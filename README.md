@@ -46,7 +46,7 @@ pip install tomescripts
 ## Documentation
 
 For more detailed information on how to use **tome**, best practices, and guides, please
-refer to our [official documentation](https://tomescripts.github.io/tome/).
+refer to our [official documentation](https://jfrog.github.io/tome/).
 
 ## Contribution
 
