@@ -1,0 +1,76 @@
+/* Import Roboto Mono font */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap");
+
+/* Color variables */
+:root {
+  --md-primary-fg-color: #121826;
+  --md-primary-bg-color: magenta;
+
+  --nav-link-active-color-light: #121826;
+  --nav-link-active-color-dark: #ffffff;
+
+  --content-h1-color-light: #121826;
+  --content-h1-color-dark: #ffffff;
+}
+
+/* Active nav link color */
+.md-nav__link.md-nav__link--active {
+  color: #ecb7b7;
+}
+
+/* Header topic styles */
+.md-header__topic > .md-ellipsis {
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+  font-size: 1.7em;
+}
+
+/* Content h1 styles */
+.md-content h1 {
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+}
+
+/* Sidebar title styles */
+.md-nav__title {
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+/* Hide the logo */
+.md-header__button.md-logo {
+  display: none;
+}
+
+/* Nav link styles for light theme */
+[data-md-color-scheme="default"] .md-nav__link:active,
+[data-md-color-scheme="default"] .md-nav__link--active {
+  color: var(--nav-link-active-color-light);
+  font-weight: bold;
+}
+
+/* Nav link styles for dark theme */
+[data-md-color-scheme="slate"] .md-nav__link:active,
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: var(--nav-link-active-color-dark);
+  font-weight: bold;
+}
+
+/* Content h1 color based on theme */
+[data-md-color-scheme="default"] .md-content h1 {
+  color: var(--content-h1-color-light);
+}
+
+[data-md-color-scheme="slate"] .md-content h1 {
+  color: var(--content-h1-color-dark);
+}
+
+.tabbed-content .tabbed-block p {
+    margin: 0;
+}
+
+.tabbed-content .tabbed-block code {
+    display: block;
+    padding: 1em;
+}

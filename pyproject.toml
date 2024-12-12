@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tomescripts"
+version = "0.1.0"
+authors = [{ name = "JFrog Tome Team", email = "tomescripts@jfrog.com" }]
+description = "A tool for managing and organizing scripts."
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["scripts", "management", "automation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "rich",
+    "urllib3",
+    "requests",
+    "Pyyaml",
+    "sqlalchemy",
+    "cryptography"
+]
+requires-python = ">=3.8"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tome", "tome.*"]
+
+[project.urls]
+homepage = "https://github.com/jfrog/tome"
+repository = "https://github.com/jfrog/tome"
+documentation = "https://jfrog.github.io/tome/"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "responses",
+    "coverage",
+    "pre-commit",
+    "ruff",
+    "bandit",
+]
+
+docs = ["mkdocs", "mkdocstrings[python]", "mkdocs-material"]
+
+[project.scripts]
+tome = "tome.cli:main"
+
+[tool.coverage.run]
+source = ["tome"]
+
+[tool.ruff]
+output-format = "full"
+src = ["src"]
+fix = true
+show-fixes = true
+line-length = 120
+indent-width = 4
+target-version = "py38"
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.bandit]
+skips = [
+    "B202", # zip extraction does not need known members
+    "B324", # files.sha1() is tooling only, no security risk
+]
