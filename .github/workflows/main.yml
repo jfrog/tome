@@ -32,7 +32,6 @@ jobs:
           pip install .[dev]
           coverage run -m pytest -v tests/
           coverage report
-        shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
   docs:
     needs: test
