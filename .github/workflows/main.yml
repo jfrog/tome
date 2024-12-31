@@ -22,14 +22,17 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Upgrade pip globally
+        run: python -m pip install --upgrade pip --no-cache-dir
       - name: Install dependencies and run tests in venv
         run: |
           python -m venv venv
-          ${{ matrix.os == 'windows-latest' && 'venv\\Scripts\\Activate.ps1' || 'source venv/bin/activate' }}
-          pip install --upgrade pip
+          ${{ matrix.os == 'windows-latest' && '.\\venv\\Scripts\\Activate.ps1' || 'source venv/bin/activate' }}
+          python -m pip install --upgrade pip --no-cache-dir
           pip install .[dev]
           coverage run -m pytest -v tests/
           coverage report
+        shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
   docs:
     needs: test
