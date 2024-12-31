@@ -9,76 +9,22 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  PYTHON_VERSION: "3.8"
-
 jobs:
-  formatting:
-    runs-on: ubuntu-latest
-    name: Validate code style with Ruff
-    continue-on-error: true
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.8", "3.9", "3.10"]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Ruff format
-        uses: chartboost/ruff-action@v1
-        with:
-          args: format --check --no-cache
-
-  dead-code:
-    runs-on: ubuntu-latest
-    name: Sniff dead code with Vulture
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python environment
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: pip install vulture
-      - name: Run Vulture
-        run: vulture tome/ || true
-
-  security:
-    runs-on: ubuntu-latest
-    name: Check for security vulnerabilities with Bandit
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python environment
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install dependencies
-        run: pip install bandit[toml]
-      - name: Run Bandit
-        run: bandit -c pyproject.toml tome -r -lll
-
-  secrets:
-    runs-on: ubuntu-latest
-    name: Check for secrets with detect-secrets
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python environment
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install dependencies
-        run: pip install detect-secrets
-      - name: Run detect-secrets
-        run: detect-secrets -C tome scan
-
-  tests:
-    runs-on: ubuntu-latest
-    name: Run tests with coverage
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python environment
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Create virtual environment and run tests
+        run: pip install .[dev]
+      - name: Run tests with coverage
         run: |
           python -m venv venv
           source venv/bin/activate
@@ -87,35 +33,35 @@ jobs:
           coverage run -m pytest -v tests/
           coverage report
 
-  build-docs:
+  docs:
+    needs: test
     runs-on: ubuntu-latest
-    name: Build Documentation with MkDocs
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python environment
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install dependencies
+          python-version: "3.8"
+      - name: Install docs dependencies
         run: pip install .[docs]
       - name: Build documentation
         run: mkdocs build --verbose
 
-  # FIXME: improve this to test a matrix of os's
-  windows-tests:
-    runs-on: windows-latest
-    name: Run test suite on Windows
+  static-analysis:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python environment
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Setup and run tests in Virtual Environment
-        shell: pwsh
-        run: |
-          python -m venv venv
-          .\venv\Scripts\Activate.ps1
-          python -m pip install --upgrade pip
-          pip install .[dev]
-          pytest -v tests/
+          python-version: "3.8"
+      - name: Install tools
+        run: pip install ruff vulture bandit[toml] detect-secrets
+      - name: Run Ruff
+        run: ruff format --check --no-cache
+      - name: Run Vulture
+        run: vulture tome/
+      - name: Run Bandit
+        run: bandit -c pyproject.toml tome -r -lll
+      - name: Run Detect-Secrets
+        run: detect-secrets -C tome scan
