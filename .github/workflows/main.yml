@@ -87,7 +87,7 @@ jobs:
         run: |
           DATE=$(date +%Y%m%d)
           cat pyproject.toml
-          sed -i "s/^version = '\(.*\)'/version = '\1.dev${DATE}'/" pyproject.toml
+          sed -i "s/^version = \"\(.*\)\"/version = \"\1.dev${DATE}\"/" pyproject.toml
           cat pyproject.toml
     #   - name: Build the package
     #     run: python -m build
