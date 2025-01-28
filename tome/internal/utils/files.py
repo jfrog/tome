@@ -119,7 +119,7 @@ def _generic_algorithm_sum(file_path, algorithm_name):
     with open(file_path, 'rb') as fh:
         try:
             m = hashlib.new(algorithm_name)
-        except ValueError:  # FIPS error https://github.com/conan-io/conan/issues/7800
+        except ValueError:
             m = hashlib.new(algorithm_name, usedforsecurity=False)
         while True:
             data = fh.read(8192)
