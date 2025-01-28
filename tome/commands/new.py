@@ -66,7 +66,7 @@ def create_test(script_name, command_name):
     from {namespace}.{command_name} import format_message_{command_name}
     def test_format_message_{command_name}():
         """
-        Test the format_message function from {script_name.replace('_','-')}
+        Test the format_message function from {script_name.replace('_', '-')}
         """
         assert format_message_{command_name}("Hello") == "Hello!!!"
     ''')
@@ -77,9 +77,7 @@ def new(tome_api, parser, *args):  # noqa
     """
     Create a new example recipe and source files from a template.
     """
-    parser.add_argument(
-        "script_name", help="Name for the script in a tome standard way, " "like namespace:script_name."
-    )
+    parser.add_argument("script_name", help="Name for the script in a tome standard way, like namespace:script_name.")
     parser.add_argument(
         "--type", default="python", choices=["python", "sh", "bat"], help="Type of the script to create."
     )

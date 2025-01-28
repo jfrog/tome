@@ -43,7 +43,7 @@ class BaseTomeCommand:
                 if callable(action):
                     self._formatters[kind] = action
                 else:
-                    raise TomeException(f"Invalid formatter for {kind}. The formatter must be" "a valid function")
+                    raise TomeException(f"Invalid formatter for {kind}. The formatter must bea valid function")
 
     def _init_doc(self):
         if self._method.__doc__:

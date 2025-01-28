@@ -123,7 +123,7 @@ class Cli:
                             source=source,
                         )
                     except Exception as e:
-                        TomeOutput().error(f"Error loading command '{module_name}.py' " f"from '{scripts_path}': {e}")
+                        TomeOutput().error(f"Error loading command '{module_name}.py' from '{scripts_path}': {e}")
 
                 for _script in os.listdir(namespace_folder_path):
                     if _script.startswith("tome_"):

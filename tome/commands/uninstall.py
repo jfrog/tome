@@ -11,14 +11,14 @@ def uninstall(tome_api, parser, *args):
     parser.add_argument(
         "source",
         nargs='?',
-        help="Source can be a git repository, local file or folder, " "zip file (local or http), or tomefile.yaml.",
+        help="Source can be a git repository, local file or folder, zip file (local or http), or tomefile.yaml.",
     )
     parser.add_argument('-f', '--file', help="Uninstall from the given tomefile.yaml.")
     args = parser.parse_args(*args)
 
     if args.source and args.file:
         raise TomeException(
-            "Cannot specify both a source and a tomefile.yaml. " "Please choose one uninstallation method."
+            "Cannot specify both a source and a tomefile.yaml. Please choose one uninstallation method."
         )
 
     if args.file:
