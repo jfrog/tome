@@ -71,27 +71,27 @@ jobs:
         run: |
           detect-secrets -C tome scan || echo "::warning file=Detect-Secrets::Secrets detected."
 
-publish-to-pypitest:
-  needs: test
-  if: github.ref == 'refs/heads/main'
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.8"
-    - name: Install build tools
-      run: pip install build twine
-    - name: Add date to version
-      run: |
-        DATE=$(date +%Y%m%d)
-        sed -i "s/^version = '\(.*\)'/version = '\1.dev${DATE}'/" pyproject.toml
-    - name: Build the package
-      run: python -m build
-    - name: Publish to TestPyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
-      run: |
-        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+  publish-to-pypitest:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install build tools
+        run: pip install build twine
+      - name: Add date to version
+        run: |
+          DATE=$(date +%Y%m%d)
+          sed -i "s/^version = '\(.*\)'/version = '\1.dev${DATE}'/" pyproject.toml
+      - name: Build the package
+        run: python -m build
+      - name: Publish to TestPyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+        run: |
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/*
