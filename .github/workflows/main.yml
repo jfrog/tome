@@ -99,7 +99,7 @@ jobs:
   releaseDraft:
     name: Release draft
     if: github.ref == 'refs/heads/main'
-    needs: [test, publish-to-pypitest]
+    needs: [test, publish-to-pypitest, docs]
     runs-on: ubuntu-latest
     permissions:
       contents: write
