@@ -95,3 +95,46 @@ jobs:
     #       TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
     #     run: |
     #       twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+  releaseDraft:
+    name: Release draft
+    if: github.ref == 'refs/heads/main'
+    needs: [test, publish-to-pypitest]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - name: Extract version from pyproject.toml
+        id: get_version
+        run: |
+          VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Extracted version: $VERSION"
+
+      - name: Remove Old Release Drafts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DRAFT_IDS=$(gh api repos/${{ github.repository }}/releases --jq '.[] | select(.draft == true) | .id')
+
+          if [[ -n "$DRAFT_IDS" ]]; then
+            echo "Deleting old drafts..."
+            echo "$DRAFT_IDS" | xargs -I '{}' gh api -X DELETE repos/${{ github.repository }}/releases/'{}'
+          else
+            echo "No old drafts found. Skipping delete step."
+          fi
+
+      - name: Create Release Draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ env.VERSION }}" \
+            --draft \
+            --title "v${{ env.VERSION }}" \
+            --notes "$(cat << 'EOM'
+          ${{ needs.build.outputs.changelog }}
+          EOM
+          )"
