@@ -101,14 +101,14 @@ jobs:
     #       twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
   releaseDraft:
-    name: Release draft
+    name: Create Release Draft
     if: github.ref == 'refs/heads/main'
     needs: [test, publish-to-pypitest, docs]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Fetch Sources
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Extract version from pyproject.toml
@@ -135,6 +135,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "v${{ env.VERSION }}" \
-            --draft \
-            --title "v${{ env.VERSION }}"
+          gh release create "v${{ env.VERSION }}" --draft --title "v${{ env.VERSION }}" --generate-notes
