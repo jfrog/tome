@@ -1,48 +1,71 @@
+# Welcome to **tome**
+
 **tome** is a powerful script management tool designed to streamline the organization and
 distribution of scripts across different environments. Built with flexibility and ease of
-use in mind, **tome** enhances the way scripts of any kind are managed, shared, tested,
-and maintained.
+use in mind, **tome** enhances how scripts of any kind are managed, shared, tested, and
+maintained.
 
-Using **tome**, you will benefit from:
+## Why Use **tome**?
 
-- **Organization** 📂: Effortlessly manage and structure your scripts for a clean,
-  maintainable codebase.
-- **Collaboration** 🤝: Seamlessly share and collaborate on scripts with your team to
-  enhance productivity.
-- **Testing** 🧪: Ensure your scripts' reliability and performance with comprehensive
-  testing tools.
-- **Maintenance** 🔧: Simplify script upkeep and enhance security with robust maintenance
-  features.
+With **tome**, you gain:
+
+- **Organization** 📂: Keep your scripts neatly structured for easy management and
+  maintenance.
+- **Collaboration** 🤝: Seamlessly share scripts with your team, improving productivity.
+- **Testing** 🧪: Ensure script reliability with built-in testing tools.
+- **Security** 🔐: Use **tome vaults** to manage secrets securely.
+
+---
 
 ## Installation
 
 The recommended way to install **tome** is using `pip` within a virtual environment. This
-ensures that your project dependencies are isolated and managed effectively:
+keeps your project dependencies isolated and manageable.
 
-1. Create a virtual environment:
+### 1. Create a Virtual Environment
 
+```bash
+python -m venv tome-env
 ```
-python -m venv myenv
+
+### 2. Activate the Virtual Environment
+
+#### On UNIX/macOS
+
+```bash
+source tome-env/bin/activate
 ```
 
-2. Activate the virtual environment:
+#### On Windows
 
-=== "UNIX/macOS"
+```bash
+tome-env\Scripts\activate
+```
 
-    ```
-    source myenv/bin/activate
-    ```
+### 3. Install **tome**
 
-=== "Windows"
-
-    ```
-    myenv\Scripts\activate
-    ```
-
-Install **tome** using `pip`:
+Once the virtual environment is activated, install **tome** with:
 
 ```bash
 pip install tomescripts
 ```
 
-Now you can start using **tome**
+---
+
+## Getting Started
+
+Now that **tome** is installed, you can verify the installation by running:
+
+```bash
+tome --help
+```
+
+This will display the available commands and usage options.
+
+For a quick start, try listing all available commands:
+
+```bash
+tome list
+```
+
+To learn more about specific commands, check out the [Usage Guide](use_tome.md).
