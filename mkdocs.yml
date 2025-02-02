@@ -1,5 +1,5 @@
 site_name: ">tome"
-
+site_url: "https://jfrog.github.io/tome/"
 nav:
   - Introduction: index.md
   - "Using tome scripts": use_tome.md
@@ -30,6 +30,13 @@ theme:
 
 plugins:
   - mkdocstrings
+  - mike
+
+extra:
+  version:
+    provider: mike
+    alias: true
+    default: latest
 
 extra_css:
   - stylesheets/tome.css

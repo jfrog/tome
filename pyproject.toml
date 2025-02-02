@@ -46,7 +46,7 @@ dev = [
     "bandit",
 ]
 
-docs = ["mkdocs", "mkdocstrings[python]", "mkdocs-material"]
+docs = ["mkdocs", "mkdocstrings[python]", "mkdocs-material", "mike"]
 
 [project.scripts]
 tome = "tome.cli:main"
