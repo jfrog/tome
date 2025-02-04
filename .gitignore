@@ -102,3 +102,4 @@ Session.vim
 .sudo_as_admin_successful
 .noseids
 site/
+.venv
