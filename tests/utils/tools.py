@@ -58,7 +58,7 @@ class TestClient:
 
     __test__ = False  # Avoids pytest Collection warning
 
-    def __init__(self, cache_folder=None, current_folder=None, inputs=None, custom_commands_folder=None):
+    def __init__(self, cache_folder=None, current_folder=None, inputs=None):
         """
         current_folder: Current execution folder
         logins is a list of (user, password) for auto input in order
