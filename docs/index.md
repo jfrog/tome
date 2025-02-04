@@ -186,12 +186,17 @@ $ tome test *
 
 For more information about testing your scripts with tome please check the [testing commands](./testing.md) section.
 
-
-
 ## Contributions
 
-Contributions are welcome! Fork the repository, make changes, and submit a pull request.
+We welcome contributions! If you'd like to contribute, please check out our [Contributing
+Guide](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md) for guidelines. Fork the
+repository, make your changes, and submit a pull request.
+
+If you encounter any issues or have suggestions, feel free to [open an
+issue](https://github.com/jfrog/tome/issues).
 
 ## License
 
-Tome is licensed under the Apache License 2.0. See the LICENSE file for details.
+Tome is licensed under the [Apache License
+2.0](https://github.com/jfrog/tome/blob/main/LICENSE). See the LICENSE file for full
+details.
