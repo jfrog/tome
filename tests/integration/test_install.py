@@ -39,21 +39,20 @@ def test_install_from_remote_zip():
     assert "mynamespace:mycommand" not in client.out
 
 
-def test_install_from_git():
+@pytest.mark.parametrize("folder", [None, "examples"])
+def test_install_from_git(folder):
     client = TestClient()
-    git_repo_folder = "git_repo"
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+    source_folder = os.path.join(git_repo_folder, folder) if folder else git_repo_folder
 
-    mkdir(os.path.join(client.current_folder, git_repo_folder))
+    mkdir(source_folder)
+    with client.chdir(source_folder):
+        client.run("new mynamespace:mycommand")
 
-    client.run("new mynamespace:mycommand")
-
-    shutil.move(
-        os.path.join(client.current_folder, "mynamespace"), os.path.join(client.current_folder, git_repo_folder)
-    )
+    folder_arg = f"--folder={folder}" if folder else ""
 
     commit = client.init_git_repo(folder=git_repo_folder)
-
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}'")
+    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}' {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
@@ -61,7 +60,7 @@ def test_install_from_git():
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@{commit}'")
+    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@{commit}' {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
@@ -70,7 +69,7 @@ def test_install_from_git():
     assert "mynamespace:mycommand" not in client.out
 
     rmdir(os.path.join(client.cache_folder, "scripts"))
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@main'")
+    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@main' {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
