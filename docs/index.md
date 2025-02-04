@@ -1,174 +1,192 @@
-# > tome
+# > tome 📖
 
-An efficient tool to manage scripts with ease.
+A powerful script management tool.
 
-## Highlights
+## Key Features
 
-- 🚀 Manage and execute scripts effortlessly.
-- ⚡️ Install scripts from local folders, Git repositories, or archives.
-- 🔒 Securely store and retrieve secrets using the built-in vault.
-- 🛠️ Debug and test scripts effectively.
-- 📁 Organize and share scripts efficiently.
+- Organize 📂: Effortlessly manage and structure your scripts for a clean, maintainable codebase.
+- Collaborate 🤝: Seamlessly share and collaborate on scripts with your team to enhance productivity.
+- Test 🧪: Ensure your scripts' reliability and performance with comprehensive testing tools.
+- Secure 🔒: Manage and protect your passwords using the tome vaults.
 
 ## Getting Started
 
 Install `tome` using pip:
 
 ```bash
-pip install tome
+$ pip install tome
 ```
 
-You can also install from source:
+We highly recommend to [install into a virtual environment](./install.md).
+
+## Using tome
+
+### Installing scripts
+
+You can install scripts from various sources like a git repository, local file or folder,
+zip file (local or http), or requirements file.
+
+For example, you can install the examples from the **tome** repository by doing:
 
 ```bash
-git clone https://github.com/jfrog/tome.git
-cd tome
-pip install .
+$ tome install https://github.com/jfrog/tome.git --folder=examples
 ```
 
-## Using Tome Scripts
+!!! note
+
+    Use the ``--folder`` argument when you have your scripts under a subfolder instead the root of the repository
+
 
 ### Listing Available Scripts
 
 To list all installed scripts:
 
 ```bash
-tome list
+$ tome list
+
+🚀 ci commands
+ ci:check-pipeline-status       Check the status of a pipeline in the CI.
+ ci:view-logs                   View build or deploy logs from the CI system.
+
+☸️  k8s commands
+ k8s:deploy                     Deploy a Kubernetes resource using a manifest.
+ k8s:get-pods                   List all running pods in a Kubernetes cluster.
+
+📡 server commands
+ server:check-health            Perform a health check on a server.
+ server:log-watch               Stream live logs from a server.
+ server:restart                 Restart a specific server instance.
+ server:scale-down              Decrease the number of server instances.
+ server:scale-up                Increase the number of server instances.
 ```
 
 ### Running a Script
 
-Execute a script using:
+Execute a script invoking it with ``<namespace>:<command>`` like:
 
 ```bash
-tome <namespace>:<command> [arguments]
-```
+$ tome ci:check-pipeline-status --pipeline-id 427
 
-Example:
-
-```bash
-tome greetings:hello "Hello, world!"
+🚀 Checking the status of pipeline #427...
+Fetching pipeline details...
+Pipeline ID: 427
+Project: web-app-deployment
+Status: Running
+Started at: 2025-02-03 18:04:43 UTC
+Duration: 11 minutes
+📄 View pipeline details
+📝 Latest commit: Fix login issue (commit hash: a1b2c3d4)
+[2025-02-03 18:05:43.563673] - Cloning repository...
+[2025-02-03 18:06:58.563673] - Running tests...
+[2025-02-03 18:10:13.563673] - Building Docker image...
+Pipeline still running...
 ```
 
 ## Creating and Managing Scripts
 
 ### Creating a New Script
 
-Generate a new script with:
+Create a new script with a predefined structure as a starting point using:
 
 ```bash
-tome new <namespace>:<command>
+$ tome new <namespace>:<command>
 ```
 
 Example:
 
 ```bash
-tome new greetings:hello
+$ tome new greetings:hello
 ```
 
-### Installing Scripts
-
-To install scripts from a directory:
+To start using it, you can install this tome command as editable so that you can see the
+changes while you are developing.
 
 ```bash
-tome install <source-folder>
+$ tome install . -e
 ```
 
-Example:
+The command will appear marked as editable: ``(e)`` if you do a ``tome list``:
 
 ```bash
-tome install .
+$ tome list
+
+...
+🌲 greetings commands
+ greetings:hello (e)            Description of the command.
+...
+
 ```
 
-To install from a Git repository:
+You can open the ``./greetings/hello.py`` file with the editor of your choice and start
+making changes. The changes will be inmediately applied when you are doing them because we
+have installed it as [editable](./editables.md).
+
+This command will create something simillar to this file structure:
 
 ```bash
-tome install https://github.com/user/repo.git
+.
+└── greetings
+    ├── hello.py
+    └── tests
+        └── test_hello.py
 ```
 
-### Uninstalling Scripts
+Let's check the ``hello.py`` file:
 
-To remove a script:
+```python
+import os
 
-```bash
-tome uninstall <namespace>:<command>
+from tome.command import tome_command
+from tome.api.output import TomeOutput
+
+def format_message_hello(message):
+    """
+    Add exclamations for a message
+    """
+    return message + "!!!"
+
+
+@tome_command()
+def hello(tome_api, parser, *args):
+    """
+    Description of the command.
+    """
+    parser.add_argument('positional_argument', help="Placeholder for a positional argument")
+    parser.add_argument('--optional-argument', help="Placeholder for an optional argument")
+    args = parser.parse_args(*args)
+
+    # Add your command implementation here
+    tome_output = TomeOutput()
+    tome_output.info(format_message_hello(f"Tome command called with positional argument: {args.positional_argument}"))
+    if args.optional_argument:
+       tome_output.info(format_message_hello(f"Tome command called with optional argument: {args.optional_argument}"))
 ```
 
-Or uninstall all scripts from a source:
-
-```bash
-tome uninstall <source-folder>
-```
-
-## Vault System for Secure Storage
-
-Tome includes a vault for securely storing secrets.
-
-### Creating a Vault
-
-```bash
-tome vault create -p mypassword
-```
-
-### Adding Secrets
-
-```bash
-tome vault add-secret my_token "secret_value" -p mypassword
-```
-
-### Listing Secrets
-
-```bash
-tome vault list-secrets -p mypassword
-```
-
-### Retrieving a Secret
-
-```bash
-tome vault get-secret my_token -p mypassword
-```
-
-### Deleting a Secret
-
-```bash
-tome vault delete-secret my_token -p mypassword
-```
-
-## Debugging Scripts
-
-For debugging purposes, use:
-
-```bash
-tome <namespace>:<command> --debug
-```
+For more details on the tome commands syntax please check [reference section](./reference.md).
 
 ## Testing Scripts
 
-Tome supports testing with:
+Tome supports testing using the ``tome test`` command. If you check the files that tome
+new created you will see a tests folder with a ``test_hello.py`` file inside. To run those
+tests just run:
 
 ```bash
-tome test <namespace>:<command>
+$ tome test greetings:hello
 ```
 
-To run all tests:
+To run tests over all installed commands:
 
 ```bash
-tome test *
+$ tome test *
 ```
 
-## Configuration
+!!! note
 
-To check the Tome home directory:
+    ``tome test`` command uses [pytest](https://docs.pytest.org/en/stable/) under the hood, please install it by doing ``pip install pytest``
 
-```bash
-tome config home
-```
+For more information about testing your scripts with tome please check the [testing commands](./testing.md) section.
 
-To set a custom home directory:
 
-```bash
-export TOME_HOME=/custom/path
-```
 
 ## Contributions
 

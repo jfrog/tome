@@ -2,6 +2,11 @@ site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
 nav:
   - Introduction: index.md
+  - Installing tome: install.md
+  - Tome Commands Syntax Reference: reference.md
+  - Installing tome commands: tome_install.md
+  - Testing tome commands: tome_test.md
+  - Commands Reference: tome_commands.md
 
 theme:
   name: material
@@ -22,6 +27,7 @@ theme:
   features:
     - content.code.copy
     - content.tabs.link
+    - navigation.expand
 
 plugins:
   - mkdocstrings
