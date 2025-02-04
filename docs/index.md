@@ -195,5 +195,3 @@ Contributions are welcome! Fork the repository, make changes, and submit a pull 
 ## License
 
 Tome is licensed under the Apache License 2.0. See the LICENSE file for details.
-
-For more details, visit the [official documentation](https://jfrog.github.io/tome/).
