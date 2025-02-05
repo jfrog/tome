@@ -92,6 +92,22 @@ def test_install_from_remote_zip_invalid_folder():
     assert "not found in the archive" in client.out
 
 
+def test_install_git_nonexistent():
+    client = TestClient()
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+
+    with client.chdir(git_repo_folder):
+        client.run("new mynamespace:mycommand")
+
+    commit = client.init_git_repo(folder=git_repo_folder)
+
+    client.run(
+        f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@{commit}' --folder=nonexistent",
+        assert_error=True,
+    )
+    assert "Folder specified with --folder: 'nonexistent' does not exist" in client.out
+
+
 @pytest.mark.parametrize("folder", [None, "examples"])
 def test_install_from_git(folder):
     client = TestClient()

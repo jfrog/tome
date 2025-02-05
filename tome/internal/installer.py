@@ -84,6 +84,10 @@ def clone_git_repo(source, destination):
 
             output.info(f"Cloned {source}")
             folder = os.path.join(tmp_dir, source.folder) if source.folder else tmp_dir
+
+            if source.folder and not os.path.exists(folder):
+                raise TomeException(f"Folder specified with --folder: '{source.folder}' does not exist after cloning.")
+
             process_folder(folder, destination)
     return commit
 
