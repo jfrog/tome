@@ -248,7 +248,7 @@ def _install_requirements(source_dir, force_requirements, create_env, origin=Non
 
     env_message = "created" if create_env else "current"
     output.info(
-        f"Scripts from {origin.url if origin else source_dir} contain a 'requirements.txt', installing it in the {env_message} virtual environment."
+        f"Scripts from {origin.uri if origin else source_dir} contain a 'requirements.txt', installing it in the {env_message} virtual environment."
     )
 
     command = f"\"{python_executable}\" -m pip install -r \"{reqs}\""
