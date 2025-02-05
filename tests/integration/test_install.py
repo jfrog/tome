@@ -39,6 +39,59 @@ def test_install_from_remote_zip():
     assert "mynamespace:mycommand" not in client.out
 
 
+@responses.activate
+@pytest.mark.parametrize("folder", ["subfolder", None])
+def test_install_from_remote_zip_with_folder(folder):
+    client = TestClient()
+    fake_url = "http://fakeurl.com/scripts.zip"
+
+    if folder:
+        project_folder = os.path.join(client.current_folder, folder)
+        mkdir(project_folder)
+        with client.chdir(project_folder):
+            client.run("new mynamespace:mycommand")
+    else:
+        client.run("new mynamespace:mycommand")
+
+    zip_path = _create_zip(client.current_folder)
+
+    with open(zip_path, 'rb') as zip_content:
+        responses.add(responses.GET, fake_url, body=zip_content.read(), status=200)
+
+    folder_arg = f"--folder={folder}" if folder else ""
+    client.run(f"install {fake_url} {folder_arg}")
+    client.run("list")
+    assert "mynamespace:mycommand" in client.out
+
+    client.run(f"uninstall {fake_url}")
+    client.run("list")
+    assert "mynamespace:mycommand" not in client.out
+
+
+def test_install_folder_incompatible():
+    client = TestClient()
+    client.run("install . --folder=somefolder", assert_error=True)
+    assert "--folder argument is only compatible" in client.out
+    client.run("install . -e --folder=somefolder", assert_error=True)
+    assert "--folder argument is only compatible" in client.out
+
+
+@responses.activate
+def test_install_from_remote_zip_invalid_folder():
+    client = TestClient()
+    fake_url = "http://fakeurl.com/scripts.zip"
+
+    client.run("new mynamespace:mycommand")
+    zip_path = _create_zip(client.current_folder)
+
+    with open(zip_path, 'rb') as zip_content:
+        responses.add(responses.GET, fake_url, body=zip_content.read(), status=200)
+
+    folder_arg = "--folder=nonexistent"
+    client.run(f"install {fake_url} {folder_arg}", assert_error=True)
+    assert "not found in the archive" in client.out
+
+
 @pytest.mark.parametrize("folder", [None, "examples"])
 def test_install_from_git(folder):
     client = TestClient()
@@ -52,11 +105,11 @@ def test_install_from_git(folder):
     folder_arg = f"--folder={folder}" if folder else ""
 
     commit = client.init_git_repo(folder=git_repo_folder)
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}' {folder_arg}")
+    client.run(f"install '{source_folder}'")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
-    client.run(f"uninstall '{os.path.join(client.current_folder, git_repo_folder)}'")
+    client.run(f"uninstall '{source_folder}'")
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 
@@ -78,26 +131,14 @@ def test_install_from_git(folder):
     assert "mynamespace:mycommand" not in client.out
 
 
-@pytest.mark.parametrize("folder", [None, "examples"])
-def test_install_editable(folder):
+def test_install_editable():
     client = TestClient()
-
-    source_folder = os.path.join(client.current_folder, folder) if folder else client.current_folder
-
-    if folder:
-        mkdir(source_folder)
-
-    with client.chdir(source_folder):
-        client.run("new mynamespace:mycommand")
-
-    folder_arg = f"--folder={folder}" if folder else ""
-
-    client.run(f"install . -e {folder_arg}")
+    client.run("new mynamespace:mycommand")
+    client.run("install . -e")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
-    client.run(f"uninstall '{source_folder}'")
-
+    client.run("uninstall .")
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 

@@ -28,7 +28,9 @@ def install(tome_api, parser, *args):
         help='If the origin contains a python requirements file, '
         'install those requirements even if not running tome in a virtual environment.',
     )
-    parser.add_argument('--folder', help='Specify a folder within the source to install from.')
+    parser.add_argument(
+        '--folder', help='Specify a folder within the source to install from. Only valid for git or file sources.'
+    )
     args = parser.parse_args(*args)
 
     if args.source and args.file:
@@ -41,7 +43,14 @@ def install(tome_api, parser, *args):
         return
 
     source = Source.parse(args.source)
-    source.folder = args.folder
+
+    # Allow --folder only for sources of type GIT or FILE.
+    # this does not make sense for local folders because you can already specify the folder in the source
+    if args.folder:
+        if source.type not in (SourceType.GIT, SourceType.FILE, SourceType.URL):
+            raise TomeException("--folder argument is only compatible with git repositories and file sources.")
+        source.folder = args.folder
+
     source.verify_ssl = not args.no_ssl
     if args.editable:
         source.type = SourceType.EDITABLE
