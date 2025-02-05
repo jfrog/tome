@@ -78,14 +78,26 @@ def test_install_from_git(folder):
     assert "mynamespace:mycommand" not in client.out
 
 
-def test_install_editable():
+@pytest.mark.parametrize("folder", [None, "examples"])
+def test_install_editable(folder):
     client = TestClient()
-    client.run("new mynamespace:mycommand")
-    client.run("install . -e")
+
+    source_folder = os.path.join(client.current_folder, folder) if folder else client.current_folder
+
+    if folder:
+        mkdir(source_folder)
+
+    with client.chdir(source_folder):
+        client.run("new mynamespace:mycommand")
+
+    folder_arg = f"--folder={folder}" if folder else ""
+
+    client.run(f"install . -e {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
-    client.run("uninstall .")
+    client.run(f"uninstall '{source_folder}'")
+
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 
