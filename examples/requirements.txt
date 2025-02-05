@@ -1,0 +1,6 @@
+tweepy
+psutil
+yfinance
+cryptography
+requests
+yahooquery
