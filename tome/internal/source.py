@@ -6,7 +6,7 @@ from tome.errors import TomeException
 
 class SourceType(Enum):
     GIT = "git"  # git clone (no matter if local or remote)
-    URL = "uri"  # downloading a zipped tarball
+    URL = "url"  # downloading a zipped tarball
     FOLDER = "folder"
     EDITABLE = "editable"
     FILE = "file"
