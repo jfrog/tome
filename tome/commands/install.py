@@ -28,6 +28,7 @@ def install(tome_api, parser, *args):
         help='If the origin contains a python requirements file, '
         'install those requirements even if not running tome in a virtual environment.',
     )
+    parser.add_argument('--folder', help='Specify a folder within the source to install from.')
     args = parser.parse_args(*args)
 
     if args.source and args.file:
@@ -40,6 +41,7 @@ def install(tome_api, parser, *args):
         return
 
     source = Source.parse(args.source)
+    source.folder = args.folder
     source.verify_ssl = not args.no_ssl
     if args.editable:
         source.type = SourceType.EDITABLE

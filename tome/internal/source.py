@@ -16,12 +16,13 @@ class SourceType(Enum):
 
 
 class Source:
-    def __init__(self, url, source_type, version, verify_ssl, commit):
+    def __init__(self, url, source_type, version, verify_ssl, commit, folder=None):
         self.url = url
         self.type = source_type
         self.version = version
         self.verify_ssl = verify_ssl
         self.commit = commit
+        self.folder = folder
 
     def __str__(self):
         return self.url
@@ -33,11 +34,14 @@ class Source:
             "version": self.version,
             "verify_ssl": self.verify_ssl,
             "commit": self.commit,
+            "folder": self.folder,
         }
 
     @staticmethod
     def deserialize(data):
-        return Source(data["url"], SourceType(data["type"]), data["version"], data["verify_ssl"], data["commit"])
+        return Source(
+            data["url"], SourceType(data["type"]), data["version"], data["verify_ssl"], data["commit"], data["folder"]
+        )
 
     @staticmethod
     def parse(source):
@@ -64,4 +68,4 @@ class Source:
             else:
                 raise TomeException(f"Could not determine the type for source: {source}")
 
-        return Source(url, source_type, version, verify_ssl, None)
+        return Source(url, source_type, version, verify_ssl, None, None)

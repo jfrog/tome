@@ -82,22 +82,32 @@ def clone_git_repo(source, destination):
             commit = out.strip()
 
             output.info(f"Cloned {source}")
-            process_folder(tmp_dir, destination)
+            process_folder(source, destination)
     return commit
 
 
-def unpack_file(source, destination):
-    if zipfile.is_zipfile(source):
-        with zipfile.ZipFile(source, 'r') as zip_ref:
-            zip_ref.extractall(destination)
-    elif tarfile.is_tarfile(source):
-        with tarfile.open(source, 'r:*') as tar_ref:
-            tar_ref.extractall(destination)
+def unpack_file(path_to_file, zip_folder, destination):
+    def filter_members(members, folder):
+        if folder:
+            folder = folder.rstrip('/') + '/'
+            filtered = [m for m in members if m.startswith(folder)]
+            if not filtered:
+                raise TomeException(f"Folder '{folder}' not found in the archive.")
+            return filtered
+        return members
+
+    if zipfile.is_zipfile(path_to_file):
+        with zipfile.ZipFile(path_to_file, 'r') as zip_ref:
+            zip_ref.extractall(destination, filter_members(zip_ref.namelist(), zip_folder))
+    elif tarfile.is_tarfile(path_to_file):
+        with tarfile.open(path_to_file, 'r:*') as tar_ref:
+            tar_ref.extractall(destination, members=filter_members([m.name for m in tar_ref.getmembers()], zip_folder))
     else:
-        raise TomeException(f"Unsupported file type: {source}")
+        raise TomeException(f"Unsupported file type: {path_to_file}")
 
 
-def process_folder(folder, destination):
+def process_folder(source, destination):
+    folder = os.path.join(source.url, source.folder) if source.folder else source.url
     output = TomeOutput()
     ignore_file = os.path.join(folder, '.tomeignore')
     ignore_matcher = IgnoreMatcher(ignore_file)
@@ -131,7 +141,7 @@ def download_and_extract(source, destination):
         downloader.download(source.url, filepath, verify_ssl=source.verify_ssl)
 
         if is_compressed_file(destination_file):
-            unpack_file(filepath, destination)
+            unpack_file(filepath, source.folder, destination)
             output.info(f"Extracted {destination_file}")
         else:
             output.warning(f"Downloaded {destination_file} but did not extract (unsupported type)")
@@ -144,13 +154,13 @@ def install_from_source(source, cache_destination_folder, force_requirements, cr
         commit = clone_git_repo(source, cache_destination_folder)
         source.commit = commit
     elif source.type is SourceType.FOLDER:
-        process_folder(source.url, cache_destination_folder)
+        process_folder(source, cache_destination_folder)
     elif source.type is SourceType.FILE:
         assert is_compressed_file(source.url)
         with temporary_folder() as tmp_dir:
             with chdir(tmp_dir):
-                unpack_file(source, tmp_dir)
-                process_folder(tmp_dir, cache_destination_folder)
+                unpack_file(source.url, source.folder, tmp_dir)
+                process_folder(source, cache_destination_folder)
     elif source.type is SourceType.URL:
         download_and_extract(source, cache_destination_folder)
 
@@ -174,7 +184,9 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     output = TomeOutput()
     os.makedirs(cache_base_folder, exist_ok=True)
 
-    _install_requirements(source.url, force_requirements, create_env)
+    editable_install_path = os.path.join(source.url, source.folder) if source.folder else source.url
+
+    _install_requirements(editable_install_path, force_requirements, create_env)
 
     editables_file = TomePaths(cache_base_folder).editables_path
 
@@ -184,8 +196,8 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     else:
         editable_sources = []
 
-    if not any(editable['source'] == source.url for editable in editable_sources):
-        info = {"source": source.url, "installed_on": datetime.now().timestamp()}
+    if not any(editable['source'] == editable_install_path for editable in editable_sources):
+        info = {"source": editable_install_path, "installed_on": datetime.now().timestamp()}
         editable_sources.append(info)
 
         with open(editables_file, 'w') as f:
