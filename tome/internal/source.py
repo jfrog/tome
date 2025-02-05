@@ -6,7 +6,7 @@ from tome.errors import TomeException
 
 class SourceType(Enum):
     GIT = "git"  # git clone (no matter if local or remote)
-    URL = "url"  # downloading a zipped tarball
+    URL = "uri"  # downloading a zipped tarball
     FOLDER = "folder"
     EDITABLE = "editable"
     FILE = "file"
@@ -16,8 +16,8 @@ class SourceType(Enum):
 
 
 class Source:
-    def __init__(self, url, source_type, version, verify_ssl, commit, folder=None):
-        self.url = url
+    def __init__(self, uri, source_type, version, verify_ssl, commit, folder=None):
+        self.uri = uri
         self.type = source_type
         self.version = version
         self.verify_ssl = verify_ssl
@@ -25,11 +25,11 @@ class Source:
         self.folder = folder
 
     def __str__(self):
-        return self.url
+        return self.uri
 
     def serialize(self):
         return {
-            "url": self.url,
+            "uri": self.uri,
             "type": str(self.type),
             "version": self.version,
             "verify_ssl": self.verify_ssl,
@@ -40,7 +40,7 @@ class Source:
     @staticmethod
     def deserialize(data):
         return Source(
-            data["url"], SourceType(data["type"]), data["version"], data["verify_ssl"], data["commit"], data["folder"]
+            data["uri"], SourceType(data["type"]), data["version"], data["verify_ssl"], data["commit"], data["folder"]
         )
 
     @staticmethod
@@ -50,22 +50,22 @@ class Source:
         if ".git" in source or source.startswith("git@"):
             source_type = SourceType.GIT
             if ".git@" in source:
-                url, _, version = source.rpartition("@")
+                uri, _, version = source.rpartition("@")
             else:
-                url, version = source, None
+                uri, version = source, None
             verify_ssl = True
         elif source.startswith("http"):
             source_type = SourceType.URL
-            url, version, verify_ssl = source, None, True
+            uri, version, verify_ssl = source, None, True
         else:
             source = os.path.abspath(source)
             if os.path.isdir(source):
                 source_type = SourceType.FOLDER
-                url, version, verify_ssl = source, None, None
+                uri, version, verify_ssl = source, None, None
             elif os.path.isfile(source):
                 source_type = SourceType.FILE
-                url, version, verify_ssl = source, None, None
+                uri, version, verify_ssl = source, None, None
             else:
                 raise TomeException(f"Could not determine the type for source: {source}")
 
-        return Source(url, source_type, version, verify_ssl, None, None)
+        return Source(uri, source_type, version, verify_ssl, None, None)

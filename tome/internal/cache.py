@@ -30,5 +30,5 @@ class Cache:
     #  get multiple copies of the same thing in the cache
     #  also try to use folders that are recognizable
     def get_target_folder(self, source):
-        hashed = short_hash_path(source.url)
+        hashed = short_hash_path(source.uri)
         return os.path.join(self.paths.scripts_path, hashed)

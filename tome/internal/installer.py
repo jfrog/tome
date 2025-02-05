@@ -61,7 +61,7 @@ def clone_git_repo(source, destination):
     output = TomeOutput()
     with temporary_folder() as tmp_dir:
         with chdir(tmp_dir):
-            clone_cmd = f"git clone \"{source.url}\" ."
+            clone_cmd = f"git clone \"{source.uri}\" ."
             checkout_cmd = f"git checkout {source.version}" if source.version else ""
 
             clone_message = (
@@ -142,13 +142,13 @@ def process_folder(folder, destination):
 
 def download_and_extract(source, destination):
     output = TomeOutput()
-    filename = os.path.basename(urlparse(source.url).path)
+    filename = os.path.basename(urlparse(source.uri).path)
     destination_file = os.path.join(destination, filename)
 
     with temporary_folder() as tmp_dir:
         downloader = FileDownloader()
         filepath = os.path.join(tmp_dir, filename)
-        downloader.download(source.url, filepath, verify_ssl=source.verify_ssl)
+        downloader.download(source.uri, filepath, verify_ssl=source.verify_ssl)
 
         if is_compressed_file(destination_file):
             unpack_file(filepath, source.folder, destination)
@@ -164,13 +164,13 @@ def install_from_source(source, cache_destination_folder, force_requirements, cr
         commit = clone_git_repo(source, cache_destination_folder)
         source.commit = commit
     elif source.type is SourceType.FOLDER:
-        process_folder(source.url, cache_destination_folder)
+        process_folder(source.uri, cache_destination_folder)
     elif source.type is SourceType.FILE:
-        assert is_compressed_file(source.url)
+        assert is_compressed_file(source.uri)
         with temporary_folder() as tmp_dir:
             with chdir(tmp_dir):
-                unpack_file(source.url, source.folder, tmp_dir)
-                process_folder(source.url, cache_destination_folder)
+                unpack_file(source.uri, source.folder, tmp_dir)
+                process_folder(source.uri, cache_destination_folder)
     elif source.type is SourceType.URL:
         download_and_extract(source, cache_destination_folder)
 
@@ -194,7 +194,7 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     output = TomeOutput()
     os.makedirs(cache_base_folder, exist_ok=True)
 
-    _install_requirements(source.url, force_requirements, create_env)
+    _install_requirements(source.uri, force_requirements, create_env)
 
     editables_file = TomePaths(cache_base_folder).editables_path
 
@@ -204,16 +204,16 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     else:
         editable_sources = []
 
-    if not any(editable['source'] == source.url for editable in editable_sources):
-        info = {"source": source.url, "installed_on": datetime.now().timestamp()}
+    if not any(editable['source'] == source.uri for editable in editable_sources):
+        info = {"source": source.uri, "installed_on": datetime.now().timestamp()}
         editable_sources.append(info)
 
         with open(editables_file, 'w') as f:
             json.dump(editable_sources, f, indent=4)
 
-        output.info(f"Configured editable installation for '{source.url}'")
+        output.info(f"Configured editable installation for '{source.uri}'")
     else:
-        output.info(f"The source '{source.url}' is already configured as editable.")
+        output.info(f"The source '{source.uri}' is already configured as editable.")
 
 
 def _install_requirements(source_dir, force_requirements, create_env, origin=None):
