@@ -41,7 +41,7 @@ def test_install_from_remote_zip():
 
 @responses.activate
 @pytest.mark.parametrize("folder", ["subfolder", None])
-def test_install_from_remote_zip_with_folder(folder):
+def test_install_from_zip(folder):
     client = TestClient()
     fake_url = "http://fakeurl.com/scripts.zip"
 
@@ -58,12 +58,23 @@ def test_install_from_remote_zip_with_folder(folder):
     with open(zip_path, 'rb') as zip_content:
         responses.add(responses.GET, fake_url, body=zip_content.read(), status=200)
 
+    # from url
     folder_arg = f"--folder={folder}" if folder else ""
     client.run(f"install {fake_url} {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
     client.run(f"uninstall {fake_url}")
+    client.run("list")
+    assert "mynamespace:mycommand" not in client.out
+
+    # local
+    folder_arg = f"--folder={folder}" if folder else ""
+    client.run(f"install '{os.path.join(client.current_folder, zip_path)}' {folder_arg}")
+    client.run("list")
+    assert "mynamespace:mycommand" in client.out
+
+    client.run(f"uninstall '{os.path.join(client.current_folder, zip_path)}'")
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 
