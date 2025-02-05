@@ -170,7 +170,7 @@ def install_from_source(source, cache_destination_folder, force_requirements, cr
         with temporary_folder() as tmp_dir:
             with chdir(tmp_dir):
                 unpack_file(source.uri, source.folder, tmp_dir)
-                process_folder(source.uri, cache_destination_folder)
+                process_folder(tmp_dir, cache_destination_folder)
     elif source.type is SourceType.URL:
         download_and_extract(source, cache_destination_folder)
 
