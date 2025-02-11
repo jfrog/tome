@@ -63,7 +63,7 @@ class InstallApi:
     def uninstall_from_source(self, source):
         cache = Cache(self.tome_api.cache_folder)
         target_folder = cache.get_target_folder(source)
-        uninstall_from_source(source.url, self.tome_api.cache_folder, target_folder)
+        uninstall_from_source(source.uri, self.tome_api.cache_folder, target_folder)
 
     def uninstall_from_tomefile(self, tomefile):
         abs_tomefile = tomefile if os.path.isfile(tomefile) else os.path.abspath(tomefile)

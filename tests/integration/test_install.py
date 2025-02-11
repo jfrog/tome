@@ -39,29 +39,108 @@ def test_install_from_remote_zip():
     assert "mynamespace:mycommand" not in client.out
 
 
-def test_install_from_git():
+@responses.activate
+@pytest.mark.parametrize("folder", ["subfolder", None])
+def test_install_from_zip(folder):
     client = TestClient()
-    git_repo_folder = "git_repo"
+    fake_url = "http://fakeurl.com/scripts.zip"
 
-    mkdir(os.path.join(client.current_folder, git_repo_folder))
+    if folder:
+        project_folder = os.path.join(client.current_folder, folder)
+        mkdir(project_folder)
+        with client.chdir(project_folder):
+            client.run("new mynamespace:mycommand")
+    else:
+        client.run("new mynamespace:mycommand")
 
-    client.run("new mynamespace:mycommand")
+    zip_path = _create_zip(client.current_folder)
 
-    shutil.move(
-        os.path.join(client.current_folder, "mynamespace"), os.path.join(client.current_folder, git_repo_folder)
-    )
+    with open(zip_path, 'rb') as zip_content:
+        responses.add(responses.GET, fake_url, body=zip_content.read(), status=200)
 
-    commit = client.init_git_repo(folder=git_repo_folder)
-
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}'")
+    # from url
+    folder_arg = f"--folder={folder}" if folder else ""
+    client.run(f"install {fake_url} {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
-    client.run(f"uninstall '{os.path.join(client.current_folder, git_repo_folder)}'")
+    client.run(f"uninstall {fake_url}")
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@{commit}'")
+    # local
+    folder_arg = f"--folder={folder}" if folder else ""
+    client.run(f"install '{os.path.join(client.current_folder, zip_path)}' {folder_arg}")
+    client.run("list")
+    assert "mynamespace:mycommand" in client.out
+
+    client.run(f"uninstall '{os.path.join(client.current_folder, zip_path)}'")
+    client.run("list")
+    assert "mynamespace:mycommand" not in client.out
+
+
+def test_install_folder_incompatible():
+    client = TestClient()
+    client.run("install . --folder=somefolder", assert_error=True)
+    assert "--folder argument is only compatible" in client.out
+    client.run("install . -e --folder=somefolder", assert_error=True)
+    assert "--folder argument is only compatible" in client.out
+
+
+@responses.activate
+def test_install_from_remote_zip_invalid_folder():
+    client = TestClient()
+    fake_url = "http://fakeurl.com/scripts.zip"
+
+    client.run("new mynamespace:mycommand")
+    zip_path = _create_zip(client.current_folder)
+
+    with open(zip_path, 'rb') as zip_content:
+        responses.add(responses.GET, fake_url, body=zip_content.read(), status=200)
+
+    folder_arg = "--folder=nonexistent"
+    client.run(f"install {fake_url} {folder_arg}", assert_error=True)
+    assert "not found in the archive" in client.out
+
+
+def test_install_git_nonexistent():
+    client = TestClient()
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+
+    with client.chdir(git_repo_folder):
+        client.run("new mynamespace:mycommand")
+
+    commit = client.init_git_repo(folder=git_repo_folder)
+
+    client.run(
+        f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@{commit}' --folder=nonexistent",
+        assert_error=True,
+    )
+    assert "Folder specified with --folder: 'nonexistent' does not exist" in client.out
+
+
+@pytest.mark.parametrize("folder", [None, "examples"])
+def test_install_from_git(folder):
+    client = TestClient()
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+    source_folder = os.path.join(git_repo_folder, folder) if folder else git_repo_folder
+
+    mkdir(source_folder)
+    with client.chdir(source_folder):
+        client.run("new mynamespace:mycommand")
+
+    folder_arg = f"--folder={folder}" if folder else ""
+
+    commit = client.init_git_repo(folder=git_repo_folder)
+    client.run(f"install '{source_folder}'")
+    client.run("list")
+    assert "mynamespace:mycommand" in client.out
+
+    client.run(f"uninstall '{source_folder}'")
+    client.run("list")
+    assert "mynamespace:mycommand" not in client.out
+
+    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@{commit}' {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 
@@ -70,7 +149,7 @@ def test_install_from_git():
     assert "mynamespace:mycommand" not in client.out
 
     rmdir(os.path.join(client.cache_folder, "scripts"))
-    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@main'")
+    client.run(f"install '{os.path.join(client.current_folder, git_repo_folder)}/.git@main' {folder_arg}")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
 

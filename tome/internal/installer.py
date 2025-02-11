@@ -2,6 +2,7 @@ import fnmatch
 import json
 import os
 import platform
+import shutil
 import sys
 import tarfile
 import tempfile
@@ -60,7 +61,7 @@ def clone_git_repo(source, destination):
     output = TomeOutput()
     with temporary_folder() as tmp_dir:
         with chdir(tmp_dir):
-            clone_cmd = f"git clone \"{source.url}\" ."
+            clone_cmd = f"git clone \"{source.uri}\" ."
             checkout_cmd = f"git checkout {source.version}" if source.version else ""
 
             clone_message = (
@@ -82,19 +83,38 @@ def clone_git_repo(source, destination):
             commit = out.strip()
 
             output.info(f"Cloned {source}")
-            process_folder(tmp_dir, destination)
+            folder = os.path.join(tmp_dir, source.folder) if source.folder else tmp_dir
+
+            if source.folder and not os.path.exists(folder):
+                raise TomeException(f"Folder specified with --folder: '{source.folder}' does not exist after cloning.")
+
+            process_folder(folder, destination)
     return commit
 
 
-def unpack_file(source, destination):
-    if zipfile.is_zipfile(source):
-        with zipfile.ZipFile(source, 'r') as zip_ref:
-            zip_ref.extractall(destination)
-    elif tarfile.is_tarfile(source):
-        with tarfile.open(source, 'r:*') as tar_ref:
-            tar_ref.extractall(destination)
+# TODO: this is not optimal, it would be better to only extract
+#  the folder specified in the zip_folder
+def unpack_file(path_to_file, zip_folder, destination):
+    if zipfile.is_zipfile(path_to_file):
+        with zipfile.ZipFile(path_to_file, 'r') as archive:
+            archive.extractall(destination)
+    elif tarfile.is_tarfile(path_to_file):
+        with tarfile.open(path_to_file, 'r:*') as archive:
+            archive.extractall(destination)
     else:
-        raise TomeException(f"Unsupported file type: {source}")
+        raise TomeException(f"Unsupported file type: {path_to_file}")
+
+    if zip_folder:
+        folder = zip_folder.rstrip('/')
+        folder_path = os.path.join(destination, folder)
+        if not os.path.exists(folder_path):
+            raise TomeException(f"Folder '{zip_folder}' not found in the archive.")
+
+        for item in os.listdir(folder_path):
+            src = os.path.join(folder_path, item)
+            dst = os.path.join(destination, item)
+            shutil.move(src, dst)
+        os.rmdir(folder_path)
 
 
 def process_folder(folder, destination):
@@ -122,16 +142,16 @@ def process_folder(folder, destination):
 
 def download_and_extract(source, destination):
     output = TomeOutput()
-    filename = os.path.basename(urlparse(source.url).path)
+    filename = os.path.basename(urlparse(source.uri).path)
     destination_file = os.path.join(destination, filename)
 
     with temporary_folder() as tmp_dir:
         downloader = FileDownloader()
         filepath = os.path.join(tmp_dir, filename)
-        downloader.download(source.url, filepath, verify_ssl=source.verify_ssl)
+        downloader.download(source.uri, filepath, verify_ssl=source.verify_ssl)
 
         if is_compressed_file(destination_file):
-            unpack_file(filepath, destination)
+            unpack_file(filepath, source.folder, destination)
             output.info(f"Extracted {destination_file}")
         else:
             output.warning(f"Downloaded {destination_file} but did not extract (unsupported type)")
@@ -144,12 +164,12 @@ def install_from_source(source, cache_destination_folder, force_requirements, cr
         commit = clone_git_repo(source, cache_destination_folder)
         source.commit = commit
     elif source.type is SourceType.FOLDER:
-        process_folder(source.url, cache_destination_folder)
+        process_folder(source.uri, cache_destination_folder)
     elif source.type is SourceType.FILE:
-        assert is_compressed_file(source.url)
+        assert is_compressed_file(source.uri)
         with temporary_folder() as tmp_dir:
             with chdir(tmp_dir):
-                unpack_file(source, tmp_dir)
+                unpack_file(source.uri, source.folder, tmp_dir)
                 process_folder(tmp_dir, cache_destination_folder)
     elif source.type is SourceType.URL:
         download_and_extract(source, cache_destination_folder)
@@ -174,7 +194,7 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     output = TomeOutput()
     os.makedirs(cache_base_folder, exist_ok=True)
 
-    _install_requirements(source.url, force_requirements, create_env)
+    _install_requirements(source.uri, force_requirements, create_env)
 
     editables_file = TomePaths(cache_base_folder).editables_path
 
@@ -184,16 +204,16 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     else:
         editable_sources = []
 
-    if not any(editable['source'] == source.url for editable in editable_sources):
-        info = {"source": source.url, "installed_on": datetime.now().timestamp()}
+    if not any(editable['source'] == source.uri for editable in editable_sources):
+        info = {"source": source.uri, "installed_on": datetime.now().timestamp()}
         editable_sources.append(info)
 
         with open(editables_file, 'w') as f:
             json.dump(editable_sources, f, indent=4)
 
-        output.info(f"Configured editable installation for '{source.url}'")
+        output.info(f"Configured editable installation for '{source.uri}'")
     else:
-        output.info(f"The source '{source.url}' is already configured as editable.")
+        output.info(f"The source '{source.uri}' is already configured as editable.")
 
 
 def _install_requirements(source_dir, force_requirements, create_env, origin=None):
@@ -228,7 +248,7 @@ def _install_requirements(source_dir, force_requirements, create_env, origin=Non
 
     env_message = "created" if create_env else "current"
     output.info(
-        f"Scripts from {origin.url if origin else source_dir} contain a 'requirements.txt', installing it in the {env_message} virtual environment."
+        f"Scripts from {origin.uri if origin else source_dir} contain a 'requirements.txt', installing it in the {env_message} virtual environment."
     )
 
     command = f"\"{python_executable}\" -m pip install -r \"{reqs}\""
