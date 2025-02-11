@@ -30,3 +30,12 @@ jobs:
       #     TWINE_USERNAME: __token__
       #     TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       #   run: twine upload dist/*
+
+  deploy-docs:
+    name: Deploy Documentation
+    needs: publish
+    uses: ./.github/workflows/deploy-docs.yml
+    with:
+      version: ${{ github.event.release.tag_name }}
+    permissions:
+      contents: write
