@@ -1,12 +1,12 @@
 site_name: ">tome"
-
+site_url: "https://jfrog.github.io/tome/"
 nav:
   - Introduction: index.md
-  - "Using tome scripts": use_tome.md
-  - "Creating tome scripts": create_tome.md
-  - "Debugging tome scripts": debug_tome.md
-  - "Testing scripts": test_tome.md
-  - FAQ: faq.md
+  - Installing tome: install.md
+  - Tome Commands Syntax Reference: reference.md
+  - Installing tome commands: tome_install.md
+  - Testing tome commands: tome_test.md
+  - Commands Reference: tome_commands.md
 
 theme:
   name: material
@@ -14,27 +14,36 @@ theme:
   favicon: images/favicon.ico
   logo: images/favicon.ico
   palette:
-    - scheme: default
-      primary: custom
-      toggle:
-        icon: material/toggle-switch
-        name: Switch to dark mode
     - scheme: slate
       primary: custom
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to light mode
+    - scheme: default
+      primary: custom
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
   features:
     - content.code.copy
     - content.tabs.link
+    - navigation.expand
 
 plugins:
   - mkdocstrings
+  - mike
+
+extra:
+  version:
+    provider: mike
+    alias: true
+    default: latest
 
 extra_css:
   - stylesheets/tome.css
 
 markdown_extensions:
+  - admonition
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

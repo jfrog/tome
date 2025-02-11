@@ -11,6 +11,8 @@
 
   --content-h1-color-light: #121826;
   --content-h1-color-dark: #ffffff;
+
+  --md-link-color: magenta;
 }
 
 /* Active nav link color */
@@ -66,11 +68,27 @@
   color: var(--content-h1-color-dark);
 }
 
+[data-md-color-scheme="default"] .md-content h2,
+[data-md-color-scheme="default"] .md-content h3 {
+  color: var(--content-h1-color-light);
+}
+
+[data-md-color-scheme="slate"] .md-content h2,
+[data-md-color-scheme="slate"] .md-content h3 {
+  color: var(--content-h1-color-dark);
+}
+
+.md-content a {
+  color: var(--md-link-color);
+  text-decoration: none;
+  font-weight: normal;
+}
+
 .tabbed-content .tabbed-block p {
-    margin: 0;
+  margin: 0;
 }
 
 .tabbed-content .tabbed-block code {
-    display: block;
-    padding: 1em;
+  display: block;
+  padding: 1em;
 }
