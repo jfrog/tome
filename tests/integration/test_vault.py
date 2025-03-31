@@ -25,7 +25,7 @@ def test_vault_commands():
     assert "Secret 'token_4' added to 'foo' vault" in client.out
 
     client.run("vault delete -n foo -p potato", assert_error=True)
-    assert "Error: Impossible to open vault 'foo'. Invalid password" in client.out
+    assert "Error: Unable to open vault 'foo'. Incorrect password" in client.out
 
     client.run("vault list-secrets")
     assert "Vault 'default' secrets" in client.out
@@ -81,7 +81,7 @@ def test_vault_command():
     assert "None" in client.out
 
     client.run("greetings:read-text token -p wrong_potato", assert_error=True)
-    assert "Error: Impossible to open vault 'default'. Invalid password" in client.out
+    assert "Error: Unable to open vault 'default'. Incorrect password" in client.out
 
 
 def test_create_and_reuse_basic_secret_key():
@@ -134,4 +134,4 @@ def test_create_and_reuse_basic_secret_key():
     assert "None" in client.out
 
     client.run("greetings:read token -p wrong_potato", assert_error=True)
-    assert "Error: Impossible to open vault 'default'. Invalid password" in client.out
+    assert "Error: Unable to open vault 'default'. Incorrect password" in client.out
