@@ -43,16 +43,15 @@ class BaseTomeCommand:
                 if callable(action):
                     self._formatters[kind] = action
                 else:
-                    raise TomeException(f"Invalid formatter for {kind}. The formatter must bea valid function")
+                    raise TomeException(f"Invalid formatter for {kind}. The formatter must be a valid function")
 
     def _init_doc(self):
         if self._method.__doc__:
             self._doc = self._method.__doc__.strip()
         else:
-            raise TomeException(
-                f"No documentation string defined for command: '{self._name}'. tome "
-                "commands should provide a documentation string explaining "
-                "its use briefly."
+            self._doc = "No description provided for this command."
+            TomeOutput().warning(
+                f"The command '{self._name}' is missing a docstring. Consider adding one with a description of the command."
             )
 
     @property
@@ -240,7 +239,10 @@ class TomeShellCommand(BaseTomeCommand):
                 '.zsh': ['/bin/zsh'],
             }.get(ext)
             if runner is None:
-                raise TomeException(f"Couldn't deduce script runner for {script}")
+                raise TomeException(
+                    f"Could not deduce the interpreter for script '{script}'. Try adding a shebang line (e.g., '#!/bin/sh') "
+                    "or using a supported file extension like '.sh', '.bash', '.zsh', '.bat', or '.ps1'."
+                )
 
         description = description or f"Command to run the script: {' '.join(runner)} {script}"
         return runner, description
