@@ -180,6 +180,8 @@ def install_from_source(source, cache_destination_folder, force_requirements, cr
     # The requirements.txt would have been copied to the folder
     _install_requirements(cache_destination_folder, force_requirements, create_env, origin=source)
 
+    return source
+
 
 def install_editable(source, cache_base_folder, force_requirements, create_env):
     """
@@ -214,6 +216,7 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
         output.info(f"Configured editable installation for '{source.uri}'")
     else:
         output.info(f"The source '{source.uri}' is already configured as editable.")
+    return source
 
 
 def _install_requirements(source_dir, force_requirements, create_env, origin=None):
@@ -272,38 +275,33 @@ def uninstall_from_source(source, cache_base_folder, cache_remove_folder):
     :param cache_base_folder: The base folder for the cache.
     :param cache_remove_folder: The cache directory where the installations are stored.
     """
-    output = TomeOutput()
     editables_file = TomePaths(cache_base_folder).editables_path
 
     # Check if the source is in editable installations
-    if os.path.exists(editables_file) and os.path.isdir(os.path.abspath(source)):
+    if os.path.exists(editables_file) and os.path.isdir(os.path.abspath(source.uri)):
 
         def is_editable(editablepath, editablesources):
             for editable in editablesources:
                 if 'source' in editable and os.path.abspath(editable['source']) == editablepath:
                     return True
 
-        editable_path = os.path.abspath(source)
+        editable_path = os.path.abspath(source.uri)
         with open(editables_file) as f:
             editable_sources = json.load(f)
-
         if is_editable(editable_path, editable_sources):
             editable_sources = [editable for editable in editable_sources if editable['source'] != editable_path]
             with open(editables_file, 'w') as f:
                 json.dump(editable_sources, f, indent=4)
-            output.info(f"Removed '{source}' from editable installations.")
-            return
+            return source
 
     # If the source is not editable, attempt to remove the source directory from cache
     if os.path.isdir(cache_remove_folder):
         # Additional safety checks
         if not is_subdirectory(cache_remove_folder, cache_base_folder):
             raise TomeException(f"Attempted to uninstall from outside the cache directory: {cache_remove_folder}")
-
         if os.path.samefile(cache_remove_folder, cache_base_folder):
             raise TomeException("Attempted to uninstall the entire cache base folder, operation cancelled.")
-
         rmdir(cache_remove_folder)
-        output.info(f"Uninstalled '{source}' and removed directory: {cache_remove_folder}")
+        return source
     else:
         raise TomeException(f"Source '{source}' is not installed or already uninstalled.")

@@ -8,7 +8,7 @@ from rich.spinner import Spinner
 
 class TomeOutput:
     LEVEL_QUIET = 80  # -q
-    LEVEL_DEFAULT = 40  # Default - Most of essages that users might be interested in.
+    LEVEL_DEFAULT = 40  # Default - Most of messages that users might be interested in.
     LEVEL_V = 30  # -v  Detailed informational messages.
     LEVEL_VV = 20  # -vv Closely related to internal implementation details
     LEVEL_VVV = 10  # -vvv Fine-grained messages with very low-level implementation details

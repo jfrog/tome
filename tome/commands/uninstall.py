@@ -1,9 +1,28 @@
+import json
+
+from tome.api.output import TomeOutput
 from tome.command import tome_command
-from tome.errors import TomeException
 from tome.internal.source import Source
 
 
-@tome_command()
+def text_uninstall_formatter(source):
+    output = TomeOutput(stdout=True)
+    output.info(f"Uninstalled source: {source.uri}")
+
+
+def json_uninstall_formatter(source):
+    output = TomeOutput(stdout=True)
+    data = {
+        "uri": source.uri,
+        "type": str(source.type),
+        "version": source.version,
+        "commit": source.commit,
+        "folder": source.folder,
+    }
+    output.print_json(json.dumps(data, indent=4))
+
+
+@tome_command(formatters={"text": text_uninstall_formatter, "json": json_uninstall_formatter})
 def uninstall(tome_api, parser, *args):
     """
     Uninstall scripts from various sources.
@@ -11,19 +30,9 @@ def uninstall(tome_api, parser, *args):
     parser.add_argument(
         "source",
         nargs='?',
-        help="Source can be a git repository, local file or folder, zip file (local or http), or tomefile.yaml.",
+        help="Source: a git repository, folder, or zip file (local or http).",
     )
-    parser.add_argument('-f', '--file', help="Uninstall from the given tomefile.yaml.")
     args = parser.parse_args(*args)
 
-    if args.source and args.file:
-        raise TomeException(
-            "Cannot specify both a source and a 'tomefile.yaml'. Please choose one uninstallation method."
-        )
-
-    if args.file:
-        tome_api.install.uninstall_from_tomefile(args.file)
-        return
-
     source = Source.parse(args.source)
-    tome_api.install.uninstall_from_source(source)
+    return tome_api.install.uninstall_from_source(source)
