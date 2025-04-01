@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import yaml
 from tome.api.output import TomeOutput
 from tome.command import tome_command
 from tome.errors import TomeException
@@ -9,20 +8,12 @@ from tome.internal.source import Source, SourceType
 
 
 def text_install_formatter(data):
-    """Formats the installation summary as plain text."""
     output = TomeOutput(stdout=True)
-    if data.get("installed"):
-        output.info("Installed sources:")
-        for origin, message in data["installed"].items():
-            output.info(f"  {origin}: {message}")
-    if data.get("failed"):
-        output.warning("Failed sources:")
-        for origin, error in data["failed"].items():
-            output.warning(f"  {origin}: {error}")
+    output.info(f"Installed source: {data.get('installed')}")
+    output.info(f"Message: {data.get('message')}")
 
 
 def json_install_formatter(data):
-    """Formats the installation summary as JSON."""
     output = TomeOutput(stdout=True)
     output.print_json(json.dumps(data, indent=4))
 
@@ -30,12 +21,15 @@ def json_install_formatter(data):
 @tome_command(formatters={"text": text_install_formatter, "json": json_install_formatter})
 def install(tome_api, parser, *args):
     """
-    Install scripts from various sources.
+    Install scripts from a source.
+
+    The source can be a git repository, a folder, or a zip file (local or http).
+    Editable installations are supported with the -e/--editable flag.
     """
     parser.add_argument(
         "source",
         nargs="?",
-        help="Source can be a git repository, folder, or zip file (local or http).",
+        help="Source: a git repository, folder, or zip file (local or http).",
     )
     parser.add_argument("-e", "--editable", action="store_true", help="Install a package in editable mode.")
     parser.add_argument("--no-ssl", action="store_true", help="Do not verify SSL connections.")
@@ -47,7 +41,7 @@ def install(tome_api, parser, *args):
     parser.add_argument(
         "--force-requirements",
         action="store_true",
-        help="Install requirements even if not running tome in a virtual environment.",
+        help="Force installation of requirements even if not running in a virtual environment.",
     )
     parser.add_argument(
         "--folder", help="Specify a folder within the source to install from (only valid for git or zip file sources)."
@@ -65,18 +59,16 @@ def install(tome_api, parser, *args):
 
     source.verify_ssl = not args.no_ssl
 
-    # Prepare a summary dictionary for the installation results
-    summary = {"installed": {}, "failed": {}}
     try:
         if args.editable:
             source.type = SourceType.EDITABLE
             tome_api.install.install_editable(source, args.force_requirements, args.create_env)
-            summary["installed"][source.uri] = "Editable installation succeeded."
+            result = {"installed": source.uri, "message": "Editable installation succeeded."}
         else:
             tome_api.install.install_from_source(source, args.force_requirements, args.create_env)
-            summary["installed"][source.uri] = "Installation succeeded."
+            result = {"installed": source.uri, "message": "Installation succeeded."}
     except TomeException as e:
         TomeOutput().warning(f"Failed to install {source.uri}: {str(e)}")
-        summary["failed"][source.uri] = str(e)
+        raise
 
-    return summary
+    return result
