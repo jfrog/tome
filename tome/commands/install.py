@@ -1,5 +1,3 @@
-import os
-import sys
 import json
 from tome.api.output import TomeOutput
 from tome.command import tome_command
@@ -7,14 +5,22 @@ from tome.errors import TomeException
 from tome.internal.source import Source, SourceType
 
 
-def text_install_formatter(data):
+def text_install_formatter(source):
     output = TomeOutput(stdout=True)
-    output.info(f"Installed source: {data.get('installed')}")
-    output.info(f"Message: {data.get('message')}")
+    output.info(f"Installed source: {source.uri}")
+    if source.commit:
+        output.info(f"Commit: {source.commit}")
 
 
-def json_install_formatter(data):
+def json_install_formatter(source):
     output = TomeOutput(stdout=True)
+    data = {
+        "uri": source.uri,
+        "type": str(source.type),
+        "version": source.version,
+        "commit": source.commit,
+        "folder": source.folder,
+    }
     output.print_json(json.dumps(data, indent=4))
 
 
@@ -41,17 +47,14 @@ def install(tome_api, parser, *args):
     parser.add_argument(
         "--force-requirements",
         action="store_true",
-        help="Force installation of requirements even if not running in a virtual environment.",
+        help="Install requirements even if not running tome in a virtual environment.",
     )
     parser.add_argument(
         "--folder", help="Specify a folder within the source to install from (only valid for git or zip file sources)."
     )
     args = parser.parse_args(*args)
 
-    # check using source similar to: https://pip.pypa.io/en/latest/topics/vcs-support/
     source = Source.parse(args.source)
-    # Allow --folder only for sources of type GIT or FILE.
-    # this does not make sense for local folders because you can already specify the folder in the source
     if args.folder:
         if source.type not in (SourceType.GIT, SourceType.FILE, SourceType.URL):
             raise TomeException("--folder argument is only compatible with git repositories and file sources.")
@@ -59,16 +62,10 @@ def install(tome_api, parser, *args):
 
     source.verify_ssl = not args.no_ssl
 
-    try:
-        if args.editable:
-            source.type = SourceType.EDITABLE
-            tome_api.install.install_editable(source, args.force_requirements, args.create_env)
-            result = {"installed": source.uri, "message": "Editable installation succeeded."}
-        else:
-            tome_api.install.install_from_source(source, args.force_requirements, args.create_env)
-            result = {"installed": source.uri, "message": "Installation succeeded."}
-    except TomeException as e:
-        TomeOutput().warning(f"Failed to install {source.uri}: {str(e)}")
-        raise
+    if args.editable:
+        source.type = SourceType.EDITABLE
+        result = tome_api.install.install_editable(source, args.force_requirements, args.create_env)
+    else:
+        result = tome_api.install.install_from_source(source, args.force_requirements, args.create_env)
 
     return result
