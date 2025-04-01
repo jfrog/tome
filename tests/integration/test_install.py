@@ -133,10 +133,12 @@ def test_install_from_git(folder):
 
     commit = client.init_git_repo(folder=git_repo_folder)
     client.run(f"install '{source_folder}'")
+    assert "Installed source:" in client.out
     client.run("list")
-    assert "mynamespace:mycommand" in client.out
+    assert "mynamespace:mycommand" in client.stdout
 
     client.run(f"uninstall '{source_folder}'")
+    assert "Uninstalled source:" in client.stdout
     client.run("list")
     assert "mynamespace:mycommand" not in client.out
 

@@ -22,7 +22,7 @@ def json_uninstall_formatter(source):
     output.print_json(json.dumps(data, indent=4))
 
 
-@tome_command()
+@tome_command(formatters={"text": text_uninstall_formatter, "json": json_uninstall_formatter})
 def uninstall(tome_api, parser, *args):
     """
     Uninstall scripts from various sources.
