@@ -12,10 +12,10 @@ def install(tome_api, parser, *args):
     parser.add_argument(
         "source",
         nargs='?',
-        help="Source can be a git repository, local file or folder, zip file (local or http), or requirements file.",
+        help="Source can be a git repository, folder, zip file (local or http).",
     )
     parser.add_argument('-e', '--editable', action='store_true', help="Install a package in editable mode.")
-    parser.add_argument('-f', '--file', help="Install from the given tomefile.yaml.")
+    parser.add_argument('-f', '--file', help="Install from multiple sources using a 'tomefile.yaml'.")
     parser.add_argument('--no-ssl', action='store_true', help='Do not verify SSL connections.')
     parser.add_argument(
         '--create-env',
@@ -29,12 +29,14 @@ def install(tome_api, parser, *args):
         'install those requirements even if not running tome in a virtual environment.',
     )
     parser.add_argument(
-        '--folder', help='Specify a folder within the source to install from. Only valid for git or file sources.'
+        '--folder', help='Specify a folder within the source to install from. Only valid for git or zip file sources.'
     )
     args = parser.parse_args(*args)
 
     if args.source and args.file:
-        raise TomeException("Cannot specify both a source and a tomefile.yaml. Please choose one installation method.")
+        raise TomeException(
+            "Cannot specify both a source and a 'tomefile.yaml'. Please choose one installation method."
+        )
 
     # check using source similar to: https://pip.pypa.io/en/latest/topics/vcs-support/
     if args.file:

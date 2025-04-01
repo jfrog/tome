@@ -18,7 +18,7 @@ def uninstall(tome_api, parser, *args):
 
     if args.source and args.file:
         raise TomeException(
-            "Cannot specify both a source and a tomefile.yaml. Please choose one uninstallation method."
+            "Cannot specify both a source and a 'tomefile.yaml'. Please choose one uninstallation method."
         )
 
     if args.file:

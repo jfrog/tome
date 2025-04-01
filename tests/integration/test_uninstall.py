@@ -8,7 +8,7 @@ def test_both_source_requirements():
     """Only source or requirements can be passed, not both."""
     client = TestClient()
     client.run("uninstall source_folder -f tomefile.yaml", assert_error=True)
-    assert "Error: Cannot specify both a source and a tomefile.yaml." in client.out
+    assert "Error: Cannot specify both a source and a 'tomefile.yaml'." in client.out
 
 
 def test_install_empty_argument():

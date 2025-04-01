@@ -23,8 +23,8 @@ class VaultApi:
         if password is None:
             password = getpass.getpass(f"Enter password for vault '{name}': ")
 
-        if not self.vaults.get(name):
-            raise TomeException(f"Vault {name} doesn't exist. Run 'tome vault create' to create it first.")
+        if name not in self.vaults:
+            raise TomeException(f"Vault '{name}' does not exist. Please run 'tome vault create' to create it first.")
 
         vault_path = f"sqlite:///{os.path.join(self.vaults_folder, f'{name}-vault.db')}"
         with Session(create_engine(vault_path)) as session:
@@ -37,7 +37,7 @@ class VaultApi:
                     session.query(TomeInternal).filter(TomeInternal.key == 'vault_key').first().value
                 )
             except InvalidToken:
-                raise TomeException(f"Impossible to open vault '{name}'. Invalid password")
+                raise TomeException(f"Unable to open vault '{name}'. Incorrect password.")
             return BasicVault(key=Fernet(vault_key), vault_path=vault_path)
 
     def create(self, name, password):
