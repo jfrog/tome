@@ -6,7 +6,7 @@ from tome.command import tome_command, CommandType
 from tome.internal.formatters.printers import print_command_docstrings
 
 
-def print_list_txt(result):
+def print_list_text(result):
     commands, namespaces = result.get("list")
     if commands and namespaces:
         TomeOutput(stdout=True).info(f"Results for '{result.get('pattern')}' pattern:")
@@ -38,7 +38,7 @@ def print_list_json(result):
     output.print_json(myjson)
 
 
-@tome_command(formatters={"text": print_list_txt, "json": print_list_json})
+@tome_command(formatters={"text": print_list_text, "json": print_list_json})
 def list(tome_api, parser, *args):
     """
     List all the commands that match a given pattern.
