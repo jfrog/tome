@@ -157,13 +157,47 @@ def download_and_extract(source, destination):
             output.warning(f"Downloaded {destination_file} but did not extract (unsupported type)")
 
 
+def _has_valid_commands(directory):
+    """
+    Check the first-level subdirectories of the given directory to find files
+    that appear to contain valid tome commands.
+    """
+    # List only the first-level subdirectories of 'directory'
+    for subdir_name in os.listdir(directory):
+        subdir = os.path.join(directory, subdir_name)
+        if os.path.isdir(subdir):
+            # Iterate over the files in the first-level subdirectory
+            for file in os.listdir(subdir):
+                file_path = os.path.join(subdir, file)
+                if os.path.isfile(file_path):
+                    ext = os.path.splitext(file)[1]
+                    # Check if the filename starts with "tome_" and has a recognized shell extension
+                    if file.startswith("tome_") and ext in ['.sh', '.bat', '.ps1', '.bash', '.zsh']:
+                        return True
+                    # Alternatively, if it is a Python file, search for the decorator usage
+                    if ext == ".py":
+                        try:
+                            with open(file_path, 'r', encoding='utf-8') as f:
+                                content = f.read()
+                                if "@tome_command(" in content:
+                                    return True
+                        except Exception:
+                            # Ignore files that cannot be read
+                            continue
+    return False
+
+
 def install_from_source(source, cache_destination_folder, force_requirements, create_env):
     if os.path.exists(cache_destination_folder):
         rmdir(cache_destination_folder)
     if source.type is SourceType.GIT:
         commit = clone_git_repo(source, cache_destination_folder)
         source.commit = commit
+        if not _has_valid_commands(cache_destination_folder):
+            raise TomeException("No valid tome commands were found in the cloned repository.")
     elif source.type is SourceType.FOLDER:
+        if not _has_valid_commands(source.uri):
+            raise TomeException(f"No valid tome commands were found in the '{source.uri}' folder.")
         process_folder(source.uri, cache_destination_folder)
     elif source.type is SourceType.FILE:
         assert is_compressed_file(source.uri)
@@ -188,14 +222,16 @@ def install_editable(source, cache_base_folder, force_requirements, create_env):
     Updates the cache directory with a new source installed in editable mode.
     If an editable installations file doesn't exist, it creates a new one.
 
-    :param create_env:
-    :param force_requirements:
+    :param create_env: Whether to create a virtual environment for the source.
+    :param force_requirements: Force installation of requirements.
     :param source: The source of the scripts to be installed in editable mode.
     :param cache_base_folder: The cache directory where the installations file is stored.
     """
     output = TomeOutput()
     os.makedirs(cache_base_folder, exist_ok=True)
 
+    if not _has_valid_commands(source.uri):
+        raise TomeException(f"No valid tome commands were found in the '{source.uri}' folder.")
     _install_requirements(source.uri, force_requirements, create_env)
 
     editables_file = TomePaths(cache_base_folder).editables_path
