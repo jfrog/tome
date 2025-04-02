@@ -5,12 +5,12 @@ from tome.command import tome_command
 from tome.internal.source import Source
 
 
-def text_uninstall_formatter(source):
+def print_uninstall_text(source):
     output = TomeOutput(stdout=True)
     output.info(f"Uninstalled source: {source.uri}")
 
 
-def json_uninstall_formatter(source):
+def print_uninstall_json(source):
     output = TomeOutput(stdout=True)
     data = {
         "uri": source.uri,
@@ -22,7 +22,7 @@ def json_uninstall_formatter(source):
     output.print_json(json.dumps(data, indent=4))
 
 
-@tome_command(formatters={"text": text_uninstall_formatter, "json": json_uninstall_formatter})
+@tome_command(formatters={"text": print_uninstall_text, "json": print_uninstall_json})
 def uninstall(tome_api, parser, *args):
     """
     Uninstall scripts from various sources.

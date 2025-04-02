@@ -6,16 +6,20 @@ from tome.command import tome_command, CommandType
 from tome.internal.formatters.printers import print_command_docstrings
 
 
-def print_list_txt(result):
+def print_list_text(result):
+    output = TomeOutput(stdout=True)
+
     commands, namespaces = result.get("list")
     if commands and namespaces:
-        TomeOutput(stdout=True).info(f"Results for '{result.get('pattern')}' pattern:")
+        output.info(f"Results for '{result.get('pattern')}' pattern:")
         print_command_docstrings(commands, namespaces)
     else:
-        TomeOutput(stdout=True).error(f"No matches were found for {result.get('pattern')} pattern.")
+        output.error(f"No matches were found for {result.get('pattern')} pattern.")
 
 
 def print_list_json(result):
+    output = TomeOutput(stdout=True)
+
     commands, namespaces = result.get("list")
     pattern = result.get("pattern")
 
@@ -33,12 +37,11 @@ def print_list_json(result):
                 }
             )
 
-    output = TomeOutput(stdout=True)
     myjson = json.dumps({"results": list_results, "pattern": pattern}, indent=4)
     output.print_json(myjson)
 
 
-@tome_command(formatters={"text": print_list_txt, "json": print_list_json})
+@tome_command(formatters={"text": print_list_text, "json": print_list_json})
 def list(tome_api, parser, *args):
     """
     List all the commands that match a given pattern.

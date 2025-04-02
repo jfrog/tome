@@ -5,7 +5,7 @@ from tome.command import tome_command, CommandType
 from tome.errors import TomeException
 
 
-def print_serial(item, indent=None, color_index=None):
+def print_info_text(item, indent=None, color_index=None):
     indent = "" if indent is None else (indent + "  ")
     output = TomeOutput(stdout=True)
     if isinstance(item, dict):
@@ -16,7 +16,7 @@ def print_serial(item, indent=None, color_index=None):
                 output.info(f"{indent}{k}: {v}")
             else:
                 output.info(f"{indent}{k}")
-                print_serial(v, indent, color_index)
+                print_info_text(v, indent, color_index)
     elif isinstance(item, type([])):
         for elem in item:
             output.info(f"{indent}{elem}")
@@ -26,12 +26,12 @@ def print_serial(item, indent=None, color_index=None):
         output.info(f"{indent}{item}")
 
 
-def print_json_output(result):
+def print_info_json(result):
     output = TomeOutput(stdout=True)
     output.print_json(json.dumps(result, indent=4))
 
 
-@tome_command(formatters={"text": print_serial, "json": print_json_output})
+@tome_command(formatters={"text": print_info_text, "json": print_info_json})
 def info(tome_api, parser, *args):
     """
     Get information about a command.
@@ -41,7 +41,6 @@ def info(tome_api, parser, *args):
     commands, _ = tome_api.list.filter_cli_commands(args.command_name, [CommandType.cache, CommandType.editable])
     try:
         command_info = commands[args.command_name]
-        ret = command_info.serialize()
-        return ret
+        return command_info.serialize()
     except KeyError:
         raise TomeException(f"Command '{args.command_name}' not found.")

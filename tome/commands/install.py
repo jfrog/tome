@@ -5,14 +5,14 @@ from tome.errors import TomeException
 from tome.internal.source import Source, SourceType
 
 
-def text_install_formatter(source):
+def print_install_text(source):
     output = TomeOutput(stdout=True)
     output.info(f"Installed source: {source.uri}")
     if source.commit:
         output.info(f"Commit: {source.commit}")
 
 
-def json_install_formatter(source):
+def print_install_json(source):
     output = TomeOutput(stdout=True)
     data = {
         "uri": source.uri,
@@ -24,7 +24,7 @@ def json_install_formatter(source):
     output.print_json(json.dumps(data, indent=4))
 
 
-@tome_command(formatters={"text": text_install_formatter, "json": json_install_formatter})
+@tome_command(formatters={"text": print_install_text, "json": print_install_json})
 def install(tome_api, parser, *args):
     """
     Install scripts from a source.
