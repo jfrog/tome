@@ -1,4 +1,5 @@
 import getpass
+import json
 from tome.command import tome_command
 from tome.errors import TomeException
 from tome.api.output import TomeOutput
@@ -24,7 +25,7 @@ def print_vault_text(result):
 def print_vault_json(result):
     result_to_print = result.copy()
     result_to_print.pop("message", None)
-    TomeOutput(stdout=True).print_json(result_to_print)
+    TomeOutput(stdout=True).print_json(json.dumps(result_to_print, indent=4))
 
 
 def print_list_secrets_text(result):
