@@ -41,7 +41,6 @@ def info(tome_api, parser, *args):
     commands, _ = tome_api.list.filter_cli_commands(args.command_name, [CommandType.cache, CommandType.editable])
     try:
         command_info = commands[args.command_name]
-        ret = command_info.serialize()
-        return ret
+        return command_info.serialize()
     except KeyError:
         raise TomeException(f"Command '{args.command_name}' not found.")

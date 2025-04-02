@@ -21,7 +21,9 @@ def vault(tome_api, parser, *args):
 def create(tome_api, parser, *args):
     """Create a new vault with a new password"""
     parser.add_argument('-p', '--password', help='Tome vault password (Prompt if not specified)')
-    parser.add_argument('-n', '--name', help='vault name', default='default')
+    parser.add_argument(
+        '-n', '--name', help='Vault name (will use the "default" vault if not specified)', default='default'
+    )
     args = parser.parse_args(*args)
     vault_password = args.password
     if not vault_password:
@@ -37,7 +39,9 @@ def create(tome_api, parser, *args):
 def delete(tome_api, parser, *args):
     """Delete a vault"""
     parser.add_argument('-p', '--password', help='Tome vault password (Prompt if not specified)')
-    parser.add_argument('-n', '--name', help='vault name', default='default')
+    parser.add_argument(
+        '-n', '--name', help='Vault name (will use the "default" vault if not specified)', default='default'
+    )
     args = parser.parse_args(*args)
     vault_password = _get_password(args.password)
     tome_api.vault.delete(name=args.name, password=vault_password)
@@ -49,10 +53,12 @@ def add_secret(tome_api, parser, *args):
     """Add a new secret"""
     parser.add_argument('-p', '--password', help='Tome vault password (Prompt if not specified)')
     parser.add_argument('-u', '--update', action='store_true', help='Update if exists')
-    parser.add_argument('--description', help="secret text description")
-    parser.add_argument('-vn', '--vault', help='vault name', default='default')
-    parser.add_argument('name', help="secret text name")
-    parser.add_argument('text', help="secret text content")
+    parser.add_argument('--description', help="Secret text description")
+    parser.add_argument(
+        '-vn', '--vault', help='Vault name (will use the "default" vault if not specified)', default='default'
+    )
+    parser.add_argument('name', help="Secret text name")
+    parser.add_argument('text', help="Secret text content")
     args = parser.parse_args(*args)
     vault_password = _get_password(args.password)
     myvault = tome_api.vault.open(name=args.vault, password=vault_password)
@@ -64,8 +70,10 @@ def add_secret(tome_api, parser, *args):
 def delete_secret(tome_api, parser, *args):
     """Delete a secret"""
     parser.add_argument('-p', '--password', help='Tome vault password (Prompt if not specified)')
-    parser.add_argument('-vn', '--vault', help='vault name', default='default')
-    parser.add_argument('name', help="secret text name")
+    parser.add_argument(
+        '-vn', '--vault', help='Vault name (will use the "default" vault if not specified)', default='default'
+    )
+    parser.add_argument('name', help="Secret text name")
     args = parser.parse_args(*args)
     vault_password = _get_password(args.password)
     myvault = tome_api.vault.open(name=args.vault, password=vault_password)
