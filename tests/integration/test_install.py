@@ -407,8 +407,9 @@ def test_tomeignore_file():
     )
     # TODO:     greetings/subgreetings does not filter out subgreetings-commands.py,
     #  you have to only use the last folder, which is not ideal
-    save(os.path.join(source, "greetings", "greetings-commands.py"), "")
-    save(os.path.join(source, "greetings", "subgreetings", "subgreetings-commands.py"), "")
+    # adding fake command to not raise error for not having any tome commands
+    save(os.path.join(source, "greetings", "greetings-commands.py"), "@tome_command()")
+    save(os.path.join(source, "greetings", "subgreetings", "subgreetings-commands.py"), "@tome_command()")
     save(os.path.join(source, "assets", "image.png"), "")
     save(os.path.join(source, "pepetests", "test_pepe.py"), "")
 
@@ -423,3 +424,30 @@ def test_tomeignore_file():
     assert "subgreetings-commands.py" not in tc.out
     assert "image.png" in tc.out
     assert "test_pepe.py" in tc.out
+
+
+def test_validate_folder_install():
+    client = TestClient()
+    client.run("new mynamespace:mycommand")
+    client.run("install mynamespace", assert_error=True)
+    assert "No valid tome commands were found" in client.out
+
+    client.run("install mynamespace -e", assert_error=True)
+    assert "No valid tome commands were found" in client.out
+
+
+def test_validate_git_install():
+    client = TestClient()
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+
+    # Create an invalid structure in the git repository: place the command in a nested subdirectory (more than one level deep)
+    nested_folder = os.path.join(git_repo_folder, "subfolder", "nested")
+    os.makedirs(nested_folder, exist_ok=True)
+    with client.chdir(nested_folder):
+        client.run("new mynamespace:mycommand")
+
+    client.init_git_repo(folder=git_repo_folder)
+
+    install_source = f"{os.path.join(client.current_folder, git_repo_folder)}/.git"
+    client.run(f"install '{install_source}'", assert_error=True)
+    assert "No valid tome commands were found in the cloned repository" in client.out
