@@ -93,7 +93,7 @@ def add_secret(tome_api, parser, *args):
     vault_password = _get_password(args.password)
     myvault = tome_api.vault.open(name=args.vault, password=vault_password)
     myvault.create(args.name, args.text, args.description, args.update)
-    return {"message": f"Secret '{args.name}' added to vault '{args.vault}'", "vault": args.vault, "secret": args.name}
+    return {"message": f"Secret '{args.name}' added to '{args.vault}' vault", "vault": args.vault, "secret": args.name}
 
 
 @tome_command(parent=vault, formatters={"text": print_vault_text, "json": print_vault_json})
@@ -109,7 +109,7 @@ def delete_secret(tome_api, parser, *args):
     myvault = tome_api.vault.open(name=args.vault, password=vault_password)
     myvault.delete(args.name)
     return {
-        "message": f"Secret '{args.name}' deleted from vault '{args.vault}'",
+        "message": f"Secret '{args.name}' deleted from '{args.vault}' vault",
         "vault": args.vault,
         "secret": args.name,
     }
