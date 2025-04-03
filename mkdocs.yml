@@ -1,12 +1,14 @@
 site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
 nav:
-  - Introduction: index.md
-  - Installing tome: install.md
-  - Tome Commands Syntax Reference: reference.md
-  - Installing tome commands: tome_install.md
-  - Testing tome commands: tome_test.md
-  - Commands Reference: tome_commands.md
+  - Wellcome: index.md
+  - Introducction:
+    - Tome's basics: introduction/basics.md
+    - Installing Tome: introduction/installing_tome.md
+    - Using Tome: introduction/using_tome.md
+  - Community: community.md
+  - How to:
+    - How to store and reuse a secret value: how-to/secrets.md
 
 theme:
   name: material
@@ -26,6 +28,7 @@ theme:
         name: Switch to dark mode
   features:
     - content.code.copy
+    - content.code.annotate
     - content.tabs.link
     - navigation.expand
 

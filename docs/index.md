@@ -9,7 +9,13 @@ A powerful script management tool.
 - Test 🧪: Ensure your scripts' reliability and performance with comprehensive testing tools.
 - Secure 🔒: Manage and protect your passwords using the tome vaults.
 
-## Getting Started
+## License
+
+Tome is licensed under the [Apache License
+2.0](https://github.com/jfrog/tome/blob/main/LICENSE). See the LICENSE file for full
+details.
+
+## Quickstart Guide
 
 Install `tome` using pip:
 
@@ -19,9 +25,9 @@ $ pip install tome
 
 We highly recommend to [install into a virtual environment](./install.md).
 
-## Using tome
+### Using tome
 
-### Installing scripts
+#### Installing scripts
 
 You can install scripts from various sources like a git repository, local file or folder,
 zip file (local or http), or requirements file.
@@ -37,7 +43,7 @@ $ tome install https://github.com/jfrog/tome.git --folder=examples
     Use the ``--folder`` argument when you have your scripts under a subfolder instead the root of the repository
 
 
-### Listing Available Scripts
+#### Listing Available Scripts
 
 To list all installed scripts:
 
@@ -60,7 +66,7 @@ $ tome list
  server:scale-up                Increase the number of server instances.
 ```
 
-### Running a Script
+#### Running a Script
 
 Execute a script invoking it with ``<namespace>:<command>`` like:
 
@@ -82,9 +88,9 @@ Duration: 11 minutes
 Pipeline still running...
 ```
 
-## Creating and Managing Scripts
+### Creating and Managing Scripts
 
-### Creating a New Script
+#### Creating a New Script
 
 Create a new script with a predefined structure as a starting point using:
 
@@ -164,7 +170,7 @@ def hello(tome_api, parser, *args):
 
 For more details on the tome commands syntax please check [reference section](./reference.md).
 
-## Testing Scripts
+### Testing Scripts
 
 Tome supports testing using the ``tome test`` command. If you check the files that tome
 new created you will see a tests folder with a ``test_hello.py`` file inside. To run those
@@ -186,17 +192,8 @@ $ tome test *
 
 For more information about testing your scripts with tome please check the [testing commands](./testing.md) section.
 
-## Contributions
+### Whats next?
 
-We welcome contributions! If you'd like to contribute, please check out our [Contributing
-Guide](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md) for guidelines. Fork the
-repository, make your changes, and submit a pull request.
-
-If you encounter any issues or have suggestions, feel free to [open an
-issue](https://github.com/jfrog/tome/issues).
-
-## License
-
-Tome is licensed under the [Apache License
-2.0](https://github.com/jfrog/tome/blob/main/LICENSE). See the LICENSE file for full
-details.
+- **Introduction** How to install tome, create a new command or install an existing one. [*Start here if you’re new to Tome.*](/tome/introduction/using_tome)
+- **Community** Tome’s community and how you can contribute.
+- **How-to**  Advanced tutorials.

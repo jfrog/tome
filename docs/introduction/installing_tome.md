@@ -1,9 +1,8 @@
-## Installation
+# Installing Tome
 
 TODO: install editable, from sources...
 
-The recommended way to install **tome** is using `pip` within a virtual environment. This
-ensures that your project dependencies are isolated and managed effectively:
+The recommended way to install **tome** is using `pip` within a virtual environment. This ensures that your project dependencies are isolated and managed effectively:
 
 1. Create a virtual environment:
 
