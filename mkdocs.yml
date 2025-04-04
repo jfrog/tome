@@ -8,6 +8,7 @@ nav:
     - Using Tome: introduction/using_tome.md
   - Community: community.md
   - How to:
+    - How to migrate a script to tome: how-to/script_to_tome.md
     - How to store and reuse a secret value: how-to/secrets.md
 
 theme:
