@@ -2,11 +2,11 @@
 
 ## 📝 Basic concepts
 
-- **Tome**: group of commands
-- **Origin**: `Tome` folder
-- **Namespace**: `Tome` name
+- **Tome**: It is the collection of **scripts** that have a common **origin** (a folder, a git repository, ...).
+- **Origin**: site where a **tome** comes from, it can be a git repository, a local folder or a zip file for example.
+- **Namespace**: is the name of a **tome**, it is used to group **commands** and to be able to simply differentiate in a simple way two **commands** with the same name. For example `foo:hello` and `bar:hello`, in this case `foo` and `bar` would be two **namespaces** that both have a `hello` **command**.
 - **Command**: `@tome_command`
-- **Script**: files inside a `Tome`
+- **Script**: All files inside a `Tome`
 - **Vault**:
 - **...**:
 
@@ -40,7 +40,7 @@ List all the installed commands.
 
 Get information about a command.
 
-    tome info <command_name>          # See all the info abut <command_name>
+    tome info <command_name>    # See all the info abut <command_name>
 
 ### tome configuration
 
@@ -53,10 +53,26 @@ Manage the tome configuration.
 
 Run any test located by your script with pytest framework.
 
+Run any test located by your script with pytest framework.
+
+    tome test <test_to_run>     # Use '*' to launch all tests or 'namespace:command' to launch tests for a specific command.
+
 ### tome uninstall
 
 Uninstall scripts from various sources.
 
+    tome uninsall <source>      # Source can be a git repository, local file or folder or zip file (local or http).
+
 ### tome vault      
 
 Manage encrypted secret variables usable in any tome script.
+
+    tome vault create -n <vault_name>                                                           # Create a new vault with a new password
+    tome vault create -n <vault_name> -p <vault_password>                                       # Create a new vault with a new password without password prompt request
+    tome vault delete -n <vault_name>                                                           # Delete a vault
+    tome vault delete -n <vault_name> -p <vault_password>                                       # Delete a vault with a password without password prompt request
+    tome vault add-secret <secret_name> <secret_text> -vn <vault_name> -p <vault_password>      # Add a new secret 
+    tome vault add-secret <secret_name> <secret_text> -u                                        # Add a new secret or update if exists
+    tome vault add-secret <secret_name> <secret_text> --descriptopn <secret_descriptopn>        # Add a new secret with a description
+    tome vault delete-secret <secret_name> -vn <vault_name> -p <vault_password>                 # Delete a secret
+    tome vault list-secrets                                                                     # List available secrets id's and descriptions in all vaults
