@@ -14,7 +14,7 @@ from tome.command import CommandType, TomeCommand, TomeShellCommand
 from tome.errors import TomeException, exception_message_safe
 from tome.exit_codes import ERROR_GENERAL, ERROR_SIGTERM, ERROR_UNEXPECTED, SUCCESS, USER_CTRL_BREAK, USER_CTRL_C
 from tome.internal.cache import TomePaths
-from tome.internal.formatters.printers import print_command_docstrings
+from tome.internal.formatters.printers import print_grouped_commands
 from tome.internal.source import Source
 from tome.internal.utils.files import load
 
@@ -276,11 +276,13 @@ class Cli:
 
     def _output_help_cli(self):
         """
-        Prints a summary of all commands.
+        Prints a summary of all the built-in commands.
         """
         output = TomeOutput()
-        commands, filtered_namespaces = self._tome_api.list.filter_cli_commands("*", [CommandType.built_in])
-        print_command_docstrings(commands, filtered_namespaces)
+
+        built_in_commands = [cmd_info for cmd_info in self._commands.values() if cmd_info.type == CommandType.built_in]
+
+        print_grouped_commands({None: {None: built_in_commands}})
         output.info("\nType 'tome <command> -h' for help\n")
 
     def run(self, *args):

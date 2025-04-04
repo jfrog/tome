@@ -5,7 +5,7 @@ import textwrap
 import pytest
 
 from tome.internal.cache import TomePaths
-from tome.internal.utils.files import mkdir
+from tome.internal.utils.files import mkdir, rmdir
 
 from tests.utils.tools import TestClient
 
@@ -13,10 +13,10 @@ from tests.utils.tools import TestClient
 @pytest.fixture
 def client():
     client = TestClient()
-    # Editable commands
-    client.run("new mynamespace:mycommand")
-    client.run("install . -e")
+
     mkdir(os.path.join(client.current_folder, "greetings"))
+    mkdir(os.path.join(client.current_folder, "deployments"))
+
     tome_script = textwrap.dedent("""
     from tome.command import tome_command
 
@@ -36,10 +36,7 @@ def client():
         print(f"bye: {args.message}")
     """)
     client.save({os.path.join(client.current_folder, "greetings", "greetings-commands.py"): tome_script})
-    # Cache commands
-    tome_scripts_path = TomePaths(client.cache_folder).scripts_path
-    cache_commands_folder = os.path.join(tome_scripts_path, "all", "deployments")
-    mkdir(cache_commands_folder)
+
     tome_script = textwrap.dedent("""
     from tome.command import tome_command
 
@@ -58,8 +55,16 @@ def client():
         args = parser.parse_args(*args)
         print(f"Release: {args.message}")
     """)
-    client.save({os.path.join(cache_commands_folder, "deployments-commands.py"): tome_script})
+    client.save({os.path.join("deployments", "deployments-commands.py"): tome_script})
     client.run("install .")
+
+    rmdir(os.path.join(client.current_folder, "greetings"))
+    rmdir(os.path.join(client.current_folder, "deployments"))
+
+    # Editable commands
+    client.run("new mynamespace:mycommand")
+    client.run("install . -e")
+
     return client
 
 
@@ -156,3 +161,26 @@ def test_formats_json():
     }
 
     assert json.loads(client.out) == expected_output
+
+
+def test_grouped_output():
+    client = TestClient()
+    client.run(f"new space_l:my-l")
+    client.run("install .")
+
+    rmdir(os.path.join(client.current_folder, "space1"))
+
+    client.run(f"new space_e:mycommand-e")
+    client.run("install . -e")
+
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+    with client.chdir(git_repo_folder):
+        client.run("new space_g:mycommand-git")
+
+    client.init_git_repo(folder=git_repo_folder)
+
+    install_source = f"{os.path.join(client.current_folder, git_repo_folder)}/.git"
+    client.run(f"install '{install_source}'")
+
+    client.run("list")
+    print(client.out)

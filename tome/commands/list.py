@@ -3,18 +3,7 @@ from collections import defaultdict
 
 from tome.api.output import TomeOutput
 from tome.command import tome_command, CommandType
-from tome.internal.formatters.printers import print_command_docstrings
-
-
-def print_list_text(result):
-    output = TomeOutput(stdout=True)
-
-    commands, namespaces = result.get("list")
-    if commands and namespaces:
-        output.info(f"Results for '{result.get('pattern')}' pattern:")
-        print_command_docstrings(commands, namespaces)
-    else:
-        output.error(f"No matches were found for {result.get('pattern')} pattern.")
+from tome.internal.formatters.printers import print_grouped_commands
 
 
 def print_list_json(result):
@@ -41,7 +30,7 @@ def print_list_json(result):
     output.print_json(myjson)
 
 
-@tome_command(formatters={"text": print_list_text, "json": print_list_json})
+@tome_command(formatters={"text": print_grouped_commands, "json": print_list_json})
 def list(tome_api, parser, *args):
     """
     List all the commands that match a given pattern.
@@ -50,5 +39,8 @@ def list(tome_api, parser, *args):
     args = parser.parse_args(*args)
     # Adding a "*" at the end of each pattern if not given
     pattern = f"*{args.pattern}*" if args.pattern and "*" not in args.pattern else args.pattern or '*'
-    commands, namespaces = tome_api.list.filter_cli_commands(pattern, [CommandType.cache, CommandType.editable])
-    return {"list": (commands, namespaces), "pattern": pattern}
+
+    filtered_commands = tome_api.list.filter_commands(pattern, [CommandType.cache, CommandType.editable])
+    result = tome_api.list.group_commands(filtered_commands)
+
+    return result
