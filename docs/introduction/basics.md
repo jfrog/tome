@@ -7,8 +7,7 @@
 - **Namespace**: is the name of a **tome**, it is used to group **commands** and to be able to simply differentiate in a simple way two **commands** with the same name. For example `foo:hello` and `bar:hello`, in this case `foo` and `bar` would be two **namespaces** that both have a `hello` **command**.
 - **Command**: `@tome_command`
 - **Script**: All files inside a `Tome`
-- **Vault**:
-- **...**:
+- **Vault**: Local secure storage space for all those variables used in a **tome** that you don't want to expose. An authentication token or an encryption key are an example of things you might want to store in a tome vault.
 
 ## 📚 tome commands
 
