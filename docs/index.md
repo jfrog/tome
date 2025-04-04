@@ -23,7 +23,7 @@ Install `tome` using pip:
 $ pip install tome
 ```
 
-We highly recommend to [install into a virtual environment](./install.md).
+We highly recommend to [install into a virtual environment](./introduction/installing_tome.md).
 
 ### Using tome
 
@@ -125,7 +125,7 @@ $ tome list
 
 You can open the ``./greetings/hello.py`` file with the editor of your choice and start
 making changes. The changes will be inmediately applied when you are doing them because we
-have installed it as [editable](./editables.md).
+have installed it as `editable`.
 
 This command will create something simillar to this file structure:
 
@@ -168,7 +168,7 @@ def hello(tome_api, parser, *args):
        tome_output.info(format_message_hello(f"Tome command called with optional argument: {args.optional_argument}"))
 ```
 
-For more details on the tome commands syntax please check [reference section](./reference.md).
+For more details on the tome commands syntax please check [using tome section](./introduction/using_tome.md).
 
 ### Testing Scripts
 
@@ -190,10 +190,10 @@ $ tome test *
 
     ``tome test`` command uses [pytest](https://docs.pytest.org/en/stable/) under the hood, please install it by doing ``pip install pytest``
 
-For more information about testing your scripts with tome please check the [testing commands](./testing.md) section.
+For more information about testing your scripts with tome please check the [using tome section](./introduction/using_tome.md).
 
 ### Whats next?
 
-- **Introduction** How to install tome, create a new command or install an existing one. [*Start here if you’re new to Tome.*](/tome/introduction/using_tome)
+- **Introduction** How to install tome, create a new command or install an existing one. [*Start here if you’re new to Tome.*](./introduction/using_tome.md)
 - **Community** Tome’s community and how you can contribute.
 - **How-to**  Advanced tutorials.
