@@ -105,7 +105,7 @@ def test_empty_pattern():
     """
     client = TestClient()
     client.run("list")
-    assert "Error: No matches were found for * pattern." in client.out
+    assert "Error: No matches were found for '*' pattern." in client.out
 
 
 def test_list_failed_imported():
@@ -149,15 +149,18 @@ def test_list_failed_imported():
 
 def test_formats_json():
     client = TestClient()
-    client.run(f"new mynamespace:mycommand")
+    client.run("new mynamespace:mycommand")
     client.run("install .")
     client.run("list --format json")
 
+    origin_key = os.path.abspath(client.current_folder)
+    namespace_key = "mynamespace"
+    command_key = "mycommand"
+
     expected_output = {
-        "results": {
-            "mynamespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
-        },
-        "pattern": "*",
+        origin_key: {
+            namespace_key: {command_key: {"doc": "Description of the command.", "type": "cache", "error": None}}
+        }
     }
 
     assert json.loads(client.out) == expected_output
