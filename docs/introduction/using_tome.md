@@ -75,9 +75,9 @@ def read(tome_api, parser, *args):
 ## Use a tome vault to store your secret variables
 
 ```sh
-vault create -n intro -p my_password
-vault add-secret hello_text 'my secret hello world' --description 'my secret hello text' -nv intro -p my_password
-vault list-secrets
+tome vault create -n intro -p my_password
+tome vault add-secret hello_text 'my secret hello world' --description 'my secret hello text' -vn intro -p my_password
+tome vault list-secrets
 ```
 
 ```py
