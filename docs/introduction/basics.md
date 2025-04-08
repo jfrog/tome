@@ -52,8 +52,6 @@ Manage the tome configuration.
 
 Run any test located by your script with pytest framework.
 
-Run any test located by your script with pytest framework.
-
     tome test <test_to_run>     # Use '*' to launch all tests or 'namespace:command' to launch tests for a specific command.
 
 ### tome uninstall
