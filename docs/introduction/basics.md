@@ -39,7 +39,7 @@ List all the installed commands.
 
 Get information about a command.
 
-    tome info <command_name>    # See all the info abut <command_name>
+    tome info <command_name>    # See all the info about <command_name>
 
 ### tome configuration
 
