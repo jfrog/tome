@@ -123,11 +123,29 @@ def bye(tome_api, parser, *args):
     """
     Bye command.
     """
-    parser.add_argument('--optional-argument', help="optional bye user")
+    parser.add_argument('--user', help="optional bye user")
     args = parser.parse_args(*args)
     tome_output = TomeOutput()
-    bye_user = args.optional_argument or "everyone"
+    bye_user = args.user or "everyone"
     tome_output.info(format_message_hello(f"Bye {bye_user}!"))
+```
+
+```bash
+tome intro:say hello
+usage: tome say hello [-h] [-v] [-q] user
+tome say hello: error: the following arguments are required: user
+
+tome intro:say hello world
+Hello world!!!
+
+tome intro:say hello tome
+Hello tome!!!
+
+tome intro:say bye
+Bye everyone!!!
+
+tome intro:say bye --user tome
+Bye tome!!!
 ```
 
 !!! note

@@ -1,3 +1,75 @@
 # How to migrate a script to tome
 
 !!! Example "How to migrate shell and python scripts to tome."
+
+If you want to add your current scripts to tome you just need to add a single comment at top of the script with the `tome_description:` and store it as an others tome scripts in a folder to have a tome namespace.
+
+Imagine that you have following `tome_ping.sh` bash script.
+
+```bash
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <IP or URL>"
+    exit 1
+fi
+
+ping -c 4 "$1"
+```
+
+```bash
+% /bin/bash tome_ping.sh 8.8.8.8
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: icmp_seq=0 ttl=117 time=5.569 ms
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=9.094 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=4.945 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=5.347 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 4.945/6.239/9.094/1.664 ms
+```
+
+You just need to copy this file to an empty folder and add a description.
+
+```bash
+% tree
+└── my_script
+    └── network
+        └── tome_ping.sh
+```
+
+```bash
+#!/bin/bash
+# tome_description: Script to ping an IP address or URL. Arguments: <IP or URL>.
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <IP or URL>"
+    exit 1
+fi
+
+ping -c 4 "$1"
+```
+
+```bash
+% tome install my_script -e
+
+ % tome list
+Results for '*' pattern:
+
+🌐 network commands
+ network:ping (e)        Script to ping an IP address or URL. Arguments: <IP or URL>.
+```
+
+```bash
+% tome network:ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: icmp_seq=0 ttl=117 time=3.526 ms
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=3.878 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=4.606 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=6.007 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 3.526/4.504/6.007/0.951 ms
+```
