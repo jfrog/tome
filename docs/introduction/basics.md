@@ -58,7 +58,7 @@ Run any test located by your script with pytest framework.
 
 Uninstall scripts from various sources.
 
-    tome uninsall <source>      # Source can be a git repository, local file or folder or zip file (local or http).
+    tome uninstall <source>      # Source can be a git repository, local file or folder or zip file (local or http).
 
 ### tome vault      
 
