@@ -20,7 +20,7 @@ Install scripts from various sources. The source can be a git repository, local 
     tome install <source> --no-ssl                  # Do not verify SSL connections.
     tome install <source> --create-env              # Create a new virtual environment, if the command depends on any requirements.
     tome install <source> --force-requirements      # If the origin contains a python requirements file, install those requirements even if not running tome in a virtual environment.
-    tome install <source> --folder <folder>         # Specify a <folder<> within the source to install from.
+    tome install <source> --folder <folder>         # Specify a <folder> within the source to install from.
 
 ### Create a new command
 
