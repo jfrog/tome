@@ -313,15 +313,23 @@ def test_commands_from_script():
         echo "hello world"
         '''
     )
-    script_name = "tome_echo.sh"
-    if sys.platform == "win32":
-        script_name = "tome_echo.bat"
-    client.save({os.path.join(client.current_folder, "greetings", script_name): script})
+
+    client.save({os.path.join(client.current_folder, "greetings", "tome_echo.sh"): script})
+    client.save({os.path.join(client.current_folder, "greetings", "tome_echo.bat"): script})
+
     client.run("install .")
     client.run("list")
-    assert "greetings:echo" in client.out
-    client.run("greetings:echo --help")
+
+    assert "greetings:echo-bat" in client.out
+    assert "greetings:echo-sh" in client.out
+
+    command_name = "greetings:echo-bat" if sys.platform == "win32" else "greetings:echo-sh"
+
+    client.run(f"{command_name} --help")
+
     assert "Command to run the script: " in client.out
+
+    script_name = "tome_echo.bat" if sys.platform == "win32" else "tome_echo.sh"
     assert script_name in client.out
 
 

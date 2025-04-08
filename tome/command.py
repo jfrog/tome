@@ -205,7 +205,7 @@ class TomeShellCommand(BaseTomeCommand):
         super().__init__(method=method_wrapper)
 
         basename = os.path.basename(script)[len("tome_") :]
-        self._name = os.path.splitext(basename)[0].replace("_", "-")
+        self._name = basename.replace("_", "-").replace(".", "-")
         self.parser = TomeArgumentParser(
             description=self._doc, prog=f"tome {self._name}", formatter_class=SmartFormatter
         )
