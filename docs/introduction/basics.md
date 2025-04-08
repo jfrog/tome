@@ -70,6 +70,6 @@ Manage encrypted secret variables usable in any tome script.
     tome vault delete -n <vault_name> -p <vault_password>                                       # Delete a vault with a password without password prompt request
     tome vault add-secret <secret_name> <secret_text> -vn <vault_name> -p <vault_password>      # Add a new secret 
     tome vault add-secret <secret_name> <secret_text> -u                                        # Add a new secret or update if exists
-    tome vault add-secret <secret_name> <secret_text> --descriptopn <secret_descriptopn>        # Add a new secret with a description
+    tome vault add-secret <secret_name> <secret_text> --description <secret_description>        # Add a new secret with a description
     tome vault delete-secret <secret_name> -vn <vault_name> -p <vault_password>                 # Delete a secret
     tome vault list-secrets                                                                     # List available secrets id's and descriptions in all vaults
