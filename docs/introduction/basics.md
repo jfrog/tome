@@ -26,7 +26,7 @@ Install scripts from various sources. The source can be a git repository, local 
 
 Create a new example recipe and source files from a template.
 
-    tome new <namespace>:<command>      # Create a new example command named <command> insithe the folder <namespace>
+    tome new <namespace>:<command>      # Create a new example command named <command> inside the folder <namespace>
 
 ### See my installed commands
 
