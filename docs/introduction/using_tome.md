@@ -14,7 +14,7 @@ tome new intro:hello
 tome install . -e
 ```
 
-## Test your commnad namespace
+## Test your command namespace
 
 ```sh
 tome test intro
