@@ -36,7 +36,7 @@ Now you can start using **tome**
 
 ### install from source
 
-1. Clone the tome git repositore:
+1. Clone the tome git repository:
 
 ```
 git clone https://github.com/jfrog/tome.git
