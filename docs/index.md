@@ -8,10 +8,10 @@ A powerful script management tool.
 
 ## Key Features
 
-- Organize 📂: Effortlessly manage and structure your scripts for a clean, maintainable codebase.
-- Collaborate 🤝: Seamlessly share and collaborate on scripts with your team to enhance productivity.
-- Test 🧪: Ensure your scripts' reliability and performance with comprehensive testing tools.
-- Secure 🔒: Manage and protect your passwords using the tome vaults.
+- 📂 Organize: Effortlessly manage and structure your scripts for a clean, maintainable codebase.
+- 🤝 Collaborate: Seamlessly share and collaborate on scripts with your team to enhance productivity.
+- 🧪 Test: Ensure your scripts' reliability and performance with comprehensive testing tools.
+- 🔒 Secure: Manage and protect your passwords using the tome vaults.
 
 Install `tome` using pip:
 
@@ -19,7 +19,7 @@ Install `tome` using pip:
 $ pip install tomescripts
 ```
 
-We highly recommend to [install into a virtual environment](./introduction/installing_tome.md).
+We highly recommend to [install into a virtual environment](installing_tome.md#pip-package-recommended).
 
 ## Installing scripts
 
@@ -43,21 +43,17 @@ To list all installed scripts:
 
 ```bash
 $ tome list
+Results for '*' pattern:
 
-🚀 ci commands
- ci:check-pipeline-status       Check the status of a pipeline in the CI.
- ci:view-logs                   View build or deploy logs from the CI system.
+🌐 network commands
+ network:ping            Script to ping an IP address or URL. Arguments: <IP or URL>.
+ network:traceroute      Script to perform a traceroute to an IP address or URL. Arguments: <IP or URL>.
 
-☸️  k8s commands
- k8s:deploy                     Deploy a Kubernetes resource using a manifest.
- k8s:get-pods                   List all running pods in a Kubernetes cluster.
+🖥️  system commands
+ system:monitor          Monitor system usage including CPU, memory, and disk.
 
-📡 server commands
- server:check-health            Perform a health check on a server.
- server:log-watch               Stream live logs from a server.
- server:restart                 Restart a specific server instance.
- server:scale-down              Decrease the number of server instances.
- server:scale-up                Increase the number of server instances.
+📝 todo commands
+ todo:tasks              Manage your to-do list tasks.
 ```
 
 ## Running a Script
@@ -65,21 +61,8 @@ $ tome list
 Execute a script invoking it with ``<namespace>:<command>`` like:
 
 ```bash
-$ tome ci:check-pipeline-status --pipeline-id 427
-
-🚀 Checking the status of pipeline #427...
-Fetching pipeline details...
-Pipeline ID: 427
-Project: web-app-deployment
-Status: Running
-Started at: 2025-02-03 18:04:43 UTC
-Duration: 11 minutes
-📄 View pipeline details
-📝 Latest commit: Fix login issue (commit hash: a1b2c3d4)
-[2025-02-03 18:05:43.563673] - Cloning repository...
-[2025-02-03 18:06:58.563673] - Running tests...
-[2025-02-03 18:10:13.563673] - Building Docker image...
-Pipeline still running...
+$ tome system:monitor --cpu 
+CPU Usage: 3.6%
 ```
 
 ## Creating a New Script

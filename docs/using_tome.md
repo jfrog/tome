@@ -50,6 +50,8 @@ tome test intro
 
 ### Edit your command
 
+If you open `intro/hello.py`, you will see the following script.
+
 ```py
 import os
 
@@ -77,6 +79,55 @@ def hello(tome_api, parser, *args):
     tome_output.info(format_message_hello(f"Tome command called with positional argument: {args.positional_argument}"))
     if args.optional_argument:
        tome_output.info(format_message_hello(f"Tome command called with optional argument: {args.optional_argument}"))
+```
+
+Any python tome command has some common elements:
+- Use [argparse](https://docs.python.org/3/library/argparse.html) as cli parameter parser.
+- You need to defane a `@tome_command()` decorator in any commnad.
+    - If you want to create a subcommand, you need to define the previous command in the decorator.
+- Is recommended to use the `TomeOutput()` to write any message.
+
+Lets try to add a new command and a subcommand.
+
+```py
+import os
+
+from tome.command import tome_command
+from tome.api.output import TomeOutput
+
+def format_message_hello(message):
+    """
+    Add exclamations for a message
+    """
+    return message + "!!!"
+
+@tome_command()
+def say(tome_api, parser, *args):
+    """
+    Say something.
+    """
+
+@tome_command(parent=say)
+def hello(tome_api, parser, *args):
+    """
+    Hello commnad.
+    """
+    parser.add_argument('user', help="hello user")
+    args = parser.parse_args(*args)
+    tome_output = TomeOutput()
+    tome_output.info(format_message_hello(f"Hello {args.user}!"))
+
+
+@tome_command(parent=say)
+def bye(tome_api, parser, *args):
+    """
+    Bye command.
+    """
+    parser.add_argument('--optional-argument', help="optional bye user")
+    args = parser.parse_args(*args)
+    tome_output = TomeOutput()
+    bye_user = args.optional_argument or "everyone"
+    tome_output.info(format_message_hello(f"Bye {bye_user}!"))
 ```
 
 !!! note
