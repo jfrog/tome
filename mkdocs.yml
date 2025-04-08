@@ -1,7 +1,7 @@
 site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
 nav:
-  - Wellcome: index.md
+  - Welcome: index.md
   - Introducction:
     - Tome's basics: introduction/basics.md
     - Installing Tome: introduction/installing_tome.md
