@@ -30,7 +30,7 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 round-trip min/avg/max/stddev = 4.945/6.239/9.094/1.664 ms
 ```
 
-You just need to copy this file to an empty folder and add a description.
+You just need to copy this file to an empty folder and add a `tome_description`.
 
 ```bash
 % tree
@@ -51,9 +51,15 @@ fi
 ping -c 4 "$1"
 ```
 
+Install your command.
+
 ```bash
 % tome install my_script -e
+```
 
+Now, you can use your command like an other tome commands.
+
+```bash
  % tome list
 Results for '*' pattern:
 
