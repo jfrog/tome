@@ -20,7 +20,7 @@ details.
 Install `tome` using pip:
 
 ```bash
-$ pip install tome
+$ pip install tomescripts
 ```
 
 We highly recommend to [install into a virtual environment](./introduction/installing_tome.md).
