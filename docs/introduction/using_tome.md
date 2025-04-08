@@ -5,7 +5,7 @@
 - Python 3.9
 - tome installed
 
-## Create and isntall you first basic command
+## Create and install your first basic command
 
 ```
 mkdir tome-introduction
