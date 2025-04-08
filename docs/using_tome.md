@@ -22,7 +22,7 @@
 
 ### Create and install your first basic command
 
-```
+```bash
 mkdir tome-introduction
 cd tome-introduction
 tome new intro:hello
@@ -38,13 +38,13 @@ This command will create something simillar to this file structure:
         └── test_hello.py
 ```
 
-```
+```bash
 tome install . -e
 ```
 
 ### Test your command namespace
 
-```sh
+```bash
 tome test intro
 ```
 
@@ -84,6 +84,6 @@ def hello(tome_api, parser, *args):
 
 ### Uninstall your command
 
-```sh
+```bash
 tome uninstall .
 ```
