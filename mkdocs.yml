@@ -1,15 +1,17 @@
 site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
 nav:
-  - Welcome: index.md
-  - Introduction:
-    - Tome's basics: introduction/basics.md
-    - Installing Tome: introduction/installing_tome.md
-    - Using Tome: introduction/using_tome.md
-  - Community: community.md
+  - Quickstart: index.md
+  - Installing Tome: installing_tome.md
+  - Using Tome: using_tome.md
   - How to:
-    - How to migrate a script to tome: how-to/script_to_tome.md
-    - How to store and reuse a secret value: how-to/secrets.md
+    - Migrate a script to tome: how-to/script_to_tome.md
+  - features:
+    - Store files locally: features/local_store.md
+    - Store your secret variables: features/vault.md
+  - Tome commands reference: tome_commands.md
+  - Community: community.md
+  - "LICENSE: Apache License 2.0": https://github.com/jfrog/tome/blob/main/LICENSE
 
 theme:
   name: material

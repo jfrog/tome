@@ -1,5 +1,9 @@
 # Installing Tome
 
+!!! Example "How to install tome"
+    - pip install tomescript.
+    - other installation options.
+
 ## pip package *(recommended)*
 
 The recommended way to install **tome** is using `pip` within a virtual environment. This ensures that your project dependencies are isolated and managed effectively:
@@ -65,5 +69,5 @@ python -m venv myenv
 4. Install **tome** using `pip`:
 
 ```bash
-pip install <tome/git/repository/local/path>
+pip install -e <tome/git/repository/local/path>
 ```

@@ -1,5 +1,7 @@
 # How to Contribute
 
+!!! Example "contributors guidelines"
+
 ## Setup
 
 If you wish to contribute or modify **tome**, follow these steps to clone the repository

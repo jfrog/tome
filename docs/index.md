@@ -1,5 +1,9 @@
 # > tome 📖
 
+!!! Example "Tome index section. what is tome and a super simple example"
+    - key features.
+    - super simple example.
+
 A powerful script management tool.
 
 ## Key Features
@@ -9,14 +13,6 @@ A powerful script management tool.
 - Test 🧪: Ensure your scripts' reliability and performance with comprehensive testing tools.
 - Secure 🔒: Manage and protect your passwords using the tome vaults.
 
-## License
-
-Tome is licensed under the [Apache License
-2.0](https://github.com/jfrog/tome/blob/main/LICENSE). See the LICENSE file for full
-details.
-
-## Quickstart Guide
-
 Install `tome` using pip:
 
 ```bash
@@ -25,9 +21,7 @@ $ pip install tomescripts
 
 We highly recommend to [install into a virtual environment](./introduction/installing_tome.md).
 
-### Using tome
-
-#### Installing scripts
+## Installing scripts
 
 You can install scripts from various sources like a git repository, local file or folder,
 zip file (local or http), or requirements file.
@@ -38,12 +32,12 @@ For example, you can install the examples from the **tome** repository by doing:
 $ tome install https://github.com/jfrog/tome.git --folder=examples
 ```
 
-!!! note
+!!! info
 
     Use the ``--folder`` argument when you have your scripts under a subfolder instead the root of the repository
 
 
-#### Listing Available Scripts
+## Listing Available Scripts
 
 To list all installed scripts:
 
@@ -66,7 +60,7 @@ $ tome list
  server:scale-up                Increase the number of server instances.
 ```
 
-#### Running a Script
+## Running a Script
 
 Execute a script invoking it with ``<namespace>:<command>`` like:
 
@@ -88,9 +82,7 @@ Duration: 11 minutes
 Pipeline still running...
 ```
 
-### Creating and Managing Scripts
-
-#### Creating a New Script
+## Creating a New Script
 
 Create a new script with a predefined structure as a starting point using:
 
@@ -127,50 +119,10 @@ You can open the ``./greetings/hello.py`` file with the editor of your choice an
 making changes. The changes will be inmediately applied when you are doing them because we
 have installed it as `editable`.
 
-This command will create something simillar to this file structure:
+!!! info
+    For more details on the tome commands syntax inside ``hello.py`` please check [using tome section](./using_tome.md#edit-your-command).
 
-```bash
-.
-└── greetings
-    ├── hello.py
-    └── tests
-        └── test_hello.py
-```
-
-Let's check the ``hello.py`` file:
-
-```python
-import os
-
-from tome.command import tome_command
-from tome.api.output import TomeOutput
-
-def format_message_hello(message):
-    """
-    Add exclamations for a message
-    """
-    return message + "!!!"
-
-
-@tome_command()
-def hello(tome_api, parser, *args):
-    """
-    Description of the command.
-    """
-    parser.add_argument('positional_argument', help="Placeholder for a positional argument")
-    parser.add_argument('--optional-argument', help="Placeholder for an optional argument")
-    args = parser.parse_args(*args)
-
-    # Add your command implementation here
-    tome_output = TomeOutput()
-    tome_output.info(format_message_hello(f"Tome command called with positional argument: {args.positional_argument}"))
-    if args.optional_argument:
-       tome_output.info(format_message_hello(f"Tome command called with optional argument: {args.optional_argument}"))
-```
-
-For more details on the tome commands syntax please check [using tome section](./introduction/using_tome.md).
-
-### Testing Scripts
+## Testing Scripts
 
 Tome supports testing using the ``tome test`` command. If you check the files that tome
 new created you will see a tests folder with a ``test_hello.py`` file inside. To run those
@@ -183,17 +135,9 @@ $ tome test greetings:hello
 To run tests over all installed commands:
 
 ```bash
-$ tome test *
+$ tome test "*"
 ```
 
-!!! note
-
-    ``tome test`` command uses [pytest](https://docs.pytest.org/en/stable/) under the hood, please install it by doing ``pip install pytest``
-
-For more information about testing your scripts with tome please check the [using tome section](./introduction/using_tome.md).
-
-### Whats next?
-
-- **Introduction** How to install tome, create a new command or install an existing one. [*Start here if you’re new to Tome.*](./introduction/using_tome.md)
-- **Community** Tome’s community and how you can contribute.
-- **How-to**  Advanced tutorials.
+!!! info
+    ``tome test`` command uses [pytest](https://docs.pytest.org/en/stable/) under the hood, please install it by doing ``pip install pytest``.
+    For more information about testing your scripts with tome please check the [using tome section](./using_tome.md#test-your-command-namespace).

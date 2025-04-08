@@ -1,1 +1,0 @@
-# How to store and reuse a secret value

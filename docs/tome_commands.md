@@ -1,17 +1,8 @@
-# 📖 Tome's basics
+# 📚 Tome commands
 
-## 📝 Basic concepts
+!!! Example "tome commands list and reference"
 
-- **Tome**: It is the collection of **scripts** that have a common **origin** (a folder, a git repository, ...).
-- **Origin**: site where a **tome** comes from, it can be a git repository, a local folder or a zip file for example.
-- **Namespace**: is the name of a **tome**, it is used to group **commands** and to be able to simply differentiate in a simple way two **commands** with the same name. For example `foo:hello` and `bar:hello`, in this case `foo` and `bar` would be two **namespaces** that both have a `hello` **command**.
-- **Command**: `@tome_command`
-- **Script**: All files inside a `Tome`
-- **Vault**: Local secure storage space for all those variables used in a **tome** that you don't want to expose. An authentication token or an encryption key are an example of things you might want to store in a tome vault.
-
-## 📚 tome commands
-
-### Install a new command script
+## Install a new command script
 
 Install scripts from various sources. The source can be a git repository, local file or folder, zip file (local or http), or requirements file.
 
@@ -22,45 +13,45 @@ Install scripts from various sources. The source can be a git repository, local 
     tome install <source> --force-requirements      # If the origin contains a python requirements file, install those requirements even if not running tome in a virtual environment.
     tome install <source> --folder <folder>         # Specify a <folder> within the source to install from.
 
-### Create a new command
+## Create a new command
 
 Create a new example recipe and source files from a template.
 
     tome new <namespace>:<command>      # Create a new example command named <command> inside the folder <namespace>
 
-### See my installed commands
+## See my installed commands
 
 List all the installed commands.
 
     tome list               # List all the commands
     tome list <pattern>     # List all the commands that match a given pattern.
 
-### See a command information
+## See a command information
 
 Get information about a command.
 
     tome info <command_name>    # See all the info about <command_name>
 
-### tome configuration
+## tome configuration
 
 Manage the tome configuration.
 
     tome config home         # print the current home folder
     tome config store        # print the current store folder
 
-### tome test          
+## tome test          
 
 Run any test located by your script with pytest framework.
 
     tome test <test_to_run>     # Use '*' to launch all tests or 'namespace:command' to launch tests for a specific command.
 
-### tome uninstall
+## tome uninstall
 
 Uninstall scripts from various sources.
 
     tome uninstall <source>      # Source can be a git repository, local file or folder or zip file (local or http).
 
-### tome vault      
+## tome vault      
 
 Manage encrypted secret variables usable in any tome script.
 
