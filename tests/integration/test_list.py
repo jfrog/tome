@@ -168,22 +168,37 @@ def test_formats_json():
 
 def test_grouped_output():
     client = TestClient()
-    client.run(f"new space_l:my-l")
+    client.run(f"new namespace1:mycommand1")
     client.run("install .")
 
-    rmdir(os.path.join(client.current_folder, "space1"))
+    rmdir(os.path.join(client.current_folder, "namespace1"))
 
-    client.run(f"new space_e:mycommand-e")
-    client.run("install . -e")
+    with client.chdir(os.path.join(client.current_folder, "editable-commands")):
+        client.run(f"new namespace2:mycommand-editable")
+        client.run("install . -e")
 
     git_repo_folder = os.path.join(client.current_folder, "git_repo")
     with client.chdir(git_repo_folder):
-        client.run("new space_g:mycommand-git")
+        client.run("new namespace3:mycommand-git")
 
     client.init_git_repo(folder=git_repo_folder)
 
     install_source = f"{os.path.join(client.current_folder, git_repo_folder)}/.git"
     client.run(f"install '{install_source}'")
 
-    client.run("list")
-    print(client.out)
+    expected = {
+        os.path.abspath(client.current_folder): {
+            "namespace1": {"mycommand1": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        },
+        os.path.abspath(os.path.join(client.current_folder, "git_repo", ".git")): {
+            "namespace3": {"mycommand-git": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        },
+        os.path.abspath(os.path.join(client.current_folder, "editable-commands")): {
+            "namespace2": {
+                "mycommand-editable": {"doc": "Description of the command.", "type": "editable", "error": None}
+            }
+        },
+    }
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
