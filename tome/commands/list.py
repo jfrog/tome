@@ -40,6 +40,6 @@ def list(tome_api, parser, *args):
     result = tome_api.list.group_commands(filtered_commands)
 
     if not result:
-        TomeOutput().error(f"No matches were found for '{pattern}' pattern.")
+        TomeOutput().info(f"No matches were found for '{pattern}' pattern.")
 
     return result

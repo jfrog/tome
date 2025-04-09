@@ -106,7 +106,7 @@ def test_empty_pattern():
     """
     client = TestClient()
     client.run("list")
-    assert "Error: No matches were found for '*' pattern." in client.out
+    assert "No matches were found for '*' pattern." in client.out
 
 
 def test_list_failed_imported():
