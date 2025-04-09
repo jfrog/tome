@@ -17,7 +17,7 @@ class ListApi:
         Filter commands based on a search pattern and allowed command types.
 
         :param pattern: The search pattern to filter command names and documentation.
-        :param types: An optional iterable of CommandType values. If not provided, all command types are considered.
+        :param types: List CommandType values. If not provided, all command types are considered.
         :return: A list of CommandInfo objects that match the search pattern.
         """
         from tome.cli import Cli
