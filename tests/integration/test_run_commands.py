@@ -19,7 +19,7 @@ def test_not_run_shell_when_help():
         script_type = "bat"
     client.run(f"new greetings:hello --type={script_type}")
     client.run("install .")
-    client.run("greetings:hello --help")
+    client.run(f"greetings:hello-{script_type} --help")
     # The shell scripts were being executed by just calling to tome command --help
     assert "Hello, world!" not in client.out
     assert "Description of the command." in client.out
@@ -42,6 +42,7 @@ def test_run_shell_with_args():
         echo Second arg: %2
         '''
     )
+
     if sys.platform == "win32":
         script_name = "tome_echo.bat"
         client.save({os.path.join(client.current_folder, "greetings", script_name): script_bat})
@@ -49,7 +50,9 @@ def test_run_shell_with_args():
         script_name = "tome_echo.sh"
         client.save({os.path.join(client.current_folder, "greetings", script_name): script_sh})
 
+    script_type = "bat" if sys.platform == "win32" else "sh"
+
     client.run("install .")
-    client.run("greetings:echo value1 value2")
+    client.run(f"greetings:echo-{script_type} value1 value2")
     assert "First arg: value1" in str(client.stdout)
     assert "Second arg: value2" in str(client.stdout)

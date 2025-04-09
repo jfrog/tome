@@ -202,3 +202,30 @@ def test_grouped_output():
 
     client.run("list --format=json")
     assert json.loads(client.out) == expected
+
+
+# def test_overlapped_commands():
+#     client = TestClient()
+#
+#     with client.chdir(os.path.join(client.current_folder, "origin1")):
+#         client.run(f"new namespace:mycommand")
+#         client.run("install .")
+#
+#     with client.chdir(os.path.join(client.current_folder, "origin2")):
+#         client.run(f"new namespace:mycommand")
+#         client.run("install .")
+#
+#     expected = {
+#         os.path.abspath(os.path.join(client.current_folder, "origin1")): {
+#             "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
+#         },
+#         os.path.abspath(os.path.join(client.current_folder, "origin2")): {
+#             "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
+#         },
+#     }
+#
+#     client.run("list --format=json")
+#     assert json.loads(client.out) == expected
+#
+#     client.run("namespace:mycommand")
+#     print(client.out)
