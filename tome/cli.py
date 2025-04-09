@@ -144,7 +144,19 @@ class Cli:
         """Load tome scripts installed in the cache."""
 
         tome_scripts_path = TomePaths(self._tome_api.cache_folder).scripts_path
-        for origin in os.listdir(tome_scripts_path):
+
+        # FIXME: should we error out if commands overlap? should we allow multiple commands with the same name?
+        # we need to sort the origins by modification time, so the most recent ones are loaded first
+        # then, when two commands collide because they have the same name the first one that
+        # was installed is the one that is kept
+
+        origins = [
+            origin for origin in os.listdir(tome_scripts_path) if os.path.isdir(os.path.join(tome_scripts_path, origin))
+        ]
+
+        origins.sort(key=lambda origin: os.path.getmtime(os.path.join(tome_scripts_path, origin)), reverse=True)
+
+        for origin in origins:
             origin_folder = os.path.join(tome_scripts_path, origin)
             if not os.path.isdir(origin_folder):
                 continue
@@ -233,29 +245,25 @@ class Cli:
     def _register_command(self, command, package, module_name=None, base_folder=None, command_type=None, source=None):
         fullname = f"{package}:{command.name}" if package else command.name
         command.namespace = package or ""
-        if command.doc:
-            command.type = command_type  # setting the command_type
-            command.base_folder = base_folder
-            command.module_name = module_name
-            command_info = CommandInfo(
-                command.namespace,
-                command.name,
-                command.doc,
-                command_type,
-                module_name,
-                base_folder,
-                command,
-                source=source,
-            )
-            if base_folder:
-                venv_path = os.path.join(base_folder, ".tome_venv")
-                if os.path.exists(venv_path):
-                    command_info.env_path = venv_path
+        command.type = command_type  # setting the command_type
+        command.base_folder = base_folder
+        command.module_name = module_name
+        command_info = CommandInfo(
+            command.namespace,
+            command.name,
+            command.doc,
+            command_type,
+            module_name,
+            base_folder,
+            command,
+            source=source,
+        )
+        if base_folder:
+            venv_path = os.path.join(base_folder, ".tome_venv")
+            if os.path.exists(venv_path):
+                command_info.env_path = venv_path
 
-            self._commands[fullname] = command_info
-        else:
-            # do we want to error, maybe just a warning with the path to the scripts
-            raise TomeException(f"Please, add a docstring for the '{fullname}' command")
+        self._commands[fullname] = command_info
 
     def _print_similar(self, command):
         """

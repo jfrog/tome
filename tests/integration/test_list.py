@@ -1,6 +1,7 @@
 import json
 import os
 import textwrap
+from time import sleep
 
 import pytest
 
@@ -204,28 +205,55 @@ def test_grouped_output():
     assert json.loads(client.out) == expected
 
 
-# def test_overlapped_commands():
-#     client = TestClient()
-#
-#     with client.chdir(os.path.join(client.current_folder, "origin1")):
-#         client.run(f"new namespace:mycommand")
-#         client.run("install .")
-#
-#     with client.chdir(os.path.join(client.current_folder, "origin2")):
-#         client.run(f"new namespace:mycommand")
-#         client.run("install .")
-#
-#     expected = {
-#         os.path.abspath(os.path.join(client.current_folder, "origin1")): {
-#             "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
-#         },
-#         os.path.abspath(os.path.join(client.current_folder, "origin2")): {
-#             "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
-#         },
-#     }
-#
-#     client.run("list --format=json")
-#     assert json.loads(client.out) == expected
-#
-#     client.run("namespace:mycommand")
-#     print(client.out)
+def test_overlapped_commands():
+    client = TestClient()
+
+    # FIXME: right now if command names overlap the first one that was installed will be the one used
+    # should we error out if commands overlap? should we allow multiple commands with the same name?
+    # let's wait for the user to ask for this feature
+
+    with client.chdir(os.path.join(client.current_folder, "someorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    sleep(0.1)
+    with client.chdir(os.path.join(client.current_folder, "anotherorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    expected = {
+        os.path.abspath(os.path.join(client.current_folder, "someorigin")): {
+            "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        }
+    }
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+    sleep(0.1)
+    with client.chdir(os.path.join(client.current_folder, "yetanotherorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+    sleep(0.1)
+    with client.chdir(os.path.join(client.current_folder, "lastorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+    # let's uninstall the first one, then the next should be used
+
+    expected = {
+        os.path.abspath(os.path.join(client.current_folder, "anotherorigin")): {
+            "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        }
+    }
+
+    client.run(f"uninstall '{os.path.abspath(os.path.join(client.current_folder, 'someorigin'))}'")
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
