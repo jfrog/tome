@@ -2,9 +2,12 @@
 
 !!! Example "How to migrate shell and python scripts to tome."
 
-If you want to add your current scripts to tome you just need to add a single comment at top of the script with the `tome_description:` and store it as an others tome scripts in a folder to have a tome namespace.
+If you want to add your current scripts to tome you need to: 
+- Add the `tome_` prefix name only to the scripts that you want to use as tome command.
+- Add a single comment at top of the script with the `tome_description:`.
+- Store it as an others tome scripts in a folder to have a tome namespace.
 
-Imagine that you have following `tome_ping.sh` bash script.
+Imagine that you have following `ping.sh` bash script and you want to use it as `tome network:ping`.
 
 ```bash
 #!/bin/bash
@@ -18,7 +21,7 @@ ping -c 4 "$1"
 ```
 
 ```bash
-% /bin/bash tome_ping.sh 8.8.8.8
+% /bin/bash ping.sh 8.8.8.8
 PING 8.8.8.8 (8.8.8.8): 56 data bytes
 64 bytes from 8.8.8.8: icmp_seq=0 ttl=117 time=5.569 ms
 64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=9.094 ms
@@ -30,7 +33,7 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 round-trip min/avg/max/stddev = 4.945/6.239/9.094/1.664 ms
 ```
 
-You just need to copy this file to an empty folder and add a `tome_description`.
+First of all, copy this file to an empty folder, add the `tome_` prefix and a `tome_description`.
 
 ```bash
 % tree
@@ -51,13 +54,13 @@ fi
 ping -c 4 "$1"
 ```
 
-Install your command.
+Install your command as editable.
 
 ```bash
 % tome install my_script -e
 ```
 
-Now, you can use your command like an other tome commands.
+Now, you can use your command like an other tome commands and edit it as usual.
 
 ```bash
  % tome list
