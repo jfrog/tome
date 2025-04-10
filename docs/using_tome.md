@@ -130,20 +130,78 @@ def bye(tome_api, parser, *args):
     tome_output.info(format_message_hello(f"Bye {bye_user}!"))
 ```
 
+As we have installed our commands as editable, we don't need to do anything to update them in tome. Let's see how to run them.
+
+We can list our commands using the `tome list` command.
+
+```bash
+tome list intro
+Results for '*intro*' pattern:
+
+✨ intro commands
+ intro:say (e)  Say something.
+```
+
+If we chek the `intro:say` help message, we can see all its sub-commands
+
+```bash
+tome intro:say --help
+usage: tome say [-h] [-v] [-q] {hello,bye} ...
+
+Say something.
+
+positional arguments:
+  {hello,bye}    sub-command help
+    hello        Hello commnad.
+    bye          Bye command.
+```
+
+```bash
+tome intro:say hello --help
+usage: tome say hello [-h] [-v] [-q] user
+
+positional arguments:
+  user           hello user
+```
+
+```bash
+tome intro:say bye --help  
+usage: tome say bye [-h] [-v] [-q] [--user USER]
+
+options:
+  ...
+  --user USER    optional bye user
+```
+
+Thanks to this information we know that:
+- `tome intro:say` has 2 subcommands.
+- `tome intro:say hello` has a positional and mandatory argument `user`
+- `tome intro:say` has an optional argument `user` and is defined using the key `--user`.
+
+Now, we have all the information to use our commands, to know what they need and what to do in case of error.
+
 ```bash
 tome intro:say hello
 usage: tome say hello [-h] [-v] [-q] user
 tome say hello: error: the following arguments are required: user
+```
 
+```bash
 tome intro:say hello world
 Hello world!!!
+```
 
+```bash
 tome intro:say hello tome
 Hello tome!!!
+```
 
+```bash
 tome intro:say bye
 Bye everyone!!!
+```
 
+```bash
 tome intro:say bye --user tome
 Bye tome!!!
 ```
@@ -156,3 +214,9 @@ Bye tome!!!
 ```bash
 tome uninstall .
 ```
+
+### What's next?
+
+- Do you want to learn more about all the tome features? check the [features section](features.md) to see all our examples.
+- If you want to see more advanced example, check the [how to section](how_to.md).
+- Are you interested in collaborating in the development of tome? check our [contribution guide](community.md)!
