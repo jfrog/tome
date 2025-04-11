@@ -33,8 +33,8 @@ def test_new_oneliner_script():
     client.run("install .")
     # testing this way because client.run wont return the things outputed by echo
     client.run("list")
-    assert "mynamespace:mycommand      Description of the command." in client.out
-    client.run("mynamespace:mycommand")  # it runs without failing
+    assert f"mynamespace:mycommand-{script_type}      Description of the command." in client.out
+    client.run(f"mynamespace:mycommand-{script_type}")  # it runs without failing
 
 
 def test_new_oneliner_script_other():
@@ -51,8 +51,8 @@ def test_new_oneliner_script_other():
     client.run("list")
     assert "otherscript" not in client.out
     assert "myshellscript" not in client.out
-    assert "mynamespace:mycommand      Description of the command." in client.out
-    client.run("mynamespace:mycommand")  # it runs without failing
+    assert f"mynamespace:mycommand-{script_type}      Description of the command." in client.out
+    client.run(f"mynamespace:mycommand-{script_type}")  # it runs without failing
 
 
 def test_new_with_hyphen():

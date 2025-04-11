@@ -1,11 +1,12 @@
 import json
 import os
 import textwrap
+from time import sleep
 
 import pytest
 
 from tome.internal.cache import TomePaths
-from tome.internal.utils.files import mkdir
+from tome.internal.utils.files import mkdir, rmdir
 
 from tests.utils.tools import TestClient
 
@@ -13,10 +14,10 @@ from tests.utils.tools import TestClient
 @pytest.fixture
 def client():
     client = TestClient()
-    # Editable commands
-    client.run("new mynamespace:mycommand")
-    client.run("install . -e")
+
     mkdir(os.path.join(client.current_folder, "greetings"))
+    mkdir(os.path.join(client.current_folder, "deployments"))
+
     tome_script = textwrap.dedent("""
     from tome.command import tome_command
 
@@ -36,10 +37,7 @@ def client():
         print(f"bye: {args.message}")
     """)
     client.save({os.path.join(client.current_folder, "greetings", "greetings-commands.py"): tome_script})
-    # Cache commands
-    tome_scripts_path = TomePaths(client.cache_folder).scripts_path
-    cache_commands_folder = os.path.join(tome_scripts_path, "all", "deployments")
-    mkdir(cache_commands_folder)
+
     tome_script = textwrap.dedent("""
     from tome.command import tome_command
 
@@ -58,8 +56,16 @@ def client():
         args = parser.parse_args(*args)
         print(f"Release: {args.message}")
     """)
-    client.save({os.path.join(cache_commands_folder, "deployments-commands.py"): tome_script})
+    client.save({os.path.join("deployments", "deployments-commands.py"): tome_script})
     client.run("install .")
+
+    rmdir(os.path.join(client.current_folder, "greetings"))
+    rmdir(os.path.join(client.current_folder, "deployments"))
+
+    # Editable commands
+    client.run("new mynamespace:mycommand")
+    client.run("install . -e")
+
     return client
 
 
@@ -100,7 +106,7 @@ def test_empty_pattern():
     """
     client = TestClient()
     client.run("list")
-    assert "Error: No matches were found for * pattern." in client.out
+    assert "No matches were found for '*' pattern." in client.out
 
 
 def test_list_failed_imported():
@@ -144,15 +150,110 @@ def test_list_failed_imported():
 
 def test_formats_json():
     client = TestClient()
-    client.run(f"new mynamespace:mycommand")
+    client.run("new mynamespace:mycommand")
     client.run("install .")
     client.run("list --format json")
 
+    origin_key = os.path.abspath(client.current_folder)
+    namespace_key = "mynamespace"
+    command_key = "mycommand"
+
     expected_output = {
-        "results": {
-            "mynamespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
-        },
-        "pattern": "*",
+        origin_key: {
+            namespace_key: {command_key: {"doc": "Description of the command.", "type": "cache", "error": None}}
+        }
     }
 
     assert json.loads(client.out) == expected_output
+
+
+def test_grouped_output():
+    client = TestClient()
+    client.run(f"new namespace1:mycommand1")
+    client.run("install .")
+
+    rmdir(os.path.join(client.current_folder, "namespace1"))
+
+    with client.chdir(os.path.join(client.current_folder, "editable-commands")):
+        client.run(f"new namespace2:mycommand-editable")
+        client.run("install . -e")
+
+    git_repo_folder = os.path.join(client.current_folder, "git_repo")
+    with client.chdir(git_repo_folder):
+        client.run("new namespace3:mycommand-git")
+
+    client.init_git_repo(folder=git_repo_folder)
+
+    install_source = f"{os.path.join(client.current_folder, git_repo_folder)}/.git"
+    client.run(f"install '{install_source}'")
+
+    expected = {
+        os.path.abspath(client.current_folder): {
+            "namespace1": {"mycommand1": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        },
+        os.path.abspath(os.path.join(client.current_folder, "git_repo", ".git")): {
+            "namespace3": {"mycommand-git": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        },
+        os.path.abspath(os.path.join(client.current_folder, "editable-commands")): {
+            "namespace2": {
+                "mycommand-editable": {"doc": "Description of the command.", "type": "editable", "error": None}
+            }
+        },
+    }
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+
+def test_overlapped_commands():
+    client = TestClient()
+
+    # FIXME: right now if command names overlap the first one that was installed will be the one used
+    # should we error out if commands overlap? should we allow multiple commands with the same name?
+    # let's wait for the user to ask for this feature
+
+    with client.chdir(os.path.join(client.current_folder, "someorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    sleep(0.1)
+    with client.chdir(os.path.join(client.current_folder, "anotherorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    expected = {
+        os.path.abspath(os.path.join(client.current_folder, "someorigin")): {
+            "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        }
+    }
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+    sleep(0.1)
+    with client.chdir(os.path.join(client.current_folder, "yetanotherorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+    sleep(0.1)
+    with client.chdir(os.path.join(client.current_folder, "lastorigin")):
+        client.run(f"new namespace:mycommand")
+        client.run("install .")
+
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected
+
+    # let's uninstall the first one, then the next should be used
+
+    expected = {
+        os.path.abspath(os.path.join(client.current_folder, "anotherorigin")): {
+            "namespace": {"mycommand": {"doc": "Description of the command.", "type": "cache", "error": None}}
+        }
+    }
+
+    client.run(f"uninstall '{os.path.abspath(os.path.join(client.current_folder, 'someorigin'))}'")
+    client.run("list --format=json")
+    assert json.loads(client.out) == expected

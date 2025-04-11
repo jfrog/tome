@@ -34,13 +34,15 @@ def print_info_json(result):
 @tome_command(formatters={"text": print_info_text, "json": print_info_json})
 def info(tome_api, parser, *args):
     """
-    Get information about a command.
+    Get information about a specific command.
     """
-    parser.add_argument("command_name", help="Name for the tome command.")
+    parser.add_argument("command_name", help="The full name of the command (e.g., namespace:command).")
     args = parser.parse_args(*args)
-    commands, _ = tome_api.list.filter_cli_commands(args.command_name, [CommandType.cache, CommandType.editable])
-    try:
-        command_info = commands[args.command_name]
-        return command_info.serialize()
-    except KeyError:
+
+    filtered_list = tome_api.list.filter_commands(args.command_name, [CommandType.cache, CommandType.editable])
+
+    if len(filtered_list) == 1:
+        found_command = filtered_list[0]
+        return found_command.serialize()
+    else:
         raise TomeException(f"Command '{args.command_name}' not found.")

@@ -1,5 +1,6 @@
 import fnmatch
 import re
+from collections import defaultdict
 
 from tome.command import CommandType
 from tome.errors import TomeException
@@ -11,57 +12,54 @@ class ListApi:
         self.tome_api = tome_api
         self.cli = None
 
-    # TODO: it'd be great if we could highlight the matches
-    def filter_cli_commands(self, pattern, include):
+    def filter_commands(self, pattern, types=None):
         """
-        Filtering all the available commands, and even help documentation. By default, built-in commands
-        are excluded.
+        Filter commands based on a search pattern and allowed command types.
 
-        :param pattern: pattern (str-like) to perform a search through the command names, and even the docs.
-        :param include: list of CommandType values to be included in the final list. If None, all the types
-                        will be included.
+        :param pattern: The search pattern to filter command names and documentation.
+        :param types: List CommandType values. If not provided, all command types are considered.
+        :return: A list of CommandInfo objects that match the search pattern.
         """
         from tome.cli import Cli
 
         if not isinstance(self.cli, Cli):
             raise TomeException(f"Expected 'Cli' type, got '{type(self.cli).__name__}'")
 
-        included = include or list(CommandType)
+        included_types = types or list(CommandType)
+        result = []
 
-        # Check for exact command match first
-        if pattern in self.cli.commands and self.cli.commands[pattern].type in included:
-            namespace, command = pattern.split(":")
-            return {pattern: self.cli.commands[pattern]}, {namespace: [pattern]}
+        commands = {
+            name: command_info
+            for name, command_info in self.cli.commands.items()
+            if command_info.type in included_types
+        }
 
-        # If no exact match, proceed with existing filtering logic
-        regex = re.compile(fnmatch.translate(pattern), flags=re.IGNORECASE)  # optimizing the match
-        filtered_commands = {}
-        filtered_namespaces = {}
+        # Exact match: if the pattern exactly matches a command's full name, return it immediately.
+        if pattern in commands:
+            return [commands[pattern]]
 
-        for namespace, commands in sorted(self.cli.namespaces.items()):
-            # First search in namespace name, if match all the commands are included
-            if regex.search(namespace):
-                matched_commands = commands
+        regex = re.compile(fnmatch.translate(pattern), flags=re.IGNORECASE)
+
+        for command_name, command_info in commands.items():
+            if regex.search(command_name):
+                result.append(command_info)
+            elif command_info.doc and regex.search(command_info.doc):
+                result.append(command_info)
+
+        return result
+
+    def group_commands(self, commands_list):
+        grouped_data = defaultdict(lambda: defaultdict(list))
+
+        if not commands_list:
+            return {}
+
+        for command_info in commands_list:
+            if command_info.type == CommandType.built_in:
+                source_uri = None
             else:
-                # Second search in command names
-                matched_commands = [name for name in commands if regex.search(name)]
-                # Third search in command docstrings
-                matched_commands += [
-                    name
-                    for name in commands
-                    if self.cli.commands[name].doc and regex.search(self.cli.commands[name].doc)
-                ]
+                source_uri = command_info.source.uri if command_info.source else command_info.base_folder
 
-            # Filter commands by their type
-            filtered_commands_in_namespace = [
-                name
-                for name in matched_commands
-                if self.cli.commands.get(name) and self.cli.commands.get(name).type in included
-            ]
+            grouped_data[source_uri][command_info.namespace].append(command_info)
 
-            if filtered_commands_in_namespace:
-                filtered_namespaces[namespace] = filtered_commands_in_namespace
-                for name in filtered_commands_in_namespace:
-                    filtered_commands[name] = self.cli.commands[name]
-
-        return filtered_commands, filtered_namespaces
+        return grouped_data
