@@ -214,5 +214,5 @@ tome uninstall .
 ### What's next?
 
 - Do you want to learn more about all the tome features? check the [features section](features.md) to see all our examples.
-- If you want to see more advanced example, check the [how to section](how_to.md).
+- If you want to see more advanced example, check the [how to section](how-to.md).
 - Are you interested in collaborating in the development of tome? check our [contribution guide](community.md)!
