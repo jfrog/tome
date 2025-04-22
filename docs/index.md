@@ -1,17 +1,13 @@
 # > tome 📖
 
-!!! Example "Tome index section. what is tome and a super simple example"
-    - key features.
-    - super simple example.
-
 A powerful script management tool.
 
-## Key Features
+!!! Example "Key Features"
 
-- 📂 Organize: Effortlessly manage and structure your scripts for a clean, maintainable codebase.
-- 🤝 Collaborate: Seamlessly share and collaborate on scripts with your team to enhance productivity.
-- 🧪 Test: Ensure your scripts' reliability and performance with comprehensive testing tools.
-- 🔒 Secure: Manage and protect your passwords using the tome vaults.
+    - 📂 Organize: Effortlessly manage and structure your scripts for a clean, maintainable codebase.
+    - 🤝 Collaborate: Seamlessly share and collaborate on scripts with your team to enhance productivity.
+    - 🧪 Test: Ensure your scripts' reliability and performance with comprehensive testing tools.
+    - 🔒 Secure: Manage and protect your passwords using the tome vaults.
 
 Install `tome` using pip:
 

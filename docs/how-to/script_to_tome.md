@@ -1,8 +1,7 @@
 # How to migrate a script to tome
 
-!!! Example "How to migrate shell and python scripts to tome."
-
 If you want to add your current scripts to tome you need to: 
+
 - Add the `tome_` prefix name only to the scripts that you want to use as tome command.
 - Add a single comment at top of the script with the `tome_description:`.
 - Store it as an others tome scripts in a folder to have a tome namespace.

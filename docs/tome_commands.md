@@ -1,7 +1,5 @@
 # 📚 Tome commands
 
-!!! Example "tome commands list and reference"
-
 ## Install a new command script
 
 Install scripts from various sources. The source can be a git repository, local file or folder, zip file (local or http), or requirements file.

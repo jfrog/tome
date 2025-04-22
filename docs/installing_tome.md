@@ -1,8 +1,4 @@
-# Installing Tome
-
-!!! Example "How to install tome"
-    - pip install tomescript.
-    - other installation options.
+# Installing Tomes
 
 ## pip package *(recommended)*
 
