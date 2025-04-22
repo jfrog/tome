@@ -1,4 +1,4 @@
-# Installing Tomes
+# Installing Tome
 
 ## pip package *(recommended)*
 

@@ -6,7 +6,7 @@ nav:
   - Using Tome: using_tome.md
   - How to:
     - Migrate a script to tome: how-to/script_to_tome.md
-  - features:
+  - Features:
     - Store files locally: features/local_store.md
     - Store your secret variables: features/vault.md
   - Tome commands reference: tome_commands.md
