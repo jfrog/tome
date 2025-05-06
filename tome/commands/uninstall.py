@@ -1,7 +1,8 @@
 import json
 
 from tome.api.output import TomeOutput
-from tome.command import tome_command
+from tome.command import CommandType, tome_command
+from tome.errors import TomeException
 from tome.internal.source import Source
 
 
@@ -25,7 +26,7 @@ def print_uninstall_json(source):
 @tome_command(formatters={"text": print_uninstall_text, "json": print_uninstall_json})
 def uninstall(tome_api, parser, *args):
     """
-    Uninstall scripts from various sources.
+    Uninstall a tome of scripts.
     """
     parser.add_argument(
         "source",
@@ -34,5 +35,20 @@ def uninstall(tome_api, parser, *args):
     )
     args = parser.parse_args(*args)
 
-    source = Source.parse(args.source)
-    return tome_api.install.uninstall_from_source(source)
+    try:
+        source = Source.parse(args.source)
+        return tome_api.install.uninstall_from_source(source)
+    except TomeException as e:
+        if args.source and ":" in args.source:
+            matching_commands = tome_api.list.filter_commands(args.source, [CommandType.cache, CommandType.editable])
+            if len(matching_commands) == 1:
+                origin = (
+                    matching_commands[0].source.uri if matching_commands[0].source else matching_commands[0].base_folder
+                )
+                raise TomeException(
+                    f"You are trying to uninstall a command '{args.source}' that is installed from the '{origin}' tome.\n"
+                    f"To uninstall this command, you must uninstall the whole tome.\n"
+                    f"Please try running: \"tome uninstall '{origin}'\" if you want to uninstall the whole set of scripts from that tome.\n"
+                ) from e
+        else:
+            raise e

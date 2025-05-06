@@ -15,7 +15,7 @@ def test(tome_api, parser, *args):
     )
     args = parser.parse_args(*args)
 
-    commands, namespaces = tome_api.list.filter_cli_commands(args.pattern, [CommandType.cache, CommandType.editable])
+    commands = tome_api.list.filter_commands(args.pattern, [CommandType.cache, CommandType.editable])
 
     if not commands:
         raise TomeException(f"No commands found for pattern '{args.pattern}'.")
@@ -24,12 +24,10 @@ def test(tome_api, parser, *args):
     test_paths = set()
     test_commands = set()
 
-    for namespace, command_names in namespaces.items():
-        for command_name in command_names:
-            command = commands[command_name]
-            test_paths.add(os.path.join(command.base_folder, namespace))
-            python_paths.add(command.base_folder)
-            test_commands.add(command.name.replace("-", "_"))
+    for command_info in commands:
+        test_paths.add(os.path.join(command_info.base_folder, command_info.namespace))
+        python_paths.add(command_info.base_folder)
+        test_commands.add(command_info.name.replace("-", "_"))
 
     test_pattern = " or ".join(test_commands)
 

@@ -66,9 +66,10 @@ def test_info_shell_commands():
         echo "hello world"
         """)
     script_name = "tome_echo.sh" if platform.system() != "Windows" else "tome_echo.bat"
+    command_name = "greetings:echo-sh" if platform.system() != "Windows" else "greetings:echo-bat"
     c.save({os.path.join(c.current_folder, "greetings", script_name): script})
     c.run("install .")
-    c.run("info greetings:echo")
+    c.run(f"info {command_name}")
     # TODO: Check more things: runner, script
     print(c.out)
     assert "name: echo" in c.out
