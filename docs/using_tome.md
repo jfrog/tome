@@ -79,7 +79,7 @@ def hello(tome_api, parser, *args):
 
 Any python tome command has some common elements:
 - Use [argparse](https://docs.python.org/3/library/argparse.html) as cli parameter parser.
-- You need to defane a `@tome_command()` decorator in any commnad.
+- You need to defane a `@tome_command()` decorator in any command.
     - If you want to create a subcommand, you need to define the previous command in the decorator.
 - Is recommended to use the `TomeOutput()` to write any message.
 
