@@ -113,7 +113,7 @@ def read_text(tome_api, parser, *args):
     tome_output.info(f"{my_vault.read(name=args.name)}")
 ```
 
-Of course, we can create a secret inside our commnads using the same API.
+Of course, we can create a secret inside our command using the same API.
 
 ```python
 from tome.command import tome_command
