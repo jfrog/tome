@@ -106,7 +106,7 @@ def say(tome_api, parser, *args):
 @tome_command(parent=say)
 def hello(tome_api, parser, *args):
     """
-    Hello commnad.
+    Hello command.
     """
     parser.add_argument('user', help="hello user")
     args = parser.parse_args(*args)
