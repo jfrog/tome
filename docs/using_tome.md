@@ -148,7 +148,7 @@ Say something.
 
 positional arguments:
   {hello,bye}    sub-command help
-    hello        Hello commnad.
+    hello        Hello command.
     bye          Bye command.
 ```
 
