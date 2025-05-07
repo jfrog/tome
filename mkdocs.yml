@@ -1,17 +1,26 @@
 site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
 nav:
-  - Quickstart: index.md
-  - Installing Tome: installing_tome.md
-  - Using Tome: using_tome.md
-  - How to:
-    - Migrate a script to tome: how-to/script_to_tome.md
-  - Features:
-    - Store files locally: features/local_store.md
-    - Store your secret variables: features/vault.md
-  - Tome commands reference: tome_commands.md
+  - Overview:
+      - Welcome to Tome: index.md
+      - Quickstart: overview/quickstart.md
+  - Guides:
+      - Create your first script: guides/first_script.md
+      - Migrate a script: guides/migrate_script.md
+      - Use the secret vault: guides/vault.md
+  - Reference:
+      - Command‑line interface: reference/cli.md
+      - Python API:
+          - TomeAPI: reference/python_api/tome_api.md
+          - Decorators: reference/python_api/decorators.md
+      - Exit codes: reference/exit_codes.md
+  - Concepts:
+      - Glossary: concepts/glossary.md
+      - Architecture overview: concepts/architecture.md
+      - FAQ: concepts/faq.md
   - Community: community.md
-  - "LICENSE: Apache License 2.0": https://github.com/jfrog/tome/blob/main/LICENSE
+  - License: https://github.com/jfrog/tome/blob/main/LICENSE
+
 
 theme:
   name: material
