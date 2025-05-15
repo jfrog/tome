@@ -92,3 +92,8 @@
   display: block;
   padding: 1em;
 }
+
+.tagline-highlight {
+  color: var(--md-link-color);
+  text-align: center;
+}

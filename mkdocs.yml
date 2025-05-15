@@ -56,6 +56,11 @@ extra:
 
 extra_css:
   - stylesheets/tome.css
+  - stylesheets/termynal.css
+
+extra_javascript:
+  - js/termynal.js
+  - js/termynal-init.js
 
 markdown_extensions:
   - admonition
