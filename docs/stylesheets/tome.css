@@ -97,3 +97,36 @@
   color: var(--md-link-color);
   text-align: center;
 }
+
+.console-line {
+  display: block;
+  white-space: pre;
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+}
+
+.console-line.empty-line {
+  height: 1em;
+}
+
+.console-line.comment-line {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.console-line.command-line {
+  color: #ffffff;
+}
+
+.console-line.command-line .prompt {
+  font-weight: bold;
+}
+
+.console-line.command-line .cmd-text {
+  color: inherit;
+}
+
+.console-line.output-line {
+  color: #6c6c6c;
+}

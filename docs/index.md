@@ -30,11 +30,11 @@ to the [install guide](getting_started/installing_tome.md). Then, install **tome
 
 ## Hello world in 30 s
 
-Use `tome new` create a template for a command. Then install it as editable so
-you can make changes to the sources and the script will be live-reloaded, list
-it and run it.
+Use `tome new` **to** create a template for a command. Then install it in
+editable mode. This allows your changes to the source to be live-reloaded.
+Afterwards, list and run it.
 
-```bash
+```console
 # create a new command
 $ tome new greetings:hello
 
@@ -50,9 +50,9 @@ $ tome greetings:hello Ada
 Tome command called with positional argument: Ada!!!
 ```
 
-Install the examples from the tome repository:
+Install the examples from a third party, in this case the tome repository:
 
-```bash
+```console
 # install tome examples from the github repository
 $ tome install https://github.com/jfrog/tome.git --folder=examples
 
