@@ -15,9 +15,9 @@ nav:
   - Reference:
       - Command-line interface: reference/cli.md
       - Exit codes: reference/exit_codes.md
-  - Concepts:
-      - Glossary: concepts/glossary.md
-      - FAQ: concepts/faq.md
+  - Resources:
+      - Glossary: resources/glossary.md
+      - FAQ: resources/faq.md
   - License: https://github.com/jfrog/tome/blob/main/LICENSE
 
 
@@ -43,8 +43,8 @@ theme:
     - content.tabs.link
     - navigation.expand
     - navigation.indexes
-    - navigation.sections     # Hace que los títulos de sección sean clickables y muestren su contenido
-    - navigation.indexes      # ¡ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ PRESENTE Y HABILITADA!
+    - navigation.sections
+    - navigation.indexes
 
 plugins:
   - mkdocstrings
