@@ -1,4 +1,4 @@
-# 📖 Using tome
+# Using tome
 
 !!! Example "📝 Basic concepts"
 
@@ -161,7 +161,7 @@ positional arguments:
 ```
 
 ```bash
-tome intro:say bye --help  
+tome intro:say bye --help
 usage: tome say bye [-h] [-v] [-q] [--user USER]
 
 options:

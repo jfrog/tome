@@ -1,4 +1,4 @@
-# 📖 tome
+# tome
 
 <p class="tagline-highlight"><em>A set of tools to <strong>organize, share & run scripts</strong></em></p>
 
@@ -107,7 +107,7 @@ Free: 2.00 GB
 
 | Goal                               | Documentation                                                              |
 | :--------------------------------- | :------------------------------------------------------------------------- |
-| 🚀 **Get started in 3 minutes** | **[Quickstart](getting_started/quickstart.md)** |
+| 🚀 **Get started in 3 minutes** | **[Quickstart](overview/quickstart.md)** |
 | 🛠️ **Create your first command** | **[Creating Commands Guide](guides/creating_commands.md)** |
 | 📚 **Explore all CLI commands** | **[CLI Reference](reference/cli/index.md)** |
 | 🧠 **Understand how Tome works** | **[Architecture Overview](explainers/architecture.md)** |
