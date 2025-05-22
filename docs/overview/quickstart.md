@@ -6,8 +6,7 @@ tome as editable so we can make live changes to it, run it, and see how easy it
 is to manage.
 
 Throughout this guide, you will encounter several terms specific to **tome**.
-For detailed definitions, we invite you to review our [tome
-Glossary](../resources/glossary.md).
+For detailed definitions, we invite you to review our [Glossary](../resources/glossary.md).
 
 ## Prerequisites
 
