@@ -9,6 +9,13 @@ from tome.internal.api.new import default_tomeignore
 
 def create_python_script(command_name, description):
     template = textwrap.dedent(f'''\
+        """
+        This is an example Tome command created using 'tome new'.
+
+        For more information on Tome and how to create your own commands,
+        please refer to the official documentation:
+        https://jfrog.github.io/tome/
+        """
         import os
 
         from tome.command import tome_command
@@ -60,6 +67,9 @@ def create_shell_script(script_content, script_type, description):
             script_content = textwrap.dedent(f'''\
                 #!/bin/bash
                 # tome_description: {description}
+                #
+                # This is an example Tome command created using 'tome new'.
+                # For more info: https://jfrog.github.io/tome/
 
                 echo 'Hello, world!'
             ''')
@@ -67,6 +77,9 @@ def create_shell_script(script_content, script_type, description):
             script_content = textwrap.dedent(f'''\
                 @echo off
                 REM tome_description: {description}
+                REM
+                REM This is an example Tome command created using 'tome new'.
+                REM For more info: https://jfrog.github.io/tome/
 
                 echo Hello, world!
             ''')
