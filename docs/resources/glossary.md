@@ -1,56 +1,77 @@
 # Glossary
 
-When you run a **tome command** like `tome new`, a new collection of scripts
-(which we call a "Tome") is typically initialized in your local directory. This
-process usually creates a **Script** file, which in turn defines a runnable
-**Command**.
+Throughout this documentation, you will encounter several terms related to
+**tome**. Here are definitions for some of the most important ones:
 
-Let's imagine we execute the following in the directory
-`/users/johndoe/tome-example`:
+-   **Command** A runnable function defined within a **Script** file. In Python
+    **Scripts**, these are typically functions decorated with `@tome_command()`.
+    **Commands** belong to a **Tome** and are accessed via the **tome** tool
+    using their **Namespace** and name (e.g., `tome namespace:command_name`).
 
-    $ tome new greetings:hello
 
-This action sets up a few things. Let's identify the key elements created or
-involved:
-
-    /users/johndoe/tome-example  -> Origin: This local directory is the source of our new collection.
-      │                             The collection of scripts and associated files here forms a Tome.
-      │
-      └── greetings/                -> Namespace: A way to group and uniquely identify commands.
-          ├── hello.py            -> Script: The file where the 'hello' Command is defined.
-          │                             (Inside, a function like `def hello(...)` decorated with
-          │                              `@tome_command` becomes the actual Command.)
-          └── tests/
-              └── test_hello.py   -> Tests for the 'hello' Command.
-
-Now, let's formally define these identified elements:
-
--   **Tome Command** A built-in command provided by the **tome** tool itself,
-    used for managing **Tomes** and the tool's general operation. In our
-    example, `tome new` is a **Tome Command**. Other examples include `tome
-    install` and `tome list`.
+-   **Namespace** The primary identifier used within the **tome** tool to group
+    and access a collection of **Commands** originating from a specific
+    **Tome**. It prevents naming conflicts, allowing, for example,
+    `utils:cleanup` and `backup:cleanup` to coexist as distinct **Commands**.
 
 -   **Origin** The source location from which the **Scripts** constituting a
-    **Tome** are fetched or installed. In our example, the **Origin** is the
-    local directory `/users/johndoe/tome-example`. Other common **Origins**
-    include Git repositories or ZIP archives.
+    **Tome** are fetched or installed. Common examples include a Git repository,
+    a local filesystem directory, or a ZIP archive.
+
+-   **Script** A file (e.g., a Python `.py` file, or a shell script such as
+    `.sh`, `.bat`) that contains the source code defining one or more
+    **Commands**. **Scripts** are part of a **Tome**.
 
 -   **Tome** A logical collection of **Scripts** that are sourced from a common
-    **Origin** (like our `tome-example` directory) and are typically organized
-    under one or more **Namespaces** within the **tome** tool.
+    **Origin**.
 
--   **Namespace** The primary identifier used within **tome** to group a set of
-    related **Commands** from a specific **Tome**. In the example, `greetings`
-    is the **Namespace**. It helps prevent naming conflicts, allowing, for
-    instance, `greetings:hello` and `utils:hello` to exist as distinct
-    **Commands**.
+## Concepts in Action
 
--   **Script** A file that contains the source code defining one or more
-    **Commands**. In our example, `greetings/hello.py` is the **Script**. This
-    could be a Python `.py` file, a shell script (`.sh`, `.bat`), etc.
+Now, let's see how these terms apply in a practical scenario. We'll use `tome
+new` to set up a small project.
 
--   **Command** An executable function or an entire script file that performs a
-    specific task. In our example, the `hello` function (decorated with
-    `@tome_command`) inside `hello.py` becomes the `hello` **Command** within
-    the `greetings` **Namespace**. Users run **Commands** via **tome** like so:
-    `tome greetings:hello`. This is distinct from a **Tome Command**.
+Imagine you start in an empty directory:
+
+- Create a project folder and navigate into it:
+
+```console
+$ mkdir my-tome
+$ cd my-tome
+```
+
+- Generate two new commands using `tome new`, each in a different **namespace**
+
+```console
+$ tome new greetings:hello
+$ tome new utils:showtime
+```
+
+- This action creates a directory structure similar to this:
+
+```
+my-tome/
+├── greetings/
+│   └── hello.py  (plus a tests/ directory)
+└── utils/
+    └── showtime.py (plus a tests/ directory)
+```
+
+- Install this **Tome** as editable.
+
+```console
+$ tome install . -e
+```
+
+Now, let's connect this setup to our glossary terms:
+
+* The `my-tome/` directory serves as the **Origin** for your scripts, it's their
+  source location.
+* This collection of all scripts and files within `my-tome/` that **tome** now
+  manages is a **Tome**.
+* The subdirectories `greetings/` and `utils/` function as **Namespaces**,
+  organizing your commands.
+* Files like `greetings/hello.py` and `utils/showtime.py` are the **Scripts**
+  where your command logic resides.
+* The actual runnable tasks defined within these **Scripts** (e.g., the `hello`
+  function in `hello.py`, exposed via `@tome_command`) become the **Commands**
+  you can execute (like `tome greetings:hello`).
