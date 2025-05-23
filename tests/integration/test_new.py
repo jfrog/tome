@@ -9,9 +9,8 @@ def test_new():
     client.run("install .")
     client.run("list")
     assert "mynamespace:mycommand" in client.out
-    client.run("mynamespace:mycommand arg1 --optional-argument arg2")
-    assert "Tome command called with positional argument: arg1" in client.out
-    assert "Tome command called with optional argument: arg2" in client.out
+    client.run("mynamespace:mycommand arg1 --optional arg2")
+    assert "arg1, arg2" in client.out
 
 
 def test_new_tomeignore():
