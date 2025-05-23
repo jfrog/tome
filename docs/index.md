@@ -108,7 +108,5 @@ Free: 2.00 GB
 | Goal                               | Documentation                                                              |
 | :--------------------------------- | :------------------------------------------------------------------------- |
 | 🚀 **Get started in 3 minutes** | **[Quickstart](overview/quickstart.md)** |
-| 🛠️ **Create your first command** | **[Creating Commands Guide](guides/creating_commands.md)** |
 | 📚 **Explore all CLI commands** | **[CLI Reference](reference/cli/index.md)** |
-| 🧠 **Understand how Tome works** | **[Architecture Overview](explainers/architecture.md)** |
-| ✨ **Contribute or get support** | **[Contribution Guide](contributing/guide.md)** |
+| ✨ **Contribute or get support** | **[Contribution Guide in GitHub](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md)** |

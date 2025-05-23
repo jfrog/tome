@@ -10,15 +10,15 @@ nav:
       - Help & Support: overview/help.md
   - Guides:
       - Create your first script: guides/first_script.md
+      - Sharing your scripts: guides/sharing.md
+      - Testing your scripts: guides/testing.md
       - Migrate a script: guides/migrate_script.md
-      - Use the secret vault: guides/vault.md
+      - Important tome features: guides/features.md
   - Reference:
       - Command-line interface: reference/cli.md
-      - Exit codes: reference/exit_codes.md
   - Resources:
       - Glossary: resources/glossary.md
-      - FAQ: resources/faq.md
-  - License: https://github.com/jfrog/tome/blob/main/LICENSE
+  - License: license.md
 
 
 theme:
