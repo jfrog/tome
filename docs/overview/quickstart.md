@@ -78,6 +78,7 @@ this example):
         TomeOutput().info(output_str)
 
 Key points:
+
 * The function is named `dt` (so the command will be `utils:dt`).
 * It uses the `datetime` module.
 * It accepts an optional `--format` argument and a `--utc` flag.
@@ -136,6 +137,7 @@ The `(e)` reminds you it's an editable installation.
 ## That's It!
 
 You've successfully:
+
 * Created a new namespaced command using `tome new`.
 * Inspected and understood a basic **tome** Python script.
 * Installed your local script collection in editable mode.
@@ -151,5 +153,3 @@ This is the basic workflow for managing your personal scripts with **tome**.
   (like Git repositories), using subcommands, and more.
 * Command Details: For a full list of **tome**'s own commands and their options,
   see the **[CLI Reference](../reference/cli.md)**.
-* Contribute: Interested in improving **tome**? Head over to our [Contribution
-  Guide in GitHub](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md).

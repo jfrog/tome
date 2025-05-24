@@ -28,10 +28,12 @@ Get detailed information about a specific installed **Command**.
 **Usage:** $ tome info <namespace:command_name> [options]
 
 **Arguments:**
+
 * `namespace:command_name`: The full name of the command you want information
   about.
 
 **Options:**
+
 * `-f, --format <FORMAT>`: Specify output format (e.g., `json`).
 
 ---
@@ -42,7 +44,9 @@ Installs a **Tome** (collection of scripts) from a specified **Origin**.
 **Usage:** $ tome install [source] [options]
 
 **Arguments:**
+
 * `source` (optional): The **Origin** of the **Tome**. Can be:
+
     * A Git repository URL (e.g., `https://github.com/user/repo.git`). You can
       specify a branch/tag/commit with `@` (e.g., `repo.git@my-branch`).
     * A local directory path (e.g., `./my-scripts` or `/path/to/tome`). Defaults
@@ -51,6 +55,7 @@ Installs a **Tome** (collection of scripts) from a specified **Origin**.
       `http://example.com/scripts.zip`, `./archive.zip`).
 
 **Options:**
+
 * `-e, --editable`: Installs a local directory **Tome** in "editable" mode.
   Script changes are live without reinstalling.
 * `--no-ssl`: Disables SSL certificate verification when downloading from HTTPS
@@ -72,10 +77,12 @@ by a pattern.
 **Usage:** $ tome list [pattern] [options]
 
 **Arguments:**
+
 * `pattern` (optional): A wildcard pattern to filter **Commands** by name or
   description. If omitted, lists all non-built-in commands.
 
 **Options:**
+
 * `-f, --format <FORMAT>`: Specify output format (e.g., `json`).
 
 ---
@@ -87,10 +94,12 @@ template.
 **Usage:** $ tome new <namespace:command_name> [options]
 
 **Arguments:**
+
 * `namespace:command_name`: The desired name for the new **Command**, including
   its **Namespace**.
 
 **Options:**
+
 * `--type <TYPE>`: Type of script to create. Choices: `python` (default), `sh`,
   `bat`.
 * `--script <CONTENT>`: For `sh` or `bat` types, provide the initial content for
@@ -108,6 +117,7 @@ Runs tests for your installed **Tomes** using the `pytest` framework.
 **Usage:** $ tome test <pattern>
 
 **Arguments:**
+
 * `pattern`: Specifies which tests to run.
     * `namespace:command_name`: Run tests for a specific command.
     * `namespace:*`: Run all tests for a given namespace.
@@ -121,6 +131,7 @@ Uninstalls a **Tome** from **tome**'s management.
 **Usage:** $ tome uninstall <source_uri_or_path>
 
 **Arguments:**
+
 * `source_uri_or_path`: The **Origin** (Git URL, local path, archive path/URL)
   of the **Tome** you wish to uninstall. For editable installs, this is the
   local path that was installed.
@@ -137,6 +148,7 @@ vault delete`, similar to how they are in your `docs/tome_commands.md` and
 `docs/features/vault.md`)*
 
 ---
+
 *(Consider adding `tome --version` and `tome --help` as general tool options if
 not covered adequately elsewhere, though `reference/cli.md` might be for
 specific commands rather than global flags.)*

@@ -19,4 +19,4 @@ Or, explore other sections for more information:
 
 * **[Overview](../overview/index.md)**: For installation and a quick start.
 * **[Reference](../reference/cli.md)**: For detailed CLI command information.
-* **[Resources](../resources/glossary.md)**: For definitions of key terms.
+* **[Glossary](../resources/glossary.md)**: For definitions of key terms.

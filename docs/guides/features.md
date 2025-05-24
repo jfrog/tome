@@ -14,6 +14,7 @@ seamlessly.
 
 ## Python and Shell Script Support
 **tome** isn't limited to one type of script. You can easily manage:
+
 * **Python Scripts:** Define **Commands** using Python functions decorated with
   `@tome_command()`. Leverage `argparse` for argument handling and `TomeOutput`
   for standardized console messages.
@@ -37,6 +38,7 @@ reinstall. This greatly speeds up development.
 ## Vault for Secrets
 **tome** includes a secure vault to store sensitive information like API keys,
 passwords, or tokens.
+
 * **Manage:** Use `tome vault create`, `tome vault add-secret`, `tome vault
   list-secrets`, etc.
 * **Access in Python Scripts:** Your Python **Commands** can securely access
@@ -56,6 +58,7 @@ within your **tome** home.
 If a **Tome** containing Python **Scripts** has external package dependencies,
 you can list them in a `requirements.txt` file at the root of the **Tome's
 Origin**. The `tome install` command offers:
+
 * `--create-env`: Creates an isolated virtual environment for the **Tome** and
   installs its dependencies there.
 * `--force-requirements`: Installs dependencies into the current Python

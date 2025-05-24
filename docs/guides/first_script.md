@@ -42,6 +42,7 @@ Open `example/mycommand.py`. You'll see something like this:
             output.info(f"Optional argument: {parsed_args.optional_arg}")
 
 Key parts:
+
 - **`from tome.command import tome_command`**: Imports the necessary decorator.
 - **`@tome_command()`**: Decorator that registers the function `mycommand` as a
   **tome** **Command**. The name of the function (with underscores replaced by

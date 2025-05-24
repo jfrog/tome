@@ -14,13 +14,13 @@ repository](https://github.com/jfrog/tome) is the place to go.
 To see a list of all available **tome** commands and their brief descriptions,
 run:
 
-```
+```console
 $ tome --help
 ```
 
 This will typically output something like:
 
-```
+```console
 📖 tome commands:
   config         Manage the tome configuration.
   info           Get information about a specific command.
@@ -41,13 +41,13 @@ use the `--help` (or `-h`) flag after the command name.
 
 For example, to get help for the `install` command:
 
-```
+```console
 $ tome install --help
 ```
 
 This will show detailed usage information, similar to this:
 
-```
+```console
 usage: tome install [-h] [-v] [-q] [-f FORMAT] [-e] [--no-ssl] [--create-env] [--force-requirements] [--folder FOLDER] [source]
 
 Install scripts from a source.
@@ -78,8 +78,9 @@ This detailed help is available for all **tome** commands and their subcommands.
 To quickly check the installed version of **tome**, you can use the `--version`
 flag:
 
-```
+```console
 $ tome --version
+0.1.0
 ```
 
 ## Further Assistance

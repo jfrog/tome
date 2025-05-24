@@ -14,11 +14,25 @@ This provides a starting point for your tests. For example, if `tome new
 example:greet` created `example/greet.py` and a helper function
 `format_greeting`, your test file might look like:
 
-    # example/tests/test_greet.py
-    from ..greet import format_greeting # Assuming greet.py is in the parent 'example' directory
+```python
+from greetings.hello import frog_hello
 
-    def test_format_greeting():
-        assert format_greeting("World") == "Hello, World!" # Example assertion
+def test_frog_hello_formatting():
+    """
+    Test the basic formatting of the frog_hello function
+    from greetings:hello.
+    """
+    message = "Test Message"
+    output = frog_hello(message)
+
+    assert f"< {message.ljust(len(message))} >" in output
+    assert " __" in output
+    assert " --" in output
+    assert r"        \\   @..@" in output
+    assert r"         \\ (----)" in output
+    assert r"           ( >__< )" in output
+    assert r"           ^^ ~~ ^^" in output
+```
 
 *(Adjust the import and function based on what your `tome new` template actually
 generates for tests).*
@@ -26,6 +40,7 @@ generates for tests).*
 ## Writing Tests
 
 You can write any standard `pytest` tests. Focus on:
+
 - Testing helper functions within your **Scripts**.
 - Testing the core logic of your **Command** functions. For complex commands,
   you might mock the `tome_api` and `parser` arguments or test the function that
@@ -58,10 +73,10 @@ the directories of the **Tomes** that match your pattern and execute them using
 `pytest`.
 
 **Prerequisites for Testing:**
+
 * Make sure `pytest` is installed in your Python environment:
   ```console
   $ pip install pytest
   ```
 * Your **Tome** (the one containing the scripts and tests) must be installed via
   `tome install` (either normally or with `-e`).
-```
