@@ -2,7 +2,7 @@
 
 !!! Example "📝 Basic concepts"
 
-    - store folder: `storage` folder inside your tome home. The default path is `.tome/storage`. 
+    - store folder: `storage` folder inside your tome home. The default path is `.tome/storage`.
 
 If you want to store some files in a shared commands, you need a way to store this files in a simple and reproducible way. You can use the standard tome cache folder using the `tome_api.store` API to do it.
 
