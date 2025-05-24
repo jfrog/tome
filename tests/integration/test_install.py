@@ -185,7 +185,7 @@ def test_install_cmd(name):
     c.run("list")
     assert f"mysp:{name}" in c.out
     c.run(f"mysp:{name} myarg")
-    assert "Tome command called with positional argument: myarg" in c.out
+    assert "myarg" in c.out
 
 
 def test_install_git_editable():

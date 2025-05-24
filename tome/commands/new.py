@@ -9,16 +9,38 @@ from tome.internal.api.new import default_tomeignore
 
 def create_python_script(command_name, description):
     template = textwrap.dedent(f'''\
+        """
+        This is an example Tome command created using 'tome new'.
+
+        For more information on Tome and how to create your own commands,
+        please refer to the official documentation:
+        https://jfrog.github.io/tome/
+        """
         import os
 
         from tome.command import tome_command
         from tome.api.output import TomeOutput
 
-        def format_message_{command_name}(message):
+        def frog_{command_name}(message):
             """
-            Add exclamations for a message
+            Format the message in a speech bubble with a frog ASCII art.
             """
-            return message + "!!!"
+            lines = message.split('\\n')
+            width = max(len(line) for line in lines)
+            # build speech bubble
+            top = ' ' + '_' * (width + 2)
+            bottom = ' ' + '-' * (width + 2)
+            bubble = [top]
+            for line in lines:
+                bubble.append(f"< {{line.ljust(width)}} >")
+            bubble.append(bottom)
+            frog = r"""
+                \\\\   @..@
+                 \\\\ (----)
+                   ( >__< )
+                   ^^ ~~ ^^
+            """
+            return "\\n".join(bubble) + frog
 
 
         @tome_command()
@@ -26,15 +48,14 @@ def create_python_script(command_name, description):
             """
             {description}
             """
-            parser.add_argument('positional_argument', help="Placeholder for a positional argument")
-            parser.add_argument('--optional-argument', help="Placeholder for an optional argument")
+            parser.add_argument('positional', help="Placeholder for a positional argument")
+            parser.add_argument('-o', '--optional', help="Placeholder for an optional argument")
             args = parser.parse_args(*args)
 
             # Add your command implementation here
             tome_output = TomeOutput()
-            tome_output.info(format_message_{command_name}(f"Tome command called with positional argument: {{args.positional_argument}}"))
-            if args.optional_argument:
-               tome_output.info(format_message_{command_name}(f"Tome command called with optional argument: {{args.optional_argument}}"))
+            msg = args.positional if args.optional is None else args.positional + ", " + args.optional
+            tome_output.info(frog_{command_name}(msg))
         ''')
 
     return template
@@ -46,6 +67,9 @@ def create_shell_script(script_content, script_type, description):
             script_content = textwrap.dedent(f'''\
                 #!/bin/bash
                 # tome_description: {description}
+                #
+                # This is an example Tome command created using 'tome new'.
+                # For more info: https://jfrog.github.io/tome/
 
                 echo 'Hello, world!'
             ''')
@@ -53,6 +77,9 @@ def create_shell_script(script_content, script_type, description):
             script_content = textwrap.dedent(f'''\
                 @echo off
                 REM tome_description: {description}
+                REM
+                REM This is an example Tome command created using 'tome new'.
+                REM For more info: https://jfrog.github.io/tome/
 
                 echo Hello, world!
             ''')
@@ -63,12 +90,23 @@ def create_test(script_name, command_name):
     namespace = script_name.split(":")[0]
 
     return textwrap.dedent(f'''\
-    from {namespace}.{command_name} import format_message_{command_name}
-    def test_format_message_{command_name}():
+    from {namespace}.{command_name} import frog_{command_name}
+
+    def test_frog_{command_name}_formatting():
         """
-        Test the format_message function from {script_name.replace('_', '-')}
+        Test the basic formatting of the frog_{command_name} function
+        from {script_name.replace('_', '-')}.
         """
-        assert format_message_{command_name}("Hello") == "Hello!!!"
+        message = "Test Message"
+        output = frog_{command_name}(message)
+
+        assert f"< {{message.ljust(len(message))}} >" in output
+        assert " __" in output
+        assert " --" in output
+        assert r"        \\\\   @..@" in output
+        assert r"         \\\\ (----)" in output
+        assert r"           ( >__< )" in output
+        assert r"           ^^ ~~ ^^" in output
     ''')
 
 
