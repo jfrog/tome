@@ -22,7 +22,7 @@ Create and activate a **virtual environment**. For detailed instructions, refer
 to the [install guide](overview/installing.md). Then, install **tome** using `pip`:
 
 <div class="termy" data-termynal>
-<span data-ty="input">python -m pip install tomescripts</span>
+<span data-ty="input">pip install tomescripts</span>
 <span data-ty>🎉  Tome installed.</span>
 </div>
 
@@ -44,10 +44,21 @@ $ tome install . -e
 # list installed commands
 $ tome list
 
+📖 /Users/tome/my-tome
+
+  🌲 greetings commands
+     greetings:hello (e)  Description of the command.
+
 # run it!
 $ tome greetings:hello Ada
 
-Tome command called with positional argument: Ada!!!
+ _____
+< Ada >
+ -----
+        \\   @..@
+         \\ (----)
+           ( >__< )
+           ^^ ~~ ^^
 ```
 
 Install the examples from a third party, in this case the tome repository:
