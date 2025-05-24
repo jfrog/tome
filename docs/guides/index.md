@@ -6,7 +6,7 @@ Choose one of the core guides to get started:
 
 * **[Create your first script](first_script.md)**: Learn to scaffold, write, and
   run a basic **tome** command.
-* **[Sharing your scripts](sharing.md)**: Discover how to package and distribute
+* **[Sharing your scripts](share.md)**: Discover how to package and distribute
   your **tomes**.
 * **[Testing your scripts](testing.md)**: Write and run tests for your **tome**
   commands.

@@ -19,6 +19,7 @@ nav:
       - Command-line interface: reference/cli.md
   - Resources:
       - Glossary: resources/glossary.md
+      - FAQ: resources/faq.md
   - License: license.md
 
 

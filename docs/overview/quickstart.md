@@ -146,11 +146,10 @@ This is the basic workflow for managing your personal scripts with **tome**.
 
 ## Next Steps
 
-* Explore Further: Check out the **[User Guide](../../guides/index.md)** (o
-  `../guide.md` según tu estructura final) to learn about creating shell
-  scripts, managing multiple "tomes" from different sources (like Git
-  repositories), using subcommands, and more.
+* Explore Further: Check out the **[User Guides](../guides/index.md)** to learn
+  about creating shell scripts, managing multiple "tomes" from different sources
+  (like Git repositories), using subcommands, and more.
 * Command Details: For a full list of **tome**'s own commands and their options,
-  see the **[CLI Reference](../../reference/cli.md)**.
-* Contribute: Interested in improving **tome**? Head over to our **[Contribution
-  Guide](../../contributing.md)**.
+  see the **[CLI Reference](../reference/cli.md)**.
+* Contribute: Interested in improving **tome**? Head over to our [Contribution
+  Guide in GitHub](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md).

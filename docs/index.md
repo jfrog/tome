@@ -19,7 +19,7 @@
 ## Install
 
 Create and activate a **virtual environment**. For detailed instructions, refer
-to the [install guide](getting_started/installing_tome.md). Then, install **tome** using `pip`:
+to the [install guide](overview/installing.md). Then, install **tome** using `pip`:
 
 <div class="termy" data-termynal>
 <span data-ty="input">python -m pip install tomescripts</span>
@@ -108,5 +108,5 @@ Free: 2.00 GB
 | Goal                               | Documentation                                                              |
 | :--------------------------------- | :------------------------------------------------------------------------- |
 | 🚀 **Get started in 3 minutes** | **[Quickstart](overview/quickstart.md)** |
-| 📚 **Explore all CLI commands** | **[CLI Reference](reference/cli/index.md)** |
+| 📚 **Explore all CLI commands** | **[CLI Reference](reference/cli.md)** |
 | ✨ **Contribute or get support** | **[Contribution Guide in GitHub](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md)** |
