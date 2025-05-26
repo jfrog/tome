@@ -7,13 +7,13 @@ recommended way to install **tome** is using `pip` within a virtual environment.
 This ensures that your project dependencies are isolated and managed
 effectively:
 
-1. Create a virtual environment:
+* Create a virtual environment:
 
 ```
 $ python -m venv myenv
 ```
 
-2. Activate the virtual environment:
+* Activate the virtual environment:
 
 === "UNIX/macOS"
 
@@ -27,7 +27,7 @@ $ python -m venv myenv
     $ myenv\Scripts\activate
     ```
 
-Install **tome** using `pip`:
+* Install **tome** using `pip`:
 
 ```
 $ pip install tomescripts
