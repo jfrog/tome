@@ -4,10 +4,12 @@ nav:
   - Welcome:
       - index.md
   - Overview:
+      - overview/index.md
       - Installation: overview/installing.md
       - Quickstart: overview/quickstart.md
       - Help & Support: overview/help.md
   - Guides:
+      - guides/index.md
       - Create your first script: guides/first_script.md
       - Sharing your scripts: guides/share.md
       - Testing your scripts: guides/testing.md
