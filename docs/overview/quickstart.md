@@ -1,45 +1,44 @@
 # Quickstart: Your First 5 Minutes with Tome
 
-Welcome to **tome**! This guide will get you from zero to running your own
-custom script in about 5 minutes. We'll create a simple script, install it with
-tome as editable so we can make live changes to it, run it, and see how easy it
-is to manage.
+This guide will get you from zero to running your own custom script in about 5
+minutes. We'll create a simple script, install it with tome as editable so we
+can make live changes to it and run it.
 
 Throughout this guide, you will encounter several terms specific to **tome**.
-For detailed definitions, we invite you to review our [Glossary](../resources/glossary.md).
-
-## Prerequisites
-
-Before you begin, make sure you have:
-
-1.  **tome** installed on your system. (See [Installation](installing.md) if you
-    haven't installed it yet.)
-2.  Access to a command-line terminal.
+For detailed definitions, we invite you to review our
+[Glossary](../resources/glossary.md).
 
 ## Step 1: Initialize Your Script Collection (Your "Tome")
 
 First, let's create a dedicated directory for our scripts. This directory will
-represent your personal "tome" or collection.
+represent your personal **Tome** or collection of scripts.
 
-    $ mkdir my-scripts
-    $ cd my-scripts
+```console
+$ mkdir my-scripts
+$ cd my-scripts
+```
 
 Now, let's tell **tome** to create a new script within this collection. We'll
 create a script in the `utils` namespace called `datetime`.
 
-    $ tome new utils:datetime
+```console
+$ tome new utils:datetime
+```
 
 This command will generate a couple of files for you:
+
 * `utils/datetime.py`: The Python file for your script.
 * `utils/tests/test_datetime.py`: A basic test file.
 
 Your `my-scripts` directory will look like this:
 
-    my-scripts/
-    └── utils/
-        ├── datetime.py
-        └── tests/
-            └── test_datetime.py
+```console
+my-scripts/
+└── utils/
+    ├── datetime.py
+    └── tests/
+        └── test_datetime.py
+```
 
 ## Step 2: Inspect and Customize Your New Script
 
@@ -47,35 +46,37 @@ Open the generated `utils/datetime.py` file in your favorite text editor. It
 will look something like this (we've slightly modified the default template for
 this example):
 
-    from tome.command import tome_command
-    from tome.api.output import TomeOutput # For standardized output
-    import datetime # We'll use the datetime module
+```python
+from tome.command import tome_command
+from tome.api.output import TomeOutput # For standardized output
+import datetime # We'll use the datetime module
 
-    @tome_command()
-    def dt(tome_api, parser, *args): # Changed name to 'dt' for brevity
-        """
-        Displays the current date and time, or a specific part.
-        """
-        parser.add_argument(
-            '--format',
-            type=str,
-            help="Optional format string (e.g., '%Y-%m-%d', '%H:%M:%S')"
-        )
-        parser.add_argument(
-            '--utc',
-            action='store_true',
-            help="Display time in UTC"
-        )
-        parsed_args = parser.parse_args(*args)
+@tome_command()
+def dt(tome_api, parser, *args): # Changed name to 'dt' for brevity
+    """
+    Displays the current date and time, or a specific part.
+    """
+    parser.add_argument(
+        '--format',
+        type=str,
+        help="Optional format string (e.g., '%Y-%m-%d', '%H:%M:%S')"
+    )
+    parser.add_argument(
+        '--utc',
+        action='store_true',
+        help="Display time in UTC"
+    )
+    parsed_args = parser.parse_args(*args)
 
-        now = datetime.datetime.utcnow() if parsed_args.utc else datetime.datetime.now()
+    now = datetime.datetime.utcnow() if parsed_args.utc else datetime.datetime.now()
 
-        if parsed_args.format:
-            output_str = now.strftime(parsed_args.format)
-        else:
-            output_str = now.isoformat()
+    if parsed_args.format:
+        output_str = now.strftime(parsed_args.format)
+    else:
+        output_str = now.isoformat()
 
-        TomeOutput().info(output_str)
+    TomeOutput().info(output_str)
+```
 
 Key points:
 
