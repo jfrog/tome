@@ -4,15 +4,15 @@
 
 ---
 
-## With tome you can...
+## What can tome do?
 
-- **Organize**: Effortlessly manage and structure your scripts for a clean,
-  maintainable codebase.
-- **Share**: Seamlessly share and collaborate on scripts with your team to
-  enhance productivity.
-- **Test**: Ensure your scripts' reliability and performance with comprehensive
-  testing tools.
-- **Secure**: Manage and protect your passwords using the tome vaults.
+- 📂 **Organise** – [keep your scripts tidy and always
+  accessible](guides/first_script.md) with a clear folder structure.
+- 🤝 **Share** – [distribute your script collections](guides/share.md) via Git,
+  archives, or local folders.
+- 🧪 **Test** – [test scripts](guides/testing.md) in one line to make sure they
+  work as expected.
+- 🔒 **Secure** – manage secrets with [tome vault](guides/features/vault.md).
 
 ---
 
@@ -24,15 +24,17 @@ to the [install guide](overview/installing.md). Then, install **tome** using `pi
 <div class="termy" data-termynal>
 <span data-ty="input">pip install tomescripts</span>
 <span data-ty>🎉  Tome installed.</span>
+<span data-ty="input">tome --version</span>
+<span data-ty>0.1.0</span>
 </div>
 
 ---
 
-## Hello world in 30 s
+## Hello world in 30 seconds
 
-Use `tome new` **to** create a template for a command. Then **install** it in
-editable mode. This allows your changes to the source to be live-reloaded.
-Afterwards, **list** all available commands and **run it**.
+Use `tome new` to create a template for a command. Then **install** it in
+editable mode. Now your changes are reloaded instantly. Afterwards, **list** all
+available commands and **run it**.
 
 ```console
 # create a new command
@@ -44,7 +46,7 @@ $ tome install . -e
 # list installed commands
 $ tome list
 
-📖 /Users/tome/my-tome
+📖 ~/my-tome
 
   🌲 greetings commands
      greetings:hello (e)  Description of the command.
