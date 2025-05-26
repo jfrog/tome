@@ -30,9 +30,9 @@ to the [install guide](overview/installing.md). Then, install **tome** using `pi
 
 ## Hello world in 30 s
 
-Use `tome new` **to** create a template for a command. Then install it in
+Use `tome new` **to** create a template for a command. Then **install** it in
 editable mode. This allows your changes to the source to be live-reloaded.
-Afterwards, list and run it.
+Afterwards, **list** all available commands and **run it**.
 
 ```console
 # create a new command
@@ -50,11 +50,10 @@ $ tome list
      greetings:hello (e)  Description of the command.
 
 # run it!
-$ tome greetings:hello Ada
-
- _____
-< Ada >
- -----
+$ tome greetings:hello Hello!
+ ________
+< Hello! >
+ --------
         \\   @..@
          \\ (----)
            ( >__< )
@@ -118,6 +117,6 @@ Free: 2.00 GB
 
 | Goal                               | Documentation                                                              |
 | :--------------------------------- | :------------------------------------------------------------------------- |
-| 🚀 **Get started in 3 minutes** | **[Quickstart](overview/quickstart.md)** |
+| 🚀 **Get started in 5 minutes** | **[Quickstart](overview/quickstart.md)** |
 | 📚 **Explore all CLI commands** | **[CLI Reference](reference/cli.md)** |
 | ✨ **Contribute or get support** | **[Contribution Guide in GitHub](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md)** |
