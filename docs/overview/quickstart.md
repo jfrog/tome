@@ -1,7 +1,7 @@
 # Quickstart: Your First 5 Minutes with Tome
 
 This guide will get you from zero to running your own custom script in about 5
-minutes. We'll create a simple script, install it with tome as editable so we
+minutes. We'll create a simple script, install it with **tome** as editable so we
 can make live changes to it and run it.
 
 Throughout this guide, you will encounter several terms specific to **tome**.
@@ -13,85 +13,85 @@ For detailed definitions, we invite you to review our
 First, let's create a dedicated directory for our scripts. This directory will
 represent your personal **Tome** or collection of scripts.
 
-```console
-$ mkdir my-scripts
-$ cd my-scripts
-```
+    $ mkdir my-scripts
+    $ cd my-scripts
 
-Now, let's tell **tome** to create a new script within this collection. We'll
-create a script in the `utils` namespace called `datetime`.
+Next, we'll use **tome** to scaffold a new script. We'll create a script named
+`agecalc.py` in the `utils` **namespace**. This script will define the
+`utils:agecalc` **command**, which calculates your age based on your birth date.
 
-```console
-$ tome new utils:datetime
-```
 
-This command will generate a couple of files for you:
+    $ tome new utils:agecalc
 
-* `utils/datetime.py`: The Python file for your script.
-* `utils/tests/test_datetime.py`: A basic test file.
+This command will generate a couple of files:
+
+* `utils/agecalc.py`: The Python file for your script containing the definition of the `utils:agecalc` command.
+* `utils/tests/test_agecalc.py`: A basic test file.
 
 Your `my-scripts` directory will look like this:
 
-```console
-my-scripts/
-└── utils/
-    ├── datetime.py
-    └── tests/
-        └── test_datetime.py
-```
+    my-scripts/
+    └── utils/
+        ├── agecalc.py
+        └── tests/
+            └── test_agecalc.py
 
 ## Step 2: Inspect and Customize Your New Script
 
-Open the generated `utils/datetime.py` file in your favorite text editor. It
-will look something like this (we've slightly modified the default template for
-this example):
+Open the generated `utils/agecalc.py` file in your favorite text editor.
+Let's modify the default template to implement our age calculator:
 
-```python
-from tome.command import tome_command
-from tome.api.output import TomeOutput # For standardized output
-import datetime # We'll use the datetime module
+    from tome.command import tome_command
+    from tome.api.output import TomeOutput
+    import datetime
 
-@tome_command()
-def dt(tome_api, parser, *args): # Changed name to 'dt' for brevity
-    """
-    Displays the current date and time, or a specific part.
-    """
-    parser.add_argument(
-        '--format',
-        type=str,
-        help="Optional format string (e.g., '%Y-%m-%d', '%H:%M:%S')"
-    )
-    parser.add_argument(
-        '--utc',
-        action='store_true',
-        help="Display time in UTC"
-    )
-    parsed_args = parser.parse_args(*args)
+    @tome_command()
+    def agecalc(tome_api, parser, *args):
+        """
+        Calculates age based on a given birth date.
+        """
 
-    now = datetime.datetime.utcnow() if parsed_args.utc else datetime.datetime.now()
+        parser.add_argument(
+            'birthdate',
+            type=str,
+            help="Your birth date in YYYY-MM-DD format (e.g., '1990-07-25')"
+        )
 
-    if parsed_args.format:
-        output_str = now.strftime(parsed_args.format)
-    else:
-        output_str = now.isoformat()
+        parsed_args = parser.parse_args(*args)
 
-    TomeOutput().info(output_str)
-```
+        output = TomeOutput()
+
+        try:
+            birth_date_obj = datetime.datetime.strptime(parsed_args.birthdate, '%Y-%m-%d').date()
+        except ValueError:
+            output.error("Invalid date format. Please use YYYY-MM-DD.")
+            return
+
+        today = datetime.date.today()
+
+        age_years = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+
+        output.info(f"You are {age_years} years old.")
 
 Key points:
 
-* The function is named `dt` (so the command will be `utils:dt`).
-* It uses the `datetime` module.
-* It accepts an optional `--format` argument and a `--utc` flag.
+Explicar el decorador tome_command que sirve para definir agecalc como comando a correr... The function is named `agecalc` (so the command will be `utils:agecalc`).
+el comando es agecalc  que toma de parametros la tome_api, parser y *args
+Dentro del comando cogemos los argumentos de entrada con argparse, mencionar que esto no tiene nada de especial y que es uso standard de argparse con python
+Mencionar el output con tomeouput que es la forma mas sencilla pero luego mas adelante quiero añadir formatters de json y text y explicarlos y decir por qué es buena idea usar formatters
+
+* It uses the `datetime` module to parse the birthdate and calculate age.
+* It accepts a `birthdate` argument.
 * It uses `TomeOutput().info()` to print the result.
 
-**Save the changes** to `utils/datetime.py` if you made any.
+**Save the changes** to `utils/agecalc.py`.
 
 ## Step 3: Install Your Local "Tome"
 
 For **tome** to recognize and run scripts from your `my-scripts` directory, you
-need to "install" this directory. We'll use an editable install (`-e`) so any
-further changes to your scripts are picked up automatically.
+need to "install" this **Tome** or directory of scripts. We'll use an editable
+install (`-e`) so any further changes to your scripts are picked up
+automatically.
 
 From inside the `my-scripts` directory, run:
 
@@ -101,26 +101,14 @@ You should see a confirmation message.
 
 ## Step 4: Run Your New Command!
 
-Now you can execute your `dt` script from anywhere using its full **tome** name
+Now you can execute your `agecalc` script from anywhere using its full **tome** name
 (`namespace:command_name`):
 
-    $ tome utils:dt
+    $ tome utils:agecalc 1990-07-25
 
-This will output the current date and time in ISO format.
+This will output the age in years. For example (output depends on the current date):
 
-Let's try the options:
-
-    $ tome utils:dt --utc
-
-This shows the current time in UTC.
-
-    $ tome utils:dt --format "%Y-%m-%d"
-
-This shows only the current date.
-
-    $ tome utils:dt --format "%H:%M:%S on %A" --utc
-
-This shows the UTC time and the day of the week.
+    You are 34 years old.
 
 ## Step 5: See Your Command Listed
 
@@ -131,26 +119,14 @@ You can always check what commands are available in a particular namespace:
 Output:
 
     ✨ utils commands
-     utils:dt (e)  Displays the current date and time, or a specific part.
+     utils:agecalc (e)  Calculates age based on a given birth date.
 
 The `(e)` reminds you it's an editable installation.
-
-## That's It!
-
-You've successfully:
-
-* Created a new namespaced command using `tome new`.
-* Inspected and understood a basic **tome** Python script.
-* Installed your local script collection in editable mode.
-* Run your command with different arguments.
-* Listed your command.
-
-This is the basic workflow for managing your personal scripts with **tome**.
 
 ## Next Steps
 
 * Explore Further: Check out the **[User Guides](../guides/index.md)** to learn
-  about creating shell scripts, managing multiple "tomes" from different sources
+  about creating shell scripts, managing multiple **Tomes** from different sources
   (like Git repositories), using subcommands, and more.
 * Command Details: For a full list of **tome**'s own commands and their options,
   see the **[CLI Reference](../reference/cli.md)**.
