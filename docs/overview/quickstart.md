@@ -20,8 +20,9 @@ Next, we'll use **tome** to scaffold a new script. We'll create a script named
 `agecalc.py` in the `utils` **namespace**. This script will define the
 `utils:agecalc` **command**, which calculates your age based on your birth date.
 
-
-    $ tome new utils:agecalc
+```console
+$ tome new utils:agecalc
+```
 
 This command will generate a couple of files:
 
@@ -30,103 +31,201 @@ This command will generate a couple of files:
 
 Your `my-scripts` directory will look like this:
 
-    my-scripts/
-    └── utils/
-        ├── agecalc.py
-        └── tests/
-            └── test_agecalc.py
+```console
+my-scripts/
+└── utils/
+    ├── agecalc.py
+    └── tests/
+        └── test_agecalc.py
+```
 
 ## Step 2: Inspect and Customize Your New Script
 
-Open the generated `utils/agecalc.py` file in your favorite text editor.
-Let's modify the default template to implement our age calculator:
+Open the generated `utils/agecalc.py` file in your favorite text editor. Let's
+modify the default template to implement our age calculator. Initially, it will
+print directly, but we'll change this later to use formatters.
 
-    from tome.command import tome_command
-    from tome.api.output import TomeOutput
-    import datetime
+```python
+from tome.command import tome_command
+from tome.api.output import TomeOutput
+import datetime
 
-    @tome_command()
-    def agecalc(tome_api, parser, *args):
-        """
-        Calculates age based on a given birth date.
-        """
+@tome_command()
+def agecalc(tome_api, parser, *args):
+    """
+    Calculates age based on a given birth date.
+    """
+    parser.add_argument(
+        'birthdate',
+        type=str,
+        help="Your birth date in YYYY-MM-DD format (e.g., '1990-07-25')"
+    )
+    parsed_args = parser.parse_args(*args)
 
-        parser.add_argument(
-            'birthdate',
-            type=str,
-            help="Your birth date in YYYY-MM-DD format (e.g., '1990-07-25')"
-        )
+    output = TomeOutput() # For now, we'll use it for errors and direct output
 
-        parsed_args = parser.parse_args(*args)
+    try:
+        birth_date_obj = datetime.datetime.strptime(parsed_args.birthdate, '%Y-%m-%d').date()
+    except ValueError:
+        output.error("Invalid date format. Please use YYYY-MM-DD.")
+        return # Exit if date is invalid
 
-        output = TomeOutput()
+    today = datetime.date.today()
+    age_years = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
 
-        try:
-            birth_date_obj = datetime.datetime.strptime(parsed_args.birthdate, '%Y-%m-%d').date()
-        except ValueError:
-            output.error("Invalid date format. Please use YYYY-MM-DD.")
-            return
+    # Initial direct output
+    output.info(f"You are {age_years} years old.")
+    # We will modify this function later to return data for formatters
+```
 
-        today = datetime.date.today()
+**Key points about this script structure:**
 
-        age_years = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
-
-        output.info(f"You are {age_years} years old.")
-
-Key points:
-
-Explicar el decorador tome_command que sirve para definir agecalc como comando a correr... The function is named `agecalc` (so the command will be `utils:agecalc`).
-el comando es agecalc  que toma de parametros la tome_api, parser y *args
-Dentro del comando cogemos los argumentos de entrada con argparse, mencionar que esto no tiene nada de especial y que es uso standard de argparse con python
-Mencionar el output con tomeouput que es la forma mas sencilla pero luego mas adelante quiero añadir formatters de json y text y explicarlos y decir por qué es buena idea usar formatters
-
-* It uses the `datetime` module to parse the birthdate and calculate age.
-* It accepts a `birthdate` argument.
-* It uses `TomeOutput().info()` to print the result.
+* **`@tome_command()` Decorator**: The `@tome_command()` decorator above the `agecalc` function is essential. It registers `agecalc` with **tome** so it can be run as a command. For more details on its options (like defining subcommands or `formatters`), see the [**tome_command Decorator Reference**](../reference/python_api.md#tome_command-decorator). * **Command Function Signature**: The `agecalc` function, like all **tome** Python commands, takes `tome_api`, `parser`, and `*args` as parameters. You can learn more about these in the [Command Function Signature Reference](../reference/python_api.md#command-function-signature). * `tome_api`: Provides access to **tome**'s features (not used in this simple version).
+    * `parser`: An `argparse.ArgumentParser` instance provided by **tome** for defining command-line arguments.
+    * `*args`: The arguments passed to your command.
+* **Argument Parsing**: We use `parser.add_argument(...)`. This is standard Python `argparse` functionality.
+* **Output with `TomeOutput`**: For now, `TomeOutput().info()` prints directly. Later, we'll explore more flexible output using formatters.
 
 **Save the changes** to `utils/agecalc.py`.
 
 ## Step 3: Install Your Local "Tome"
 
 For **tome** to recognize and run scripts from your `my-scripts` directory, you
-need to "install" this **Tome** or directory of scripts. We'll use an editable
-install (`-e`) so any further changes to your scripts are picked up
-automatically.
+need to "install" this **Tome**. We'll use an editable install (`-e`) so any
+further changes to your scripts are picked up automatically.
 
 From inside the `my-scripts` directory, run:
 
-    $ tome install . -e
+```console
+$ tome install . -e
+```
 
 You should see a confirmation message.
 
 ## Step 4: Run Your New Command!
 
-Now you can execute your `agecalc` script from anywhere using its full **tome** name
-(`namespace:command_name`):
+Now you can execute your `agecalc` script:
 
-    $ tome utils:agecalc 1990-07-25
+```console
+$ tome utils:agecalc 1990-07-25
+```
 
 This will output the age in years. For example (output depends on the current date):
 
-    You are 34 years old.
+```console
+You are 34 years old.
+```
 
 ## Step 5: See Your Command Listed
 
-You can always check what commands are available in a particular namespace:
+Check what commands are available:
 
-    $ tome list utils
+```console
+$ tome list utils
 
-Output:
+📖 ~/my-scripts
 
-    ✨ utils commands
+  🐮 utils commands
      utils:agecalc (e)  Calculates age based on a given birth date.
+```
 
 The `(e)` reminds you it's an editable installation.
+
+## Step 6: Enhancing Output with Formatters
+
+Instead of printing directly, **tome** **Commands** can return data and use
+**formatters** to control the presentation (e.g., plain text or JSON). This is
+particularly useful for structured output. You can learn more about how to
+define and use them in the [Output Formatters
+Reference](../reference/python_api.md#output-formatters). Let's modify
+`utils/agecalc.py` to use this pattern:
+
+1.  **Update the `agecalc` function to return data and define formatters:**
+
+        from tome.command import tome_command
+        from tome.api.output import TomeOutput
+        import datetime
+        import json # Required for JSON formatting
+
+        # Formatter functions
+        def age_text_formatter(data_dict):
+            output = TomeOutput(stdout=True)
+            if "error" in data_dict:
+                output.error(data_dict["error"])
+            else:
+                output.info(f"Based on birthdate {data_dict.get('birthdate_input', 'N/A')}, calculated age is {data_dict.get('calculated_age_years', 'N/A')} years.")
+
+        def age_json_formatter(data_dict):
+            output = TomeOutput(stdout=True)
+            output.print_json(json.dumps(data_dict, indent=4))
+
+        @tome_command(formatters={"text": age_text_formatter, "json": age_json_formatter})
+        def agecalc(tome_api, parser, *args):
+            """
+            Calculates age based on a given birth date.
+            Supports --format text (default) or --format json.
+            """
+            parser.add_argument(
+                'birthdate',
+                type=str,
+                help="Your birth date in YYYY-MM-DD format (e.g., '1990-07-25')"
+            )
+            parsed_args = parser.parse_args(*args)
+
+            try:
+                birth_date_obj = datetime.datetime.strptime(parsed_args.birthdate, '%Y-%m-%d').date()
+            except ValueError:
+                return {"error": "Invalid date format. Please use YYYY-MM-DD."}
+
+            today = datetime.date.today()
+            age_years = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+
+            return {"birthdate_input": parsed_args.birthdate, "calculated_age_years": age_years, "status": "success"}
+
+2.  **Save the `utils/agecalc.py` file.**
+
+**Key changes for formatters:**
+- The `agecalc` function now `return`s a dictionary.
+- We defined `age_text_formatter` and `age_json_formatter`.
+- The `@tome_command()` decorator was updated with a `formatters` argument.
+
+Now, **tome** automatically adds a `--format` option to your command.
+
+Try it out:
+
+Default text output:
+    $ tome utils:agecalc 1990-07-25
+
+Output:
+    Based on birthdate 1990-07-25, calculated age is 34 years.
+
+JSON output:
+    $ tome utils:agecalc 1990-07-25 --format json
+
+Output:
+    {
+        "birthdate_input": "1990-07-25",
+        "calculated_age_years": 34,
+        "status": "success"
+    }
+
+## That's It!
+
+You've successfully:
+
+* Created a new namespaced command using `tome new`.
+* Implemented a Python script that returns data.
+* Defined and used output formatters for text and JSON.
+* Installed your local script collection in editable mode.
+* Run your command with different arguments and output formats.
+* Listed your command.
+
+This showcases how **tome** handles script creation, execution, and flexible output formatting.
 
 ## Next Steps
 
 * Explore Further: Check out the **[User Guides](../guides/index.md)** to learn
   about creating shell scripts, managing multiple **Tomes** from different sources
-  (like Git repositories), using subcommands, and more.
+  (like Git repositories), subcommands, and more advanced formatter usage.
 * Command Details: For a full list of **tome**'s own commands and their options,
   see the **[CLI Reference](../reference/cli.md)**.
