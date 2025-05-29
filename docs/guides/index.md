@@ -1,9 +1,7 @@
 # Guides
 
 This section provides practical, step-by-step guides to help you perform common
-tasks and leverage various features of **tome**.
-
-Explore our guides to learn how to:
+tasks with **tome**. Explore our guides to learn how to:
 
 * **[Create your first script](first_script.md):** From `tome new` to a runnable
   Python command.
