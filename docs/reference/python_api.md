@@ -86,6 +86,15 @@ output style and respects **tome**'s verbosity settings (`-v`, `-q`).
 
 ## Output Formatters
 
+stdout/stderr: the the decision to send all messages, but the final output of
+the command, including info, warnings, and errors, to `stderr` follows a
+deliberate design choice that aligns with common practices in many CLI tools and
+the [POSIX
+standard](https://pubs.opengroup.org/onlinepubs/9699919799/functions/stderr.html)
+(you'll see that it defines _standard output (for writing conventional output)
+and standard error (for writing diagnostic output)_ so stderr is not only used
+for errors but all kinds of informative messages).
+
 If your command function `return`s data (typically a dictionary or a simple
 string/list), you can define formatters to present this data in different ways
 (e.g., human-readable text, JSON).
@@ -109,6 +118,10 @@ command) and use `TomeOutput` to print it. They are registered in the
 
 Users can then select the output format using the automatically added `--format`
 flag: `$ tome yournamespace:my_data_command --format json`
+
+## Errors
+
+TODO
 
 ## Vault API (Accessing Secrets)
 *(Details on `tome_api.vault.open()`, `vault.read()`, `vault.create()`, etc.,

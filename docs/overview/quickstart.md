@@ -34,7 +34,7 @@ This command will generate a couple of files:
 
 Your `my-scripts` directory will look like this:
 
-```console
+```bash
 my-scripts/
 └── utils/
     ├── agecalc.py
@@ -45,12 +45,13 @@ my-scripts/
 ## Step 2: Customize Your New Script
 
 Open the generated `utils/agecalc.py` file in your favorite text editor. Let's
-modify the default template to implement our age calculator. Initially, it will
-print directly, but we'll change this later to use formatters.
+modify the default template to implement our age calculator.
 
 ```python
 from tome.command import tome_command
 from tome.api.output import TomeOutput
+from tome.errors import TomeException
+
 import datetime
 
 @tome_command()
@@ -65,44 +66,51 @@ def agecalc(tome_api, parser, *args):
     )
     parsed_args = parser.parse_args(*args)
 
-    output = TomeOutput()
-
     try:
         birth_date_obj = datetime.datetime.strptime(parsed_args.birthdate, '%Y-%m-%d').date()
     except ValueError:
-        output.error("Invalid date format. Please use YYYY-MM-DD.")
-        return
+        raise TomeException("Invalid date format. Please use YYYY-MM-DD.")
 
     today = datetime.date.today()
     age_years = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
 
-    output.info(f"You are {age_years} years old.")
+    TomeOutput(stdout=True).info(f"You are {age_years} years old.")
 ```
 
-**Key points about this script structure:**
+**Script Breakdown:**
 
-* **`@tome_command()`** This decorator before your `agecalc` function, is how
-  you register it with **tome**. It essentially tells **tome** to make this
-  function runnable as the `utils:agecalc` command. It's the main way **tome**
-  discovers your Python-based commands. See the [reference
-  section](../reference/python_api.md#tome_command-decorator) for more
-  information on how to use it.
+* [**`@tome_command()`**](../reference/python_api.md#tome_command-decorator):
+  This decorator before your `agecalc` function, is how you register it with
+  **tome**. It essentially tells **tome** to make this function runnable as the
+  `utils:agecalc` command. It's the main way **tome** discovers your
+  Python-based commands.
 
-* **Command Function Signature**: The `agecalc` function, like all **tome**
-Python commands, takes `tome_api`, `parser`, and `*args` as parameters. You can
-learn more about these in the [command signature
-reference section](../reference/python_api.md#command-function-signature).
+* [**Command Function
+Signature**](../reference/python_api.md#command-function-signature): The
+`agecalc` function, like all **tome** Python commands, takes `tome_api`,
+`parser`, and `*args` as parameters.
 
-    * `tome_api`: Provides access to **tome**'s features (not used in this simple version).
-    * `parser`: An `argparse.ArgumentParser` instance provided by **tome** for defining command-line arguments.
+    * `tome_api`: Provides access to **tome**'s features (not used in this
+      simple version).
+    * `parser`: An `argparse.ArgumentParser` instance provided by **tome** for
+      defining command-line arguments.
     * `*args`: The arguments passed to your command.
 
 * **Argument Parsing**: We use `parser.add_argument(...)`. This is standard
   Python `argparse` functionality.
 
-* **Output with `TomeOutput`**: For now, `TomeOutput().info()` prints directly.
-  Later, we'll explore more flexible output using
+* **Output with `TomeOutput`**: For now, `TomeOutput(stdout=True).info()` prints
+  directly. Notice the `stdout=True`, by default all output via `TomeOutput`
+  goes to `stderr`, so we specify that we want the result message of our command
+  in `stdout`. In the next section, we'll explore more flexible output using
   [formatters](../reference/python_api.md#output-formatters).
+
+* [**Error Handling with `TomeException`**](../reference/python_api.md#errors):
+  Notice the `try...except` block. If the date format is invalid, instead of
+  just printing an error, we `raise TomeException("Invalid date format...")`.
+  This is the recommended way to signal errors from your commands. **tome** will
+  catch this exception and display the error message to the user in a
+  standardized way, also ensuring the command exits with an error status.
 
 **Save the changes** to `utils/agecalc.py`.
 
@@ -120,8 +128,6 @@ Configured editable installation ...
 Installed source ...
 ```
 
-You should see a confirmation message.
-
 ## Step 4: Run Your New Command!
 
 Now you can execute your `agecalc` script:
@@ -133,7 +139,7 @@ You are 34 years old.
 
 ## Step 5: See Your Command Listed
 
-Check what commands are available:
+Check all available commands with `tome list`:
 
 ```console
 $ tome list utils
@@ -160,26 +166,27 @@ Reference](../reference/python_api.md#output-formatters). Let's modify
 ```python
 from tome.command import tome_command
 from tome.api.output import TomeOutput
+from tome.errors import TomeException
+
 import datetime
-import json # Required for JSON formatting
+import json
 
-# Formatter functions
-def age_text_formatter(data_dict):
-    output = TomeOutput(stdout=True)
+def text_formatter(data_dict):
     if "error" in data_dict:
-        output.error(data_dict["error"])
+        raise TomeException(data_dict["error"])
     else:
-        output.info(f"Based on birthdate {data_dict.get('birthdate_input', 'N/A')}, calculated age is {data_dict.get('calculated_age_years', 'N/A')} years.")
+        age = data_dict["calculated_age_years"]
+        TomeOutput(stdout=True).info(f"You are {age} years old.")
 
-def age_json_formatter(data_dict):
-    output = TomeOutput(stdout=True)
-    output.print_json(json.dumps(data_dict, indent=4))
+def json_formatter(data_dict):
+    TomeOutput(stdout=True).print_json(json.dumps(data_dict))
+    if "error" in data_dict:
+        raise TomeException(data_dict["error"])
 
-@tome_command(formatters={"text": age_text_formatter, "json": age_json_formatter})
+@tome_command(formatters={"text": text_formatter, "json": json_formatter})
 def agecalc(tome_api, parser, *args):
     """
     Calculates age based on a given birth date.
-    Supports --format text (default) or --format json.
     """
     parser.add_argument(
         'birthdate',
