@@ -208,49 +208,76 @@ def agecalc(tome_api, parser, *args):
 
 2.  **Save the `utils/agecalc.py` file.**
 
-**Key changes for formatters:**
+**Understanding the Changes:**
 
-- The `agecalc` function now `return`s a dictionary.
-- We defined `age_text_formatter` and `age_json_formatter`.
 - The `@tome_command()` decorator was updated with a `formatters` argument.
+- The `agecalc` function now `return`s a dictionary, whether for success or a
+  validation error.
+- We defined `text_formatter` and `json_formatter` to handle the dictionary
+  returned by `agecalc` you can select which one you want to use when running
+  `utils:agecalc` with the `--format` argument. The `text` one is used by
+  default if the `--format` argument is not passed.
+- The `text_formatter` raises a `TomeException` if it finds an error in the
+  data, ensuring **tome** reports it.
+- The `json_formatter` prints the JSON (which will include the error structure
+  if present) and *then* raises `TomeException` if an error key exists, so
+  automated tools get structured error data but the script still exits with an
+  error code.
 
 Now, **tome** automatically adds a `--format` option to your command.
 
 Try it out:
 
 Default text output:
-    $ tome utils:agecalc 1990-07-25
 
-Output:
-    Based on birthdate 1990-07-25, calculated age is 34 years.
+```console
+$ tome utils:agecalc 1990-07-25
+You are 34 years old.
 
-JSON output:
-    $ tome utils:agecalc 1990-07-25 --format json
+$ tome utils:agecalc 1990-07-25 --format=json
+{
+  "birthdate_input": "1990-07-25",
+  "calculated_age_years": 34,
+  "status": "success"
+}
 
-Output:
-    {
-        "birthdate_input": "1990-07-25",
-        "calculated_age_years": 34,
-        "status": "success"
-    }
+# here the json goes to stdout and the exception error goes to stderr
+$ tome utils:agecalc invalid-date --format=json
+{
+  "error": "Invalid date format. Please use YYYY-MM-DD."
+}
+Error: Invalid date format. Please use YYYY-MM-DD.
+```
+
+Using formatters like this keeps your command's core logic separate from its
+presentation, making your code cleaner. Plus, you can easily offer different
+output styles (e.g., text for users, JSON for tools) from a single command,
+making it more maintainable.
 
 ## That's It!
 
-You've successfully:
+Congratulations! You've successfully navigated the core workflow of creating a
+**tome** command:
 
-* Created a new namespaced command using `tome new`.
-* Implemented a Python script that returns data.
-* Defined and used output formatters for text and JSON.
-* Installed your local script collection in editable mode.
-* Run your command with different arguments and output formats.
-* Listed your command.
-
-This showcases how **tome** handles script creation, execution, and flexible output formatting.
+* Used `tome new` to scaffold a Python **Script** within a **Namespace**.
+* Defined a **Command** with command-line arguments using `argparse`.
+* Implemented basic error handling using `TomeException`.
+* Installed your local directory as an editable **Tome**.
+* Executed your **Command**, initially with direct output.
+* Implemented custom **output formatters** for both human-readable text and
+  machine-readable JSON.
+* Tested your command with different arguments and output formats using the
+  automatically provided `--format` option.
 
 ## Next Steps
 
-* Explore Further: Check out the **[User Guides](../guides/index.md)** to learn
-  about creating shell scripts, managing multiple **Tomes** from different sources
-  (like Git repositories), subcommands, and more advanced formatter usage.
-* Command Details: For a full list of **tome**'s own commands and their options,
-  see the **[CLI Reference](../reference/cli.md)**.
+Now that you've seen the basics, you're ready to explore more:
+
+* **Deepen your knowledge:** Explore the **[User Guides](../guides/index.md)**,
+  starting with "[Create your first script](../guides/first_script.md)" to learn
+  about subcommands, script migration and managing Tomes.
+* **API Specifics:** For detailed information on the `@tome_command` decorator,
+  command function signatures, or the `TomeOutput` class, see the [Python
+  Scripting API Reference](../reference/python_api.md).
+* **Command Details:** For a full list of **tome**'s own built-in commands and
+  all their options, refer to the **[CLI Reference](../reference/cli.md)**.

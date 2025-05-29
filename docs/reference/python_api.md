@@ -86,6 +86,17 @@ output style and respects **tome**'s verbosity settings (`-v`, `-q`).
 
 ## Output Formatters
 
+* **Separation of Concerns:** Your main command logic focuses on processing and
+  returning data, while formatters handle the presentation. This makes your code
+  cleaner and easier to maintain.
+* **Flexible Output:** Easily provide multiple output formats (like
+  human-readable text, JSON, CSV, etc.) for the same command, catering to
+  different users or a_utomation needs without changing the core command logic.
+* **Consistency:** Output handling, including error presentation when combined
+  with `TomeException`, can be standardized across your commands.
+* **Reusability:** Common formatter functions can potentially be reused across
+  different commands if they handle similar data structures.
+
 stdout/stderr: the the decision to send all messages, but the final output of
 the command, including info, warnings, and errors, to `stderr` follows a
 deliberate design choice that aligns with common practices in many CLI tools and
