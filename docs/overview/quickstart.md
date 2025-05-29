@@ -274,8 +274,8 @@ Congratulations! You've successfully navigated the core workflow of creating a
 Now that you've seen the basics, you're ready to explore more:
 
 * **Deepen your knowledge:** Explore the **[User Guides](../guides/index.md)**,
-  starting with "[Create your first script](../guides/first_script.md)" to learn
-  about subcommands, script migration and managing Tomes.
+  starting with "[Tome Scripts In-Depth](../guides/in_depth.md)" to learn about
+  subcommands, formatting output, script migration and managing Tomes.
 * **API Specifics:** For detailed information on the `@tome_command` decorator,
   command function signatures, or the `TomeOutput` class, see the [Python
   Scripting API Reference](../reference/python_api.md).

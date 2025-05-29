@@ -10,7 +10,7 @@ nav:
       - Help & Support: overview/help.md
   - Guides:
       - guides/index.md
-      - Create your first script: guides/first_script.md
+      - Tome Scripts In-Depth: guides/in_depth.md
       - Sharing your scripts: guides/share.md
       - Testing your scripts: guides/testing.md
       - Migrate a script: guides/migrate_script.md
