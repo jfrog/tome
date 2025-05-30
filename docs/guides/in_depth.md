@@ -173,95 +173,148 @@ hardcoding paths or worrying about where to put user-specific data.
 
 ## 5. Standarazing Output using Formatters
 
-Our subcommands currently return dictionaries. To present this data to the user
-in a readable way, or as structured data like JSON, we use **formatters**.
-
-Let's define formatters for our `list` subcommand. We'll add a text formatter
-and a JSON formatter.
+Our subcommands currently is printing a success message to `stdout` but **tome**
+provides a way of presenting information in a more structured? way using
+`formatters`.  Let's define formatters for our `list` subcommand. We'll add a
+`text` formatter and a `JSON` formatter.
 
 Modify `utils/todo.py` to include these formatter functions and update the
 `@tome_command` decorator for `list`:
 
 ```python
-Codigo con solo añadidos los formatters
+from tome.command import tome_command
+from tome.api.output import TomeOutput
+from tome.errors import TomeException
+import json
+import os
+
+TASKS_FILE_NAME = "mytasks.json"
+
+def todo_text_formatter(data_dict):
+    if data_dict.get("status") == "success" and "message" in data_dict:
+        TomeOutput(stdout=True).info(data_dict["message"])
+    elif data_dict.get("status") == "error" and "error" in data_dict:
+        raise TomeException(data_dict["error"])
+
+def todo_json_formatter(data_dict):
+    TomeOutput(stdout=True).print_json(json.dumps(data_dict, indent=2))
+
+    if data_dict.get("status") == "error" and "error" in data_dict:
+        raise TomeException(data_dict["error"])
+
+
+@tome_command()
+def todo(tome_api, parser, *args):
+    """
+    A simple command-line To-Do list manager.
+    """
+    pass
+
+@tome_command(parent=todo, formatters={"text": todo_text_formatter, "json": todo_json_formatter})
+def add(tome_api, parser, *args):
+    """Adds a new task to the list."""
+    parser.add_argument('description', help="The description of the task.")
+    parsed_args = parser.parse_args(*args)
+
+    task_description = parsed_args.description
+
+    utility_storage_path = os.path.join(tome_api.store.folder, "utils_todo")
+    os.makedirs(utility_storage_path, exist_ok=True)
+    tasks_file_path = os.path.join(utility_storage_path, TASKS_FILE_NAME)
+
+    tasks = []
+    if os.path.exists(tasks_file_path):
+        try:
+            with open(tasks_file_path, 'r') as f:
+                tasks = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            tasks = []
+
+    new_task = {"description": task_description}
+    tasks.append(new_task)
+
+    try:
+        with open(tasks_file_path, 'w') as f:
+            json.dump(tasks, f, indent=2)
+
+        return {
+            "action": "add",
+            "status": "success",
+            "message": f"Task '{task_description}' added.",
+            "description": task_description
+        }
+    except IOError as e:
+        return {
+            "action": "add",
+            "status": "error",
+            "error": f"Could not save task to '{tasks_file_path}': {str(e)}",
+            "description": task_description
+        }
 ```
 
-**Key changes for formatters:**
+**Understanding the Changes:**
 
-- Each subcommand function (`add`, `list`, `done`, `remove`) now `return`s a
-  dictionary.
-- We defined formatter functions (`todo_list_text_formatter`,
-  `todo_list_json_formatter`, `simple_message_text_formatter`,
-  `simple_message_json_formatter`).
-- The `@tome_command()` decorator for each subcommand was updated with the
-  `formatters` argument.
-- **tome** now automatically adds a `--format` option to these subcommands.
+- The `@tome_command()` decorator for `add` was updated with a `formatters` argument.
+- The `add` function now `return`s a dictionary, whether for success or a
+  validation error.
+- We defined `todo_text_formatter` and `todo_json_formatter` to handle the dictionary
+  returned by `add` you can select which one you want to use when running
+  `utils:todo add` with the `--format` argument. The `text` one is used by
+  default if the `--format` argument is not passed.
+- The `todo_text_formatter` raises a `TomeException` if it finds an error in the
+  data, ensuring **tome** reports it.
+- The `todo_json_formatter` prints the JSON (which will include the error structure
+  if present) and *then* raises `TomeException` if an error key exists, so
+  automated tools get structured error data but the script still exits with an
+  error code.
 
+Now, **tome** automatically adds a `--format` option to your command.
 
-## 6. Installing and Running the Enhanced `todo` Command
+Try it out:
 
-1.  **Save `utils/todo.py`**.
-2.  If you haven't already, install your **Tome** from the `my-scripts`
-    directory:
-
-        $ tome install . -e
-
-3.  Now, try out your `todo` command and its subcommands:
+Default text output:
 
 ```console
 $ tome utils:todo add "Buy groceries"
-Task 'Buy groceries' added with ID 1.
+Task 'Buy groceries' added.
 
-$ tome utils:todo add "Read Tome documentation"
-Task 'Read Tome documentation' added with ID 2.
 
-$ tome utils:todo list
-Your To-Do List:
-    1. [ ] Buy groceries
-    2. [ ] Read Tome documentation
-
-$ tome utils:todo done 1
-Task 1 marked as done.
-
-$ tome utils:todo list --format json
+$ tome utils:todo add "Take the dog out" --format=json
 {
-    "status": "success",
-    "tasks": [
-        {
-            "id": 1,
-            "description": "Buy groceries",
-            "done": true
-        },
-        {
-            "id": 2,
-            "description": "Read Tome documentation",
-            "done": false
-        }
-    ]
+  "action": "add",
+  "status": "success",
+  "message": "Task 'Take the dog out' added.",
+  "description": "Take the dog out"
 }
-
-$ tome utils:todo remove 1
-Task 1 removed.
-
-$ tome utils:todo list
-Your To-Do List:
-    1. [ ] Read Tome documentation
-
-$ tome utils:todo done 5 --format json # Example of an error in JSON
-{
-    "status": "error",
-    "error": "Task ID 5 not found."
-}
-Error: Task ID 5 not found.
 ```
+
+Using formatters like this keeps your command's core logic separate from its
+presentation, making your code cleaner. Plus, you can easily offer different
+output styles (e.g., text for users, JSON for tools) from a single command,
+making it more maintainable. You can learn more about how to define and use them
+in the [Output Formatters
+Reference](../reference/python_api.md#output-formatters).
+
+## 6. Finishing the command
+
+You can find the full implementation in the examples folder in the GitHub
+repository. Please, [copy and paste from
+here](https://github.com/jfrog/tome/blob/main/examples/utils/todo.py) if you
+want to test the complete command.
 
 ## Conclusion
 
 In this guide, you've seen how to:
+
 * Structure commands using **subcommands** for better organization.
 * Make your commands return data and use **formatters** for flexible text and
   JSON output.
 * Utilize the **`tome_api.store.folder`** for persistent data storage.
+* Executed your **Command**, initially with direct output.
+* Implemented custom **output formatters** for both human-readable text and
+  machine-readable JSON.
+* Tested your command with different arguments and output formats using the
+  automatically provided `--format` option.
 
 These features allow you to build more sophisticated and user-friendly
 command-line tools with **tome**. Explore the [Python Scripting API
