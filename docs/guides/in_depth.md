@@ -307,12 +307,9 @@ want to test the complete command.
 In this guide, you've seen how to:
 
 * Structure commands using **subcommands** for better organization.
+* Utilize the **`tome_api.store.folder`** for persistent data storage.
 * Make your commands return data and use **formatters** for flexible text and
   JSON output.
-* Utilize the **`tome_api.store.folder`** for persistent data storage.
-* Executed your **Command**, initially with direct output.
-* Implemented custom **output formatters** for both human-readable text and
-  machine-readable JSON.
 * Tested your command with different arguments and output formats using the
   automatically provided `--format` option.
 
