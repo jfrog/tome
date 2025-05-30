@@ -102,8 +102,7 @@ Signature**](../reference/python_api.md#command-function-signature): The
 * **Output with `TomeOutput`**: For now, `TomeOutput(stdout=True).info()` prints
   directly. Notice the `stdout=True`, by default all output via `TomeOutput`
   goes to `stderr`, so we specify that we want the result message of our command
-  in `stdout`. In the next section, we'll explore more flexible output using
-  [formatters](../reference/python_api.md#output-formatters).
+  in `stdout`.
 
 * [**Error Handling with `TomeException`**](../reference/python_api.md#errors):
   Notice the `try...except` block. If the date format is invalid, instead of
@@ -152,108 +151,6 @@ $ tome list utils
 
 The `(e)` reminds you it's an editable installation.
 
-## Step 6: Enhancing Output with Formatters
-
-Instead of printing directly, **tome** **Commands** can return data and use
-**formatters** to control the presentation (e.g., plain text or JSON). This is
-particularly useful for structured output. You can learn more about how to
-define and use them in the [Output Formatters
-Reference](../reference/python_api.md#output-formatters). Let's modify
-`utils/agecalc.py` to use this pattern:
-
-1.  **Update the `agecalc` function to return data and define formatters:**
-
-```python
-from tome.command import tome_command
-from tome.api.output import TomeOutput
-from tome.errors import TomeException
-
-import datetime
-import json
-
-def text_formatter(data_dict):
-    if "error" in data_dict:
-        raise TomeException(data_dict["error"])
-    else:
-        age = data_dict["calculated_age_years"]
-        TomeOutput(stdout=True).info(f"You are {age} years old.")
-
-def json_formatter(data_dict):
-    TomeOutput(stdout=True).print_json(json.dumps(data_dict))
-    if "error" in data_dict:
-        raise TomeException(data_dict["error"])
-
-@tome_command(formatters={"text": text_formatter, "json": json_formatter})
-def agecalc(tome_api, parser, *args):
-    """
-    Calculates age based on a given birth date.
-    """
-    parser.add_argument(
-        'birthdate',
-        type=str,
-        help="Your birth date in YYYY-MM-DD format (e.g., '1990-07-25')"
-    )
-    parsed_args = parser.parse_args(*args)
-
-    try:
-        birth_date_obj = datetime.datetime.strptime(parsed_args.birthdate, '%Y-%m-%d').date()
-    except ValueError:
-        return {"error": "Invalid date format. Please use YYYY-MM-DD."}
-
-    today = datetime.date.today()
-    age_years = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
-
-    return {"birthdate_input": parsed_args.birthdate, "calculated_age_years": age_years, "status": "success"}
-```
-
-2.  **Save the `utils/agecalc.py` file.**
-
-**Understanding the Changes:**
-
-- The `@tome_command()` decorator was updated with a `formatters` argument.
-- The `agecalc` function now `return`s a dictionary, whether for success or a
-  validation error.
-- We defined `text_formatter` and `json_formatter` to handle the dictionary
-  returned by `agecalc` you can select which one you want to use when running
-  `utils:agecalc` with the `--format` argument. The `text` one is used by
-  default if the `--format` argument is not passed.
-- The `text_formatter` raises a `TomeException` if it finds an error in the
-  data, ensuring **tome** reports it.
-- The `json_formatter` prints the JSON (which will include the error structure
-  if present) and *then* raises `TomeException` if an error key exists, so
-  automated tools get structured error data but the script still exits with an
-  error code.
-
-Now, **tome** automatically adds a `--format` option to your command.
-
-Try it out:
-
-Default text output:
-
-```console
-$ tome utils:agecalc 1990-07-25
-You are 34 years old.
-
-$ tome utils:agecalc 1990-07-25 --format=json
-{
-  "birthdate_input": "1990-07-25",
-  "calculated_age_years": 34,
-  "status": "success"
-}
-
-# here the json goes to stdout and the exception error goes to stderr
-$ tome utils:agecalc invalid-date --format=json
-{
-  "error": "Invalid date format. Please use YYYY-MM-DD."
-}
-Error: Invalid date format. Please use YYYY-MM-DD.
-```
-
-Using formatters like this keeps your command's core logic separate from its
-presentation, making your code cleaner. Plus, you can easily offer different
-output styles (e.g., text for users, JSON for tools) from a single command,
-making it more maintainable.
-
 ## That's It!
 
 Congratulations! You've successfully navigated the core workflow of creating a
@@ -263,11 +160,6 @@ Congratulations! You've successfully navigated the core workflow of creating a
 * Defined a **Command** with command-line arguments using `argparse`.
 * Implemented basic error handling using `TomeException`.
 * Installed your local directory as an editable **Tome**.
-* Executed your **Command**, initially with direct output.
-* Implemented custom **output formatters** for both human-readable text and
-  machine-readable JSON.
-* Tested your command with different arguments and output formats using the
-  automatically provided `--format` option.
 
 ## Next Steps
 
