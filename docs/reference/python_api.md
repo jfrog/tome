@@ -134,12 +134,20 @@ flag: `$ tome yournamespace:my_data_command --format json`
 
 TODO
 
-## Vault API (Accessing Secrets)
+## Vault API
 *(Details on `tome_api.vault.open()`, `vault.read()`, `vault.create()`, etc.,
 available to scripts).* This section will explain how scripts can interact with
 **tome**'s vault functionality.
 
-## Store API (Local Storage)
+## Store API
 *(Details on using `tome_api.store.folder` to read/write persistent files
 related to a **Tome**).* This section will describe how scripts can utilize the
 local storage area provided by **tome**.
+
+**Key advantages of using `tome_api.store.folder` include:**
+
+* **Centralized Data:** Keeps all script-related data in a known location,
+  making it easier for users to manage or backup.
+* **Path Simplicity:** Your script receives a ready-to-use, writable path,
+  avoiding the need to hardcode paths or guess user directories.
+* **Cleanliness:** Separates runtime data from your script's source code.

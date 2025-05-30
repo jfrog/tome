@@ -88,12 +88,21 @@ Task 'Buy groceries' added (not saved).
 
 Let's make some improvements:
 
-## 4. Using the Store API (`tome_api.store.folder`)
+## 4. Using the Store API (`tome_api.store.folder`) for Persistent Data
 
-Hemos hecho el subcomando pero realmente no hace mucho, en este paso explicamos
-como podemos tener el store api para un sitio centralizado donde guardar
-información esto tiene la ventaja de que pueda see compartida entre varios
-comandos instalados por ej.
+Our `add` subcommand, as defined in the previous step, prints a message but
+doesn't actually save the task anywhere. To make our To-Do list useful, we need
+to store the tasks persistently so they can be retrieved later.
+
+This is where **tome**'s Store API comes in handy. The `tome_api` object passed
+to your command functions has an attribute `store.folder`, which provides a
+consistent, managed directory path within your **tome** home (usually
+`~/.tome/storage/`). Your scripts can use this location to save and read data
+files.
+
+Let's modify our `utils/todo.py` script. We will update the `add` subcommand to
+save the new task into a JSON file named `mytasks.json`, located within a
+`utils_todo` subdirectory inside the path provided by `tome_api.store.folder`.
 
 ```python
 
@@ -143,24 +152,34 @@ def add(tome_api, parser, *args):
         TomeOutput().error(f"Could not save task to '{tasks_file_path}'.")
 ```
 
-Explicar lo que se ha hecho, puede que reutilizar algo de esto:
+**Explanation of the changes:**
 
-This provides a consistent, managed directory within
-your **tome** home (usually `~/.tome/storage/`) where your application can store
-data.
+* A constant `TASKS_FILE_NAME` is defined.
+* Inside `add`, `utility_storage_path` is created using `tome_api.store.folder`
+  combined with a subdirectory `utils_todo` for better organization within the
+  global store. `os.makedirs(utility_storage_path, exist_ok=True)` ensures this
+  path exists.
+* `tasks_file_path` is the full path to our `mytasks.json`.
+* We attempt to load existing tasks from this file. If the file doesn't exist or
+  is invalid, we start with an empty list (`tasks = []`).
+* The `new_task` dictionary currently only stores the `description`.
+* The updated `tasks` list is then saved back to `mytasks.json` using
+  `json.dump()`.
+* A confirmation message, including the path to the saved file, is printed.
 
-* **`os.path.join(tome_api.store.folder, TASKS_FILE)`**: Constructs a path to
-  `tasks.json` inside the dedicated store folder.
-* **`os.makedirs(tome_api.store.folder, exist_ok=True)`**: Ensures the main
-  store folder exists.
-
-Now we have persistent information:
+Now, when you run the `add` subcommand, the task is saved:
 
 ```console
 $ tome utils:todo add "Buy groceries"
 Task 'Buy groceries' saved in '~/.tome/storage/utils_todo/mytasks.json'.
 
 $ cat '~/.tome/storage/utils_todo/mytasks.json'
+```
+
+You can inspect the `mytasks.json` file (the exact path will be shown in your
+output) to see the saved tasks:
+
+```console
 [
   {
     "description": "Buy groceries"
@@ -168,8 +187,9 @@ $ cat '~/.tome/storage/utils_todo/mytasks.json'
 ]
 ```
 
-This is a clean way to handle persistent data for your commands without
-hardcoding paths or worrying about where to put user-specific data.
+This demonstrates how the [Store API](../reference/python_api.md#store-api)
+provides a clean way to handle persistent data for your commands without needing
+to manage complex pathing or worry about where to place user-specific data.
 
 ## 5. Standarazing Output using Formatters
 
