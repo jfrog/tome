@@ -11,7 +11,7 @@ more:
   your **Tomes** using Git, local folders, or archives.
 * **[Testing your scripts](testing.md):** A guide on writing and running tests
   for your **tome** commands using `pytest`.
-* **[Migrate a script](migrate_script.md):** Integrate your existing shell or
+* **[Migrate a shell script](migrate_script.md):** Integrate your existing shell or
   Python scripts into the **tome** framework.
 * **Relevant Features:**
     * **[Store](features/store.md):** Learn how to use **tome**'s local storage

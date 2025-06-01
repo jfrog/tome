@@ -1,4 +1,4 @@
-# How to migrate a script to tome
+# How to migrate a shekll script to tome
 
 If you want to add your current scripts to tome you need to:
 
