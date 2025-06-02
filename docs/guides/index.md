@@ -14,7 +14,5 @@ more:
 * **[Migrate a shell script](migrate_script.md):** Integrate your existing shell or
   Python scripts into the **tome** framework.
 * **Relevant Features:**
-    * **[Store](features/store.md):** Learn how to use **tome**'s local storage
-      API within your scripts.
     * **[Vault](features/vault.md):** Discover how to securely manage secrets
       and use them in your commands.

@@ -47,7 +47,7 @@ Installed source: ...
 
 Let's edit `utils/todo.py`. Let's start by defining the main `todo` command and
 its first subcommand, `add`. For data persistence, we'll use a simple JSON file
-stored via [tome's Store API](features/store.md).
+stored via [tome's Store API](../reference/python_api.md).
 
 ```python
 from tome.command import tome_command
@@ -187,7 +187,7 @@ output) to see the saved tasks:
 ]
 ```
 
-This demonstrates how the [Store API](../reference/python_api.md#store-api)
+This demonstrates how the [Store API](../reference/python_api.md)
 provides a clean way to handle persistent data for your commands without needing
 to manage complex pathing or worry about where to place user-specific data.
 

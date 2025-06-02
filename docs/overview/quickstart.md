@@ -86,7 +86,7 @@ def agecalc(tome_api, parser, *args):
   Python-based commands.
 
 * [**Command Function
-Signature**](../reference/python_api.md#command-function-signature): The
+Signature**](../reference/python_api.md): The
 `agecalc` function, like all **tome** Python commands, takes `tome_api`,
 `parser`, and `*args` as parameters.
 
@@ -104,7 +104,7 @@ Signature**](../reference/python_api.md#command-function-signature): The
   goes to `stderr`, so we specify that we want the result message of our command
   in `stdout`.
 
-* [**Error Handling with `TomeException`**](../reference/python_api.md#errors):
+* [**Error Handling with `TomeException`**](../reference/python_api.md):
   Notice the `try...except` block. If the date format is invalid, instead of
   just printing an error, we `raise TomeException("Invalid date format...")`.
   This is the recommended way to signal errors from your commands. **tome** will
