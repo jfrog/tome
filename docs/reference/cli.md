@@ -1,154 +1,435 @@
-# CLI Command Reference
+# Command-Line Interface (CLI) Reference
 
-This page provides a reference for all built-in **Tome Commands** provided by
-the **tome** tool.
+This page provides a comprehensive reference for all built-in **Tome Commands**.
 
-For quick help from your terminal:
-- General help and command list: `tome --help`
-- Help for a specific command: `tome <command_name> --help`
+For quick help from your terminal, you can always use:
+
+* General help and list of commands: `tome --help`
+* Help for a specific command: `tome <command_name> --help`
+* Help for a subcommand: `tome <command_name> <subcommand_name> --help`
+
+Global options available for most commands:
+
+* `-v, --verbose`: Increase the level of verbosity (can be used multiple times,
+  e.g., `-vv`, `-vvv`).
+* `-q, --quiet`: Reduce the output to a minimum, showing only critical errors.
+
+---
+
+## `tome` (General Usage)
+
+Running `tome` without any arguments or with just `--help` provides a list of
+all top-level available commands.
+
+```console
+$ tome --help
+
+📖 tome commands:
+  config         Manage the tome configuration.
+  info           Get information about a specific command.
+  install        Install scripts from a source.
+  list           List all the commands that match a given pattern.
+  new            Create a new example recipe and source files from a template.
+  test           Run any test located by your script with pytest framework.
+  uninstall      Uninstall a tome of scripts.
+  vault          Manage encrypted secret variables usable in any tome script.
+```
 
 ---
 
 ## `tome config`
-Manages **tome** configuration.
+
+Manages **tome** configuration settings, such as the home directory and storage
+path. This command has subcommands to query specific configuration values.
+
+**Usage:**
+
+```console
+$ tome config --help
+
+usage: tome config [-h] [-v] [-q] {home,store} ...
+
+Manage the tome configuration.
+
+positional arguments:
+  {home,store}    sub-command help
+    home          print the current home folder
+    store         print the current store folder
+
+options:
+  -h, --help      show this help message and exit
+  -v, --verbose   Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet     Reduce the output to a minimum, showing only critical errors
+```
 
 ### `tome config home`
-Prints the current **tome** home directory path. This is where **tome** stores
-its cache, installed scripts, and other data. **Usage:** $ tome config home
+
+Prints the absolute path to the current **tome** home directory. This is the
+root directory where **tome** stores its cache, installed scripts, vaults, and
+other operational data.
+
+**Usage:**
+
+```console
+$ tome config home --help
+
+usage: tome config home [-h] [-v] [-q]
+
+options:
+  -h, --help      show this help message and exit
+  -v, --verbose   Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet     Reduce the output to a minimum, showing only critical errors
+```
 
 ### `tome config store`
-Prints the path to **tome**'s local storage directory. Scripts can use this
-location to persist data. **Usage:** $ tome config store
+
+Prints the absolute path to **tome**'s local storage directory. Scripts managed
+by **tome** can use this location to persist their own data, like configuration
+files or caches.
+
+**Usage:**
+
+```console
+$ tome config store --help
+
+usage: tome config store [-h] [-v] [-q]
+
+options:
+  -h, --help      show this help message and exit
+  -v, --verbose   Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet     Reduce the output to a minimum, showing only critical errors
+```
 
 ---
 
 ## `tome info`
-Get detailed information about a specific installed **Command**.
 
-**Usage:** $ tome info <namespace:command_name> [options]
+Retrieves and displays detailed information about a specific installed
+**Command**.
 
-**Arguments:**
+**Usage:**
 
-* `namespace:command_name`: The full name of the command you want information
-  about.
+```console
+$ tome info --help
 
-**Options:**
+usage: tome info [-h] [-v] [-q] [-f FORMAT] command_name
 
-* `-f, --format <FORMAT>`: Specify output format (e.g., `json`).
+Get information about a specific command.
+
+positional arguments:
+  command_name          The full name of the command (e.g., namespace:command).
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+```
 
 ---
 
 ## `tome install`
-Installs a **Tome** (collection of scripts) from a specified **Origin**.
 
-**Usage:** $ tome install [source] [options]
+Installs a **Tome** (collection of scripts) from a specified **Origin**, making
+its **Commands** discoverable and executable by **tome**.
 
-**Arguments:**
+**Usage:**
 
-* `source` (optional): The **Origin** of the **Tome**. Can be:
+```console
+$ tome install --help
 
-    * A Git repository URL (e.g., `https://github.com/user/repo.git`). You can
-      specify a branch/tag/commit with `@` (e.g., `repo.git@my-branch`).
-    * A local directory path (e.g., `./my-scripts` or `/path/to/tome`). Defaults
-      to `.` if not provided.
-    * A URL or local path to a ZIP/tarball archive (e.g.,
-      `http://example.com/scripts.zip`, `./archive.zip`).
+usage: tome install [-h] [-v] [-q] [-f FORMAT] [-e] [--no-ssl] [--create-env]
+                      [--force-requirements] [--folder FOLDER]
+                      [source]
 
-**Options:**
+Install scripts from a source.
 
-* `-e, --editable`: Installs a local directory **Tome** in "editable" mode.
-  Script changes are live without reinstalling.
-* `--no-ssl`: Disables SSL certificate verification when downloading from HTTPS
-  URLs.
-* `--create-env`: If the **Tome** contains a `requirements.txt`, creates a
-  dedicated Python virtual environment for it and installs dependencies there.
-* `--force-requirements`: Installs dependencies from `requirements.txt` into the
-  current Python environment. (Requires an active virtual environment if
-  `--create-env` is not used).
-* `--folder <FOLDER>`: For Git or archive **Origins**, specifies a subfolder
-  within the source to install from.
+    The source can be a git repository, a folder, or a zip file (local or http).
+    Editable installations are supported with the -e/--editable flag.
+
+positional arguments:
+  source                Source: a git repository, folder, or zip file (local or http).
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+  -e, --editable        Install a package in editable mode.
+  --no-ssl              Do not verify SSL connections.
+  --create-env          Create a new virtual environment if the command depends on any requirements.
+  --force-requirements  Install requirements even if not running tome in a virtual environment.
+  --folder FOLDER       Specify a folder within the source to install from (only valid for git or zip file sources).
+```
 
 ---
 
 ## `tome list`
+
 Lists all installed **Commands** that **tome** is aware of, optionally filtered
 by a pattern.
 
-**Usage:** $ tome list [pattern] [options]
+**Usage:**
 
-**Arguments:**
+```console
+$ tome list --help
 
-* `pattern` (optional): A wildcard pattern to filter **Commands** by name or
-  description. If omitted, lists all non-built-in commands.
+usage: tome list [-h] [-v] [-q] [-f FORMAT] [pattern]
 
-**Options:**
+List all the commands that match a given pattern.
 
-* `-f, --format <FORMAT>`: Specify output format (e.g., `json`).
+positional arguments:
+  pattern               Commands name pattern. By default, it shows all the commands
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+```
 
 ---
 
 ## `tome new`
-Creates a new example **Script** and associated files (like tests) from a
-template.
 
-**Usage:** $ tome new <namespace:command_name> [options]
+Creates a new example **Script** (and associated test files for Python scripts)
+from a template, placing it within the specified **Namespace**.
 
-**Arguments:**
+**Usage:**
 
-* `namespace:command_name`: The desired name for the new **Command**, including
-  its **Namespace**.
+```console
+$ tome new --help
 
-**Options:**
+usage: tome new [-h] [-v] [-q] [--type {python,sh,bat}] [--script SCRIPT] [-f]
+                  [--description DESCRIPTION]
+                  script_name
 
-* `--type <TYPE>`: Type of script to create. Choices: `python` (default), `sh`,
-  `bat`.
-* `--script <CONTENT>`: For `sh` or `bat` types, provide the initial content for
-  the script.
-* `-f, --force`: Overwrite if a script/command at the target path already
-  exists.
-* `--description "<DESCRIPTION>"`: A description for the new command (used in
-  its docstring/help text).
+Create a new example recipe and source files from a template.
+
+positional arguments:
+  script_name           Name for the script in a tome standard way, like namespace:script_name.
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  --type {python,sh,bat}
+                        Type of the script to create.
+  --script SCRIPT       Content of the script if type is 'sh' or 'bat'.
+  -f, --force           Force overwrite of command if it already exists
+  --description DESCRIPTION
+                        Description of the command.
+```
 
 ---
 
 ## `tome test`
-Runs tests for your installed **Tomes** using the `pytest` framework.
 
-**Usage:** $ tome test <pattern>
+Runs tests for your installed **Tomes** using the `pytest` framework. **tome**
+will look for test files (typically `test_*.py` or `*_test.py`) within the
+directories of the **Tomes** that match your pattern.
 
-**Arguments:**
+**Usage:**
 
-* `pattern`: Specifies which tests to run.
-    * `namespace:command_name`: Run tests for a specific command.
-    * `namespace:*`: Run all tests for a given namespace.
-    * `*`: Run all tests for all installed (non-built-in) **Tomes**.
+```console
+$ tome test --help
+
+usage: tome test [-h] [-v] [-q] pattern
+
+Run any test located by your script with pytest framework.
+
+positional arguments:
+  pattern               Commands name pattern. Use '*' to launch all tests or 'namespace:command' to launch tests for a specific command.
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+```
 
 ---
 
 ## `tome uninstall`
-Uninstalls a **Tome** from **tome**'s management.
 
-**Usage:** $ tome uninstall <source_uri_or_path>
+Uninstalls a **Tome** from **tome**'s management, based on its **Origin**.
 
-**Arguments:**
+**Usage:**
 
-* `source_uri_or_path`: The **Origin** (Git URL, local path, archive path/URL)
-  of the **Tome** you wish to uninstall. For editable installs, this is the
-  local path that was installed.
+```console
+$ tome uninstall --help
+
+usage: tome uninstall [-h] [-v] [-q] [-f FORMAT] [source]
+
+Uninstall a tome of scripts.
+
+positional arguments:
+  source                Source: a git repository, folder, or zip file (local or http).
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+```
 
 ---
 
 ## `tome vault`
-Manages encrypted secret variables usable in your **tome** **Commands**. This
-command has several subcommands. Run `tome vault --help` for a list.
 
-*(You would then list and describe subcommands like `tome vault create`, `tome
-vault add-secret`, `tome vault list-secrets`, `tome vault delete-secret`, `tome
-vault delete`, similar to how they are in your `docs/tome_commands.md` and
-`docs/features/vault.md`)*
+Manages encrypted secret variables that can be used by your **tome**
+**Commands**. This command has several subcommands for creating vaults,
+adding/removing secrets, and listing secrets.
 
----
+**Usage:**
 
-*(Consider adding `tome --version` and `tome --help` as general tool options if
-not covered adequately elsewhere, though `reference/cli.md` might be for
-specific commands rather than global flags.)*
+```console
+$ tome vault --help
+
+usage: tome vault [-h] [-v] [-q]
+                  {create,delete,add-secret,delete-secret,list-secrets} ...
+
+Manage encrypted secret variables usable in any tome script.
+
+positional arguments:
+  {create,delete,add-secret,delete-secret,list-secrets}
+                        sub-command help
+    create              Create a new vault with a new password
+    delete              Delete a vault
+    add-secret          Add a new secret
+    delete-secret       Delete a secret
+    list-secrets        List available secrets id's and descriptions in all vaults
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+```
+
+### `tome vault create`
+
+Creates a new encrypted vault. You will be prompted for a password to secure it.
+
+**Usage:**
+
+```console
+$ tome vault create --help
+
+usage: tome vault create [-h] [-v] [-q] [-f FORMAT] [-p PASSWORD] [-n NAME]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+  -p PASSWORD, --password PASSWORD
+                        Tome vault password (Prompt if not specified)
+  -n NAME, --name NAME  Vault name (will use the "default" vault if not specified)
+```
+
+### `tome vault delete`
+
+Deletes an existing vault and all secrets within it. This action is
+irreversible.
+
+**Usage:**
+
+```console
+$ tome vault delete --help
+
+usage: tome vault delete [-h] [-v] [-q] [-f FORMAT] [-p PASSWORD] [-n NAME]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+  -p PASSWORD, --password PASSWORD
+                        Tome vault password (Prompt if not specified)
+  -n NAME, --name NAME  Vault name (will use the "default" vault if not specified)
+```
+
+### `tome vault add-secret`
+
+Adds a new secret (a key-value pair) to a specified vault.
+
+**Usage:**
+
+```console
+$ tome vault add-secret --help
+
+usage: tome vault add-secret [-h] [-v] [-q] [-f FORMAT] [-p PASSWORD] [-u]
+                              [--description DESCRIPTION] [-vn VAULT]
+                              name text
+
+positional arguments:
+  name                  Secret text name
+  text                  Secret text content
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+  -p PASSWORD, --password PASSWORD
+                        Tome vault password (Prompt if not specified)
+  -u, --update          Update if exists
+  --description DESCRIPTION
+                        Secret text description
+  -vn VAULT, --vault VAULT
+                        Vault name (will use the "default" vault if not specified)
+```
+
+### `tome vault delete-secret`
+
+Removes a specific secret from a vault.
+
+**Usage:**
+
+```console
+$ tome vault delete-secret --help
+
+usage: tome vault delete-secret [-h] [-v] [-q] [-f FORMAT] [-p PASSWORD]
+                                [-vn VAULT]
+                                name
+
+positional arguments:
+  name                  Secret text name
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+  -p PASSWORD, --password PASSWORD
+                        Tome vault password (Prompt if not specified)
+  -vn VAULT, --vault VAULT
+                        Vault name (will use the "default" vault if not specified)
+```
+
+### `tome vault list-secrets`
+
+Lists the names and descriptions of all secrets stored in all vaults. The secret
+values themselves are not displayed.
+
+**Usage:**
+
+```console
+$ tome vault list-secrets --help
+
+usage: tome vault list-secrets [-h] [-v] [-q] [-f FORMAT]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet           Reduce the output to a minimum, showing only critical errors
+  -f FORMAT, --format FORMAT
+                        Select the output format: json
+```
