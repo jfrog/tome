@@ -143,7 +143,7 @@ Check all available commands with `tome list`:
 ```console
 $ tome list utils
 
-📖 ~/my-scripts
+📖 /some/path/my-scripts
 
   🐮 utils commands
      utils:agecalc (e)  Calculates age based on a given birth date.
