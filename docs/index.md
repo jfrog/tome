@@ -7,7 +7,7 @@
 ## What can tome do?
 
 - 📂 **Organise** – [keep your scripts tidy and always
-  accessible](guides/first_script.md) with a clear folder structure.
+  accessible](overview/quickstart.md) with a clear folder structure.
 - 🤝 **Share** – [distribute your script collections](guides/share.md) via Git,
   archives, or local folders.
 - 🧪 **Test** – [test scripts](guides/testing.md) in one line to make sure they

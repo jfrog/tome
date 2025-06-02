@@ -1,4 +1,4 @@
-# Python Scripting API Reference
+# Python API Reference
 
 This section details the Application Programming Interface (API) that **tome**
 provides for developers creating custom **Commands** using Python.
@@ -20,13 +20,13 @@ is by using the `@tome_command()` decorator.
 * `parent` (optional): If this command is a subcommand, set this to the parent
   command's function object. Default: `None`.
     * *Example and further details in [Guides: Creating
-      Subcommands](../guides/first_script.md#creating-subcommands) (Ajusta este
+      Subcommands](../guides/in_depth.md#3-implementing-subcommands) (Ajusta este
       enlace si es necesario).*
 * `formatters` (optional): A dictionary mapping format names (strings) to
   formatter functions. Each formatter function takes the data returned by your
   command function and handles its presentation.
     * *Example and further details in [Guides: Output
-      Formatters](../guides/first_script.md#enhancing-output-with-formatters)
+      Formatters](../guides/in_depth.md#5-standarazing-output-using-formatters)
       (Ajusta este enlace si es necesario).*
 
 ## Command Function Signature

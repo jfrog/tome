@@ -19,6 +19,7 @@ nav:
         - Vault: guides/features/vault.md
   - Reference:
       - Command-line interface: reference/cli.md
+      - Python API: reference/python_api.md
   - Resources:
       - Glossary: resources/glossary.md
       - FAQ: resources/faq.md
