@@ -1,12 +1,29 @@
 site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
 nav:
-  - Introduction: index.md
-  - Installing tome: install.md
-  - Tome Commands Syntax Reference: reference.md
-  - Installing tome commands: tome_install.md
-  - Testing tome commands: tome_test.md
-  - Commands Reference: tome_commands.md
+  - Welcome:
+      - index.md
+  - Overview:
+      - overview/index.md
+      - Installation: overview/installing.md
+      - Quickstart: overview/quickstart.md
+      - Help & Support: overview/help.md
+  - Guides:
+      - guides/index.md
+      - Tome Scripts In-Depth: guides/in_depth.md
+      - Sharing your scripts: guides/share.md
+      - Migrate a shell script: guides/migrate_script.md
+      - Testing your scripts: guides/testing.md
+      - Relevant Features:
+        - Vault: guides/features/vault.md
+  - Reference:
+      - reference/index.md
+      - Command-line interface: reference/cli.md
+      - Python API: reference/python_api.md
+  - Resources:
+      - Glossary: resources/glossary.md
+  - License: license.md
+
 
 theme:
   name: material
@@ -26,8 +43,12 @@ theme:
         name: Switch to dark mode
   features:
     - content.code.copy
+    - content.code.annotate
     - content.tabs.link
     - navigation.expand
+    - navigation.indexes
+    - navigation.sections
+    - navigation.indexes
 
 plugins:
   - mkdocstrings
@@ -41,6 +62,12 @@ extra:
 
 extra_css:
   - stylesheets/tome.css
+  - stylesheets/termynal.css
+
+extra_javascript:
+  - js/termynal.js
+  - js/termynal-init.js
+  - js/tome.js
 
 markdown_extensions:
   - admonition
@@ -50,6 +77,7 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
       slugify: !!python/object/apply:pymdownx.slugs.slugify

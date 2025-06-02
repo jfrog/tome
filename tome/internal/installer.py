@@ -64,9 +64,10 @@ def clone_git_repo(source, destination):
             clone_cmd = f"git clone \"{source.uri}\" ."
             checkout_cmd = f"git checkout {source.version}" if source.version else ""
 
-            clone_message = (
-                f"Cloning {source}" if not source.version else f"Cloning {source} at '{source.version}' branch"
-            )
+            clone_message = f"Cloning {source.uri}"
+            if source.version:
+                clone_message += f" (at reference '{source.version}')"
+
             output.info(clone_message)
             ret, out = detect_runner(clone_cmd)
             if ret != 0:

@@ -1,202 +1,124 @@
-# > tome 📖
+# tome
 
-A powerful script management tool.
+<p class="tagline-highlight"><em>A set of tools to <strong>organize, share & run scripts</strong></em></p>
 
-## Key Features
+---
 
-- Organize 📂: Effortlessly manage and structure your scripts for a clean, maintainable codebase.
-- Collaborate 🤝: Seamlessly share and collaborate on scripts with your team to enhance productivity.
-- Test 🧪: Ensure your scripts' reliability and performance with comprehensive testing tools.
-- Secure 🔒: Manage and protect your passwords using the tome vaults.
+## What can tome do?
 
-## Getting Started
+- 📂 **Organise** – [keep your scripts tidy and always
+  accessible](overview/quickstart.md) with a clear folder structure.
+- 🤝 **Share** – [distribute your script collections](guides/share.md) via Git,
+  archives, or local folders.
+- 🧪 **Test** – [test scripts](guides/testing.md) in one line to make sure they
+  work as expected.
+- 🔒 **Secure** – manage secrets with [tome vault](guides/features/vault.md).
 
-Install `tome` using pip:
+---
 
-```bash
-$ pip install tome
-```
+## Install
 
-We highly recommend to [install into a virtual environment](./install.md).
+Create and activate a **virtual environment**. For detailed instructions, refer
+to the [install guide](overview/installing.md). Then, install **tome** using `pip`:
 
-## Using tome
+<div class="termy" data-termynal>
+<span data-ty="input">pip install tomescripts</span>
+<span data-ty>🎉  Tome installed.</span>
+<span data-ty="input">tome --version</span>
+<span data-ty>0.1.0</span>
+</div>
 
-### Installing scripts
+---
 
-You can install scripts from various sources like a git repository, local file or folder,
-zip file (local or http), or requirements file.
+## Hello world in 30 seconds
 
-For example, you can install the examples from the **tome** repository by doing:
+Use `tome new` to create a template for a command. Then **install** it in
+editable mode. Now your changes are reloaded instantly. Afterwards, **list** all
+available commands and **run it**.
 
-```bash
-$ tome install https://github.com/jfrog/tome.git --folder=examples
-```
-
-!!! note
-
-    Use the ``--folder`` argument when you have your scripts under a subfolder instead the root of the repository
-
-
-### Listing Available Scripts
-
-To list all installed scripts:
-
-```bash
-$ tome list
-
-🚀 ci commands
- ci:check-pipeline-status       Check the status of a pipeline in the CI.
- ci:view-logs                   View build or deploy logs from the CI system.
-
-☸️  k8s commands
- k8s:deploy                     Deploy a Kubernetes resource using a manifest.
- k8s:get-pods                   List all running pods in a Kubernetes cluster.
-
-📡 server commands
- server:check-health            Perform a health check on a server.
- server:log-watch               Stream live logs from a server.
- server:restart                 Restart a specific server instance.
- server:scale-down              Decrease the number of server instances.
- server:scale-up                Increase the number of server instances.
-```
-
-### Running a Script
-
-Execute a script invoking it with ``<namespace>:<command>`` like:
-
-```bash
-$ tome ci:check-pipeline-status --pipeline-id 427
-
-🚀 Checking the status of pipeline #427...
-Fetching pipeline details...
-Pipeline ID: 427
-Project: web-app-deployment
-Status: Running
-Started at: 2025-02-03 18:04:43 UTC
-Duration: 11 minutes
-📄 View pipeline details
-📝 Latest commit: Fix login issue (commit hash: a1b2c3d4)
-[2025-02-03 18:05:43.563673] - Cloning repository...
-[2025-02-03 18:06:58.563673] - Running tests...
-[2025-02-03 18:10:13.563673] - Building Docker image...
-Pipeline still running...
-```
-
-## Creating and Managing Scripts
-
-### Creating a New Script
-
-Create a new script with a predefined structure as a starting point using:
-
-```bash
-$ tome new <namespace>:<command>
-```
-
-Example:
-
-```bash
+```console
+# create a new command
 $ tome new greetings:hello
-```
 
-To start using it, you can install this tome command as editable so that you can see the
-changes while you are developing.
-
-```bash
+# install in editable mode
 $ tome install . -e
-```
 
-The command will appear marked as editable: ``(e)`` if you do a ``tome list``:
-
-```bash
+# list installed commands
 $ tome list
 
-...
-🌲 greetings commands
- greetings:hello (e)            Description of the command.
-...
+📖 ~/my-tome
 
+  🌲 greetings commands
+     greetings:hello (e)  Description of the command.
+
+# run it!
+$ tome greetings:hello Hello!
+ ________
+< Hello! >
+ --------
+        \\   @..@
+         \\ (----)
+           ( >__< )
+           ^^ ~~ ^^
 ```
 
-You can open the ``./greetings/hello.py`` file with the editor of your choice and start
-making changes. The changes will be inmediately applied when you are doing them because we
-have installed it as [editable](./editables.md).
+Install the examples from a third party, in this case the tome repository:
 
-This command will create something simillar to this file structure:
+```console
+# install tome examples from the github repository
+$ tome install https://github.com/jfrog/tome.git --folder=examples
 
-```bash
-.
-└── greetings
-    ├── hello.py
-    └── tests
-        └── test_hello.py
+# list installed commands
+$ tome list
+
+📖 https://github.com/jfrog/tome.git
+
+  🌐 network commands
+     network:ping-bat               Script to ping an IP address or ...
+     network:ping-sh                Script to ping an IP address or ...
+     network:traceroute-bat         Script to perform a traceroute to ...
+     network:traceroute-sh          Script to perform a traceroute to ...
+
+  🖥️ system commands
+     system:monitor                 Monitor system usage including CPU...
+
+  📝 todo commands
+     todo:tasks                     Manage your to-do list tasks.
+
+# ask for help
+$ tome system:monitor --help
+usage: tome monitor [-h] [-v] [-q] [--cpu] [--memory] [--disk]
+
+Monitor system usage including CPU, memory, and disk.
+
+options:
+  -h, --help     show this help message and exit
+  -v, --verbose  Increase the level of verbosity (use -v, -vv, -vvv, etc.)
+  -q, --quiet    Reduce the output to a minimum, showing only critical errors
+  --cpu          Monitor CPU usage in real-time
+  --memory       Monitor memory usage in real-time
+  --disk         Display disk usage
+
+# run the command
+$ tome system:monitor --cpu --memory --disk
+Disk Usage: 1.5% used
+Total: 926.35 GB
+Used: 10.47 GB
+Free: 695.70 GB
+CPU Usage: 19.1%
+Memory Usage: 60.5%
+Total: 36.00 GB
+Used: 14.75 GB
+Available: 14.24 GB
+Free: 2.00 GB
 ```
 
-Let's check the ``hello.py`` file:
+---
 
-```python
-import os
+## What's Next?
 
-from tome.command import tome_command
-from tome.api.output import TomeOutput
-
-def format_message_hello(message):
-    """
-    Add exclamations for a message
-    """
-    return message + "!!!"
-
-
-@tome_command()
-def hello(tome_api, parser, *args):
-    """
-    Description of the command.
-    """
-    parser.add_argument('positional_argument', help="Placeholder for a positional argument")
-    parser.add_argument('--optional-argument', help="Placeholder for an optional argument")
-    args = parser.parse_args(*args)
-
-    # Add your command implementation here
-    tome_output = TomeOutput()
-    tome_output.info(format_message_hello(f"Tome command called with positional argument: {args.positional_argument}"))
-    if args.optional_argument:
-       tome_output.info(format_message_hello(f"Tome command called with optional argument: {args.optional_argument}"))
-```
-
-For more details on the tome commands syntax please check [reference section](./reference.md).
-
-## Testing Scripts
-
-Tome supports testing using the ``tome test`` command. If you check the files that tome
-new created you will see a tests folder with a ``test_hello.py`` file inside. To run those
-tests just run:
-
-```bash
-$ tome test greetings:hello
-```
-
-To run tests over all installed commands:
-
-```bash
-$ tome test *
-```
-
-!!! note
-
-    ``tome test`` command uses [pytest](https://docs.pytest.org/en/stable/) under the hood, please install it by doing ``pip install pytest``
-
-For more information about testing your scripts with tome please check the [testing commands](./testing.md) section.
-
-## Contributions
-
-We welcome contributions! If you'd like to contribute, please check out our [Contributing
-Guide](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md) for guidelines. Fork the
-repository, make your changes, and submit a pull request.
-
-If you encounter any issues or have suggestions, feel free to [open an
-issue](https://github.com/jfrog/tome/issues).
-
-## License
-
-Tome is licensed under the [Apache License
-2.0](https://github.com/jfrog/tome/blob/main/LICENSE). See the LICENSE file for full
-details.
+| Goal                               | Documentation                                                              |
+| :--------------------------------- | :------------------------------------------------------------------------- |
+| 🚀 **Get started in 5 minutes** | **[Quickstart](overview/quickstart.md)** |
+| 📚 **Explore all CLI commands** | **[CLI Reference](reference/cli.md)** |
+| ✨ **Contribute or get support** | **[Contribution Guide in GitHub](https://github.com/jfrog/tome/blob/main/CONTRIBUTING.md)** |
