@@ -77,7 +77,6 @@ def todo_list_text_formatter(data_dict):
 def todo(tome_api, parser, *args):
     """
     A simple command-line To-Do list manager.
-    Use subcommands: add, list, done, remove.
     """
     pass
 

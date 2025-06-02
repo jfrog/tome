@@ -46,7 +46,7 @@ $ tome install . -e
 # list installed commands
 $ tome list
 
-📖 ~/my-tome
+📖 /some/path/my-tome
 
   🌲 greetings commands
      greetings:hello (e)  Description of the command.
@@ -74,16 +74,16 @@ $ tome list
 📖 https://github.com/jfrog/tome.git
 
   🌐 network commands
-     network:ping-bat               Script to ping an IP address or ...
-     network:ping-sh                Script to ping an IP address or ...
-     network:traceroute-bat         Script to perform a traceroute to ...
-     network:traceroute-sh          Script to perform a traceroute to ...
+     network:ping-bat            Script to ping an IP address or URL...
+     network:ping-sh             Script to ping an IP address or URL...
+     network:traceroute-bat      Script to perform a traceroute to an IP address or URL...
+     network:traceroute-sh       Script to perform a traceroute to an IP address or URL...
 
-  🖥️ system commands
-     system:monitor                 Monitor system usage including CPU...
+  🖥️  system commands
+     system:monitor              Monitor system usage including CPU, memory, and disk.
 
-  📝 todo commands
-     todo:tasks                     Manage your to-do list tasks.
+  🐮 utils commands
+     utils:todo                  A simple command-line To-Do list manager.
 
 # ask for help
 $ tome system:monitor --help
