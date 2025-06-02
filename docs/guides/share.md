@@ -14,16 +14,15 @@ Git repository (like GitHub, GitLab, or a private server).
 - **How to share:** Commit your **Tome** directory structure to a Git
   repository. A typical structure might look like:
 
-```bash
-your-tome-repo/
-├── your_namespace_A/
+```text
+your-tome-repo
+├── namespace_A
+│   └── utility.py
+├── namespace_B
 │   ├── script1.py
 │   └── script2.sh
-├── another_namespace_B/
-│   └── utility.py
-└── README.md         (optional, for the Tome)
-└── requirements.txt  (optional, for Python dependencies)
-└── .tomeignore
+├── README.md
+└── requirements.txt
 ```
 
 **Note on `.tomeignore`:** It's a good practice to Include a `.tomeignore` file
