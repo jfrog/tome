@@ -4,23 +4,25 @@ Writing tests for your **tome** **Commands** is crucial for ensuring they behave
 as expected and for maintaining them over time. **tome** leverages `pytest` for
 its testing capabilities.
 
-## Test Structure with `tome new`
+## Tests Structure
 
-When you create a new Python-based **Command** using `tome new
-namespace:commandname`, **tome** automatically generates a basic test file for
-you, typically at `namespace/tests/test_commandname.py`.
+Let's see an example. When you create a new Python-based **Command** using `tome
+new namespace:commandname`, **tome** automatically generates a basic test file
+for you, typically at `namespace/tests/test_commandname.py`.
 
 This provides a starting point for your tests. For example, if `tome new
-example:greet` created `example/greet.py` and a helper function
-`format_greeting`, your test file might look like:
+greet:hello` created `greet/hello.py` and a helper function
+`frog_hello`, your test file might look like:
+
+<guide the user here with tome new and show tests folder structure>
 
 ```python
-from greetings.hello import frog_hello
+from greet.hello import frog_hello
 
 def test_frog_hello_formatting():
     """
     Test the basic formatting of the frog_hello function
-    from greetings:hello.
+    from greet:hello.
     """
     message = "Test Message"
     output = frog_hello(message)
