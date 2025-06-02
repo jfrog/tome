@@ -15,7 +15,6 @@ nav:
       - Migrate a shell script: guides/migrate_script.md
       - Testing your scripts: guides/testing.md
       - Relevant Features:
-        - Store: guides/features/store.md
         - Vault: guides/features/vault.md
   - Reference:
       - Command-line interface: reference/cli.md
