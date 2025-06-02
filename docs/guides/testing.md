@@ -82,25 +82,25 @@ helper or test, update this example accordingly.
 The `tome test` **Tome Command** is your primary tool for running tests. It
 discovers and executes `pytest` tests for your installed **Tomes**.
 
-1.  **Test a Specific Command:** If you want to run tests associated with a
+*   **Test a Specific Command:** If you want to run tests associated with a
     particular **Command** (e.g., tests in `greet/tests/test_hello.py` for the
     `greet:hello` command):
 
-```console
-$ tome install . -e  # Ensure your Tome is installed
-$ tome test greet:hello
-```
+    ```console
+    $ tome install . -e  # Ensure your Tome is installed
+    $ tome test greet:hello
+    ```
 
-2.  **Test All Commands in a Namespace:** To run all tests for **Commands**
+*   **Test All Commands in a Namespace:** To run all tests for **Commands**
     within the `greet` **Namespace**:
 
-```console
-$ tome test greet:*
-```
+    ```console
+    $ tome test greet:*
+    ```
 
-3.  **Test All Commands in All Installed Tomes:** (This applies to **Tomes**
+*   **Test All Commands in All Installed Tomes:** (This applies to **Tomes**
     installed from the cache or in editable mode)
 
-```console
-$ tome test "*"
-```
+    ```console
+    $ tome test "*"
+    ```
