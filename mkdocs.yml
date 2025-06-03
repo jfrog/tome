@@ -55,6 +55,7 @@ theme:
 plugins:
   - mkdocstrings
   - mike
+  - search
 
 extra:
   version:
