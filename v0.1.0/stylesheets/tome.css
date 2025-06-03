@@ -1,0 +1,156 @@
+/* Import Roboto Mono font */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap");
+
+/* Color variables */
+:root {
+  --md-primary-fg-color: #121826;
+  --md-primary-bg-color: magenta;
+
+  --nav-link-active-color-light: #121826;
+  --nav-link-active-color-dark: #ffffff;
+
+  --content-h1-color-light: #121826;
+  --content-h1-color-dark: #ffffff;
+
+  --md-link-color: magenta;
+}
+
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary .md-nav__list {
+    font-size: 0.7rem;
+  }
+
+  .md-nav--primary>.md-nav__list>.md-nav__item--section>.md-nav__link {
+    font-size: 0.9rem;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .md-nav--primary>.md-nav__list>.md-nav__item--section {
+    margin-top: 0.85em;
+    margin-bottom: 0.25em;
+  }
+}
+
+/* Hides the main sidebar site title on large screens. */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary .md-nav__title {
+    display: none;
+  }
+}
+
+/* Active nav link color */
+.md-nav__link.md-nav__link--active {
+  color: #ecb7b7;
+}
+
+/* Header topic styles */
+.md-header__topic > .md-ellipsis {
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+  font-size: 1.7em;
+}
+
+/* Content h1 styles */
+.md-content h1 {
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+}
+
+/* Sidebar title styles */
+.md-nav__title {
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+/* Hide the logo */
+.md-header__button.md-logo {
+  display: none;
+}
+
+/* Nav link styles for light theme */
+[data-md-color-scheme="default"] .md-nav__link:active,
+[data-md-color-scheme="default"] .md-nav__link--active {
+  color: var(--nav-link-active-color-light);
+  font-weight: bold;
+}
+
+/* Nav link styles for dark theme */
+[data-md-color-scheme="slate"] .md-nav__link:active,
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: var(--nav-link-active-color-dark);
+  font-weight: bold;
+}
+
+/* Content h1 color based on theme */
+[data-md-color-scheme="default"] .md-content h1 {
+  color: var(--content-h1-color-light);
+}
+
+[data-md-color-scheme="slate"] .md-content h1 {
+  color: var(--content-h1-color-dark);
+}
+
+[data-md-color-scheme="default"] .md-content h2,
+[data-md-color-scheme="default"] .md-content h3 {
+  color: var(--content-h1-color-light);
+}
+
+[data-md-color-scheme="slate"] .md-content h2,
+[data-md-color-scheme="slate"] .md-content h3 {
+  color: var(--content-h1-color-dark);
+}
+
+.md-content a {
+  color: var(--md-link-color);
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.tabbed-content .tabbed-block p {
+  margin: 0;
+}
+
+.tabbed-content .tabbed-block code {
+  display: block;
+  padding: 1em;
+}
+
+.tagline-highlight {
+  color: var(--md-link-color);
+  text-align: center;
+}
+
+.console-line {
+  display: block;
+  white-space: pre;
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+}
+
+.console-line.empty-line {
+  height: 1em;
+}
+
+.console-line.comment-line {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.console-line.command-line {
+  color: #ffffff;
+}
+
+.console-line.command-line .prompt {
+  font-weight: bold;
+}
+
+.console-line.command-line .cmd-text {
+  color: inherit;
+}
+
+.console-line.output-line {
+  color: #b7b7b7;
+}
