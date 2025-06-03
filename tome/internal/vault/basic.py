@@ -38,7 +38,7 @@ class VaultApi:
                 )
             except InvalidToken:
                 raise TomeException(f"Unable to open vault '{name}'. Incorrect password.")
-            return BasicVault(key=Fernet(vault_key), vault_path=vault_path)
+            return Vault(key=Fernet(vault_key), vault_path=vault_path)
 
     def create(self, name, password):
         name = name.replace(' ', '')
@@ -88,7 +88,7 @@ class VaultApi:
         return result
 
 
-class BasicVault:
+class Vault:
     def __init__(self, key, vault_path):
         self.engine = create_engine(vault_path)
         self.key = key
