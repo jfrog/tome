@@ -8,11 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll("div.language-console.highlight pre").forEach(preElem => {
     const copyButton = preElem.querySelector("button.md-clipboard");
-    if (copyButton) {
-      // Remove the default clipboard target, as we will set the text manually
-      delete copyButton.dataset.clipboardTarget;
-      preElem.dataset.clipboardText = "";
-    }
     const copyCommands = []
     const codeElem = preElem.querySelector("code")
     const lines = codeElem.textContent.split("\n");
@@ -23,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const prefix = escapeHTML(line.charAt(0));
         const rest   = escapeHTML(line.slice(1));
         copyCommands.push(rest.trim());
-        return `<span class="console-line command-line"><span class="prompt">${prefix}</span><span class="cmd-text" id="#${preElem.id}__cmd">${rest}</span></span>`;
+        return `<span class="console-line command-line"><span class="prompt">${prefix}</span><span class="cmd-text">${rest}</span></span>`;
       } else if (line === "") {
         return `<span class="console-line empty-line"></span>`;
       } else {
@@ -31,6 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }).join("");
     codeElem.innerHTML = html;
-    preElem.dataset.clipboardText = copyCommands.join("\n");
+    if (copyButton) {
+      // Remove the default clipboard target, as we will set the text manually
+      delete copyButton.dataset.clipboardTarget;
+      preElem.dataset.clipboardText = copyCommands.join("\n");
+    }
   });
 });
