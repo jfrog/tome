@@ -1289,8 +1289,8 @@ add the <code>api_token</code> secret.</p>
     this vault. Choose a secure password and remember it.</li>
 </ol>
 <div class="language-console highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gp">$ </span>tome<span class="w"> </span>vault<span class="w"> </span>create
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="go">Tome vault password: mydummy_pass_for_now</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="go">Confirm tome vault password: mydummy_pass_for_now</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="go">Tome vault password: **********</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="go">Confirm tome vault password: **********</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="go">Vault &#39;default&#39; created</span>
 </span></code></pre></div>
 <ol>
@@ -1298,7 +1298,7 @@ add the <code>api_token</code> secret.</p>
     for the vault password you just set.</li>
 </ol>
 <div class="language-console highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gp">$ </span>tome<span class="w"> </span>vault<span class="w"> </span>add-secret<span class="w"> </span>api_token<span class="w"> </span><span class="s2">&quot;SecretToken&quot;</span><span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Access token&quot;</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="go">Tome vault password: mydummy_pass_for_now</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="go">Tome vault password: **********</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="go">Secret &#39;api_token&#39; added to &#39;default&#39; vault.</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code>You can verify the secret name is listed (the value itself remains
@@ -1324,7 +1324,7 @@ can remove it from the vault. To delete the <code>api_token</code> we created ea
 the <code>default</code> vault, use the <code>tome vault delete-secret</code> command.</p>
 <p>You will be prompted for the vault password:</p>
 <div class="language-console highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gp">$ </span>tome<span class="w"> </span>vault<span class="w"> </span>delete-secret<span class="w"> </span>api_token
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="go">Tome vault password: &lt;enter_your_secure_password_here&gt;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="go">Tome vault password: **********</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="go">Secret &#39;api_token&#39; deleted from &#39;default&#39; vault.</span>
 </span></code></pre></div>
 <p>You can confirm it's gone by listing the secrets again:</p>
