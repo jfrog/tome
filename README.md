@@ -12,17 +12,13 @@ kind are managed, shared, tested, and maintained.
 With **tome**, you can:
 
 * **Organize** 📂: Effortlessly manage and structure your scripts for a clean,
-  maintainable codebase. [Learn more in the Quickstart
-  →](https://jfrog.github.io/tome/latest/overview/quickstart/)
+  maintainable codebase. [Learn more in the Quickstart →](https://jfrog.github.io/tome/latest/overview/quickstart/)
 * **Share & Collaborate** 🤝: Seamlessly distribute your script collections
-  (Tomes) via Git, archives, or local folders. [See sharing options
-  →](https://jfrog.github.io/tome/latest/guides/share/)
+  (Tomes) via Git, archives, or local folders. [See sharing options →](https://jfrog.github.io/tome/latest/guides/share/)
 * **Test** 🧪: Ensure your scripts' reliability with integrated `pytest`
-  support. [Read the testing guide
-  →](https://jfrog.github.io/tome/latest/guides/testing/)
+  support. [Read the testing guide →](https://jfrog.github.io/tome/latest/guides/testing/)
 * **Secure** 🔒: Manage and protect sensitive data like API keys and passwords
-  using the **tome** Vault. [Explore the Vault
-  →](https://jfrog.github.io/tome/latest/guides/features/vault/)
+  using the **tome** Vault. [Explore the Vault →](https://jfrog.github.io/tome/latest/guides/features/vault/)
 
 ---
 
