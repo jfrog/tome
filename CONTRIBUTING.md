@@ -37,6 +37,9 @@ pre-commit run --all-files
 
 ## Running the Tests
 
+It is mandatory to **use a virtual environment** to ensure that all tests will be able to
+run without any restriction. Otherwise, some tests may fail.
+
 **tome** uses `pytest` for its test suite. Ensure you have `pytest` installed:
 
 ```
