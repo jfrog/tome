@@ -80,3 +80,15 @@ mkdocs serve
 To keep the codebase consistent and easy to read, **tome** follows [PEP
 8](https://www.python.org/dev/peps/pep-0008/) and [Black code
 style](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html).
+
+
+## Submitting Pull Requests
+
+All project contributions are welcome, but when submitting a pull request, please ensure that:
+
+- You have included a description of your changes in the pull request.
+- You have linked any relevant issues or discussions in the pull request description.
+- You have tested your changes thoroughly before submitting the pull request.
+- You have added or updated tests to cover your changes in case applicable.
+- You have updated the documentation if necessary.
+- You have run the pre-commit hooks to ensure code quality.
