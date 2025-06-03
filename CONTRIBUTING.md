@@ -80,3 +80,6 @@ mkdocs serve
 To keep the codebase consistent and easy to read, **tome** follows [PEP
 8](https://www.python.org/dev/peps/pep-0008/) and [Black code
 style](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html).
+
+When opening a pull request, please ensure that the title is clear and descriptive,
+because it will be used to generate the changelog.
