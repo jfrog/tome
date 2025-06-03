@@ -48,7 +48,6 @@ theme:
     - navigation.expand
     - navigation.indexes
     - navigation.sections
-    - navigation.indexes
 
 plugins:
   - mkdocstrings
