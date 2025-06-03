@@ -179,12 +179,44 @@ If `--format` is not provided, **tome** will attempt to use a formatter named
 
 ## Error Handling
 
-TODO
+To signal operational errors from your **Command** or formatters, `raise
+TomeException` from `tome.errors`.
+
+    ```python
+    from tome.errors import TomeException
+    # if error_condition:
+    #     raise TomeException("Specific error description.")
+    ```
+
+**tome** will catch these exceptions, print a standardized error message to
+`stderr`, and exit with a non-zero status code (typically `1`).
 
 ## Vault API (for Scripts)
 
-TODO
+Access secrets via `tome_api.vault` (an instance of `VaultApi`).
+
+**`tome_api.vault` Methods:**
+
+* `open(name='default', password=None) -> Vault`: Opens a vault. Raises
+  `TomeException` on failure.
+* `create(name, password)`: Creates a new vault.
+* `list() -> dict`: Lists vaults and their secret names/descriptions.
+
+**`Vault` Instance Methods:**
+
+* `my_vault.read(name: str) -> str | None`: Reads a secret's value.
+* `my_vault.create(name, text, description=None, update=False) -> State`:
+  Adds/updates a secret.
+* `my_vault.delete(name: str)`: Deletes a secret.
+* `my_vault.list() -> list`: Lists secrets (name, description) in the opened
+  vault.
+
+*See the [Vault Guide](../guides/features/vault.md) for full examples.*
 
 ## Store API (for Scripts)
 
-TODO
+Access a persistent local storage directory via `tome_api.store.folder` (string
+path, typically `~/.tome/storage/`). Use this for script-specific
+configurations, caches, or data files.
+
+*See the [Store Guide](../guides/features/store.md) for practical examples.*

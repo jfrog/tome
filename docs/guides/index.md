@@ -16,3 +16,5 @@ more:
 * **Relevant Features:**
     * **[Vault](features/vault.md):** Discover how to securely manage secrets
       and use them in your commands.
+    * **[Store](features/store.md):** Learn how to use **tome**'s local storage
+      API for persistent data.
