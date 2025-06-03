@@ -4,8 +4,8 @@
 
 If you wish to contribute or modify **tome**, follow these steps to clone the repository
 and install it in editable mode with all the required development dependencies. It is
-recommended to **create a virtual environment** to ensure that your project dependencies
-are isolated.
+mandatory to **create a virtual environment** to ensure that all tests will be able to
+run without any restriction.
 
 ```
 git clone https://github.com/jfrog/tome.git
