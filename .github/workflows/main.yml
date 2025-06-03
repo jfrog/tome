@@ -92,7 +92,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install build tools
-        run: pip install build
+        run: python -m pip install --upgrade pip build
       - name: Add date to version
         run: |
           DATE=$(date +%Y%m%d)
