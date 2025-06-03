@@ -20,82 +20,81 @@ it has been executed.
 We'll create a command `stats:runcount` that increments a counter each time it's
 run and displays the current count.
 
-1.  **Setup the Script:** First, create the script using `tome new`:
+**Setup the Script:** First, create the script using `tome new`:
 
-    ```console
-    $ mkdir my-tome
-    $ cd my-tome
-    $ tome new stats:runcount --description "Counts and displays how many times it has been run."
-    $ tome install . -e
-    ```
+```console
+$ mkdir my-tome
+$ cd my-tome
+$ tome new stats:runcount --description "Counts times it has been run."
+$ tome install . -e
+```
 
-2.  **Implement `stats/runcount.py`:**
+**Implement `stats/runcount.py`:**
 
-    ```python
-    # stats/runcount.py
-    from tome.command import tome_command
-    from tome.api.output import TomeOutput
-    import json
-    import os
+```python
+# stats/runcount.py
+from tome.command import tome_command
+from tome.api.output import TomeOutput
+import json
+import os
 
-    COUNTER_FILENAME = "run_counter.json"
+COUNTER_FILENAME = "run_counter.json"
 
-    @tome_command()
-    def runcount(tome_api, parser, *args):
-        """Counts and displays how many times this command has been run."""
-        parsed_args = parser.parse_args(*args) # Process any potential future args
-        output = TomeOutput(stdout=True)
+@tome_command()
+def runcount(tome_api, parser, *args):
+    """Counts times it has been run."""
+    parsed_args = parser.parse_args(*args) # Process any potential future args
+    output = TomeOutput(stdout=True)
 
-        # Define a path for this command's data within the tome store
-        command_storage_dir = os.path.join(tome_api.store.folder, "stats_runcount")
-        os.makedirs(command_storage_dir, exist_ok=True) # Ensure the directory exists
-        counter_file_path = os.path.join(command_storage_dir, COUNTER_FILENAME)
+    # Define a path for this command's data within the tome store
+    command_storage_dir = os.path.join(tome_api.store.folder, "stats_runcount")
+    os.makedirs(command_storage_dir, exist_ok=True) # Ensure the directory exists
+    counter_file_path = os.path.join(command_storage_dir, COUNTER_FILENAME)
 
-        count = 0
-        # Load existing count
-        if os.path.exists(counter_file_path):
-            try:
-                with open(counter_file_path, 'r') as f:
-                    data = json.load(f)
-                    count = data.get("run_count", 0)
-            except (IOError, json.JSONDecodeError):
-                # If file is corrupt or unreadable, start count from 0
-                TomeOutput().warning(f"Could not read counter file, resetting count.")
-                count = 0
-
-        # Increment count
-        count += 1
-
-        # Save new count
+    count = 0
+    # Load existing count
+    if os.path.exists(counter_file_path):
         try:
-            with open(counter_file_path, 'w') as f:
-                json.dump({"run_count": count}, f)
-            output.info(f"This command has been run {count} time(s).")
-            output.info(f"(Counter data stored in: {counter_file_path})")
-        except IOError as e:
-            TomeOutput().error(f"Could not save run count: {e}")
-            output.info(f"Current run (not saved) would be #{count}.")
-    ```
+            with open(counter_file_path, 'r') as f:
+                data = json.load(f)
+                count = data.get("run_count", 0)
+        except (IOError, json.JSONDecodeError):
+            # If file is corrupt or unreadable, start count from 0
+            TomeOutput().warning(f"Could not read counter file, resetting count.")
+            count = 0
 
-3.  **Running the Command:** Each time you run the command, the count should
-    increment:
+    # Increment count
+    count += 1
 
-    ```console
-    $ tome stats:runcount
-    This command has been run 1 time(s).
-    (Counter data stored in: /<tome_home>/storage/stats_runcount/run_counter.json)
+    # Save new count
+    try:
+        with open(counter_file_path, 'w') as f:
+            json.dump({"run_count": count}, f)
+        output.info(f"This command has been run {count} time(s).")
+        output.info(f"(Counter data stored in: {counter_file_path})")
+    except IOError as e:
+        TomeOutput().error(f"Could not save run count: {e}")
+        output.info(f"Current run (not saved) would be #{count}.")
+```
 
-    $ tome stats:runcount
-    This command has been run 2 time(s).
-    (Counter data stored in: /<tome_home>/storage/stats_runcount/run_counter.json)
+**Running the Command:** Each time you run the command, the count should increment:
 
-    $ tome stats:runcount
-    This command has been run 3 time(s).
-    (Counter data stored in: /<tome_home>/storage/stats_runcount/run_counter.json)
-    ```
+```console
+$ tome stats:runcount
+This command has been run 1 time(s).
+(Counter data stored in: /<tome_home>/storage/stats_runcount/run_counter.json)
 
-    You can inspect the `run_counter.json` file in the specified path to see the
-    stored count.
+$ tome stats:runcount
+This command has been run 2 time(s).
+(Counter data stored in: /<tome_home>/storage/stats_runcount/run_counter.json)
+
+$ tome stats:runcount
+This command has been run 3 time(s).
+(Counter data stored in: /<tome_home>/storage/stats_runcount/run_counter.json)
+```
+
+You can inspect the `run_counter.json` file in the specified path to see the
+stored count.
 
 ### Best Practices for Using the Store API
 
