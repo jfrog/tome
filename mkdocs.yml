@@ -1,5 +1,6 @@
 site_name: ">tome"
 site_url: "https://jfrog.github.io/tome/"
+repo_url: "https://github.com/jfrog/tome"
 nav:
   - Welcome:
       - index.md
@@ -54,6 +55,7 @@ theme:
 plugins:
   - mkdocstrings
   - mike
+  - search
 
 extra:
   version:
