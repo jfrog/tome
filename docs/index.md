@@ -25,7 +25,7 @@ to the [install guide](overview/installing.md). Then, install **tome** using `pi
 <span data-ty="input">pip install tomescripts</span>
 <span data-ty>🎉  Tome installed.</span>
 <span data-ty="input">tome --version</span>
-<span data-ty>0.1.0</span>
+<span data-ty>0.2.0</span>
 </div>
 
 ---
