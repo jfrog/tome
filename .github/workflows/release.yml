@@ -6,10 +6,14 @@ on:
 
 jobs:
   publish:
-    name: Publish Release
+    name: Build and Publish to PyPI
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+      id-token: write
+    environment:
+      name: pypi-release
+      url: https://pypi.org/p/tomescripts
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,17 +23,14 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Install build tools
-        run: pip install build twine
+      - name: Install build dependencies
+        run: python -m pip install --upgrade pip build
 
       - name: Build the package
         run: python -m build
 
-      # - name: Publish to PyPI
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      #   run: twine upload dist/*
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
 
   deploy-docs:
     name: Deploy Documentation
