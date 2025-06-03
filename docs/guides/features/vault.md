@@ -118,8 +118,8 @@ add the `api_token` secret.
 
 ```console
 $ tome vault create
-Tome vault password: mydummy_pass_for_now
-Confirm tome vault password: mydummy_pass_for_now
+Tome vault password: **********
+Confirm tome vault password: **********
 Vault 'default' created
 ```
 
@@ -128,7 +128,7 @@ Vault 'default' created
 
 ```console
 $ tome vault add-secret api_token "SecretToken" --description "Access token"
-Tome vault password: mydummy_pass_for_now
+Tome vault password: **********
 Secret 'api_token' added to 'default' vault.
 ```
 
@@ -166,7 +166,7 @@ You will be prompted for the vault password:
 
 ```console
 $ tome vault delete-secret api_token
-Tome vault password: <enter_your_secure_password_here>
+Tome vault password: **********
 Secret 'api_token' deleted from 'default' vault.
 ```
 
