@@ -49,7 +49,7 @@ jobs:
       - name: Install docs dependencies
         run: pip install .[docs]
       - name: Build documentation
-        run: mkdocs build --verbose
+        run: mkdocs build --strict --verbose
 
   static-analysis:
     runs-on: ubuntu-latest
