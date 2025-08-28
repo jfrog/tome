@@ -163,6 +163,8 @@ def _has_valid_commands(directory):
     Check the first-level subdirectories of the given directory to find files
     that appear to contain valid tome commands.
     """
+    if not os.path.isdir(directory):
+        raise TomeException(f"The directory '{directory}' does not exist or is not a directory. Please, provide a valid directory.")
     # List only the first-level subdirectories of 'directory'
     for subdir_name in os.listdir(directory):
         subdir = os.path.join(directory, subdir_name)
