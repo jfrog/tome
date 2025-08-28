@@ -2,7 +2,6 @@ import os
 import shutil
 import sys
 import textwrap
-import re
 
 import pytest
 import responses
@@ -466,5 +465,4 @@ def test_install_script_file():
     client = TestClient()
     dummy_script = temp_file(suffix='.py', prefix='cmd_foobar')
     client.run(f"install -e '{dummy_script}'", assert_error=True)
-    # INFO: It may contain breaking lines
-    assert re.search(r"Error: The directory '.*' does not exist or is not a directory", client.out, re.DOTALL)
+    assert "Error: The following directory does not exist or is not a directory: " in client.out
