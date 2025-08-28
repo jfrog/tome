@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 import textwrap
+import re
 
 import pytest
 import responses
@@ -10,7 +11,7 @@ from tome.internal.utils.files import rmdir
 
 from tests.utils.tools import TestClient
 from tests.utils.tools import zipdir
-from tests.utils.files import temp_folder
+from tests.utils.files import temp_folder, temp_file
 
 
 def _create_zip(folder, zippath=None):
@@ -459,3 +460,11 @@ def test_validate_git_install():
     install_source = f"{os.path.join(client.current_folder, git_repo_folder)}/.git"
     client.run(f"install '{install_source}'", assert_error=True)
     assert "No valid tome commands were found in the cloned repository" in client.out
+
+
+def test_install_script_file():
+    client = TestClient()
+    dummy_script = temp_file(suffix='.py', prefix='cmd_foobar')
+    client.run(f"install -e '{dummy_script}'", assert_error=True)
+    # INFO: It may contain breaking lines
+    assert re.search(r"Error: The directory '.*' does not exist or is not a directory", client.out, re.DOTALL)

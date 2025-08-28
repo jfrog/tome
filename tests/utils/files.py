@@ -45,3 +45,10 @@ def temp_folder(create_dir=True):
     if create_dir:
         os.makedirs(nt)
     return nt
+
+
+def temp_file(suffix='', prefix='tmp'):
+    folder_path = temp_folder()
+    fd, name = tempfile.mkstemp(suffix=suffix, prefix=prefix, dir=folder_path)
+    os.close(fd)
+    return name
