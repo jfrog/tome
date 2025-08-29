@@ -462,6 +462,9 @@ def test_validate_git_install():
 
 
 def test_install_script_file():
+    """
+    Test that the install command fails when a script file is provided instead of a directory.
+    """
     client = TestClient()
     dummy_script = temp_file(suffix='.py', prefix='cmd_foobar')
     client.run(f"install -e '{dummy_script}'", assert_error=True)

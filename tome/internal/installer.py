@@ -342,5 +342,7 @@ def uninstall_from_source(source, cache_base_folder, cache_remove_folder):
             raise TomeException("Attempted to uninstall the entire cache base folder, operation cancelled.")
         rmdir(cache_remove_folder)
         return source
+    elif os.path.isfile(source.uri):
+        raise TomeException(f"The following path does not exist or is not a directory: '{source}'. Please, provide a valid directory.")
     else:
         raise TomeException(f"Source '{source}' is not installed or already uninstalled.")
