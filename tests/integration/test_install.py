@@ -465,4 +465,4 @@ def test_install_script_file():
     client = TestClient()
     dummy_script = temp_file(suffix='.py', prefix='cmd_foobar')
     client.run(f"install -e '{dummy_script}'", assert_error=True)
-    assert "Error: The following directory does not exist or is not a directory: " in client.out
+    assert "Error: The following path does not exist or is not a directory: " in client.out
