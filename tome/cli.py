@@ -102,6 +102,8 @@ class Cli:
         """Load commands from a directory"""
         old_sys_path = sys.path[:]
         try:
+            if not os.path.exists(scripts_path):
+                return
             sys.path.append(scripts_path)
             for namespace in os.listdir(scripts_path):
                 namespace_folder_path = os.path.join(scripts_path, namespace)
