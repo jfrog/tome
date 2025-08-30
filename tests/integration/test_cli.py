@@ -1,5 +1,6 @@
 import os
 import textwrap
+import shutil
 
 from tests.utils.tools import TestClient
 
@@ -90,3 +91,21 @@ def test_sys_path():
     assert "Hello moon!" in c.out
     c.run("cmds1:cmd")
     assert "Hello world!" in c.out
+
+
+def test_missing_editable():
+    """
+    Test when a installed editable command is missing its folder later.
+    """
+    client = TestClient()
+    os.mkdir(os.path.join(client.current_folder, "tome_commands"))
+
+    client.run("new mynamespace:mycommand")
+    shutil.move(
+        os.path.join(client.current_folder, "mynamespace"),
+        os.path.join(client.current_folder, "tome_commands", "mynamespace"),
+    )
+    client.run("install -e tome_commands")
+    shutil.rmtree(os.path.join(client.current_folder, "tome_commands"))
+    client.run("list")
+    assert "No matches were found for '*' pattern." in client.out
