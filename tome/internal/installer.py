@@ -163,6 +163,8 @@ def _has_valid_commands(directory):
     Check the first-level subdirectories of the given directory to find files
     that appear to contain valid tome commands.
     """
+    if not os.path.isdir(directory):
+        raise TomeException(f"The following path does not exist or is not a directory: '{directory}'. Please, provide a valid directory.")
     # List only the first-level subdirectories of 'directory'
     for subdir_name in os.listdir(directory):
         subdir = os.path.join(directory, subdir_name)
@@ -340,5 +342,7 @@ def uninstall_from_source(source, cache_base_folder, cache_remove_folder):
             raise TomeException("Attempted to uninstall the entire cache base folder, operation cancelled.")
         rmdir(cache_remove_folder)
         return source
+    elif os.path.isfile(source.uri):
+        raise TomeException(f"The following path does not exist or is not a directory: '{source}'. Please, provide a valid directory.")
     else:
         raise TomeException(f"Source '{source}' is not installed or already uninstalled.")

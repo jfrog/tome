@@ -10,7 +10,7 @@ from tome.internal.utils.files import rmdir
 
 from tests.utils.tools import TestClient
 from tests.utils.tools import zipdir
-from tests.utils.files import temp_folder
+from tests.utils.files import temp_folder, temp_file
 
 
 def _create_zip(folder, zippath=None):
@@ -459,3 +459,13 @@ def test_validate_git_install():
     install_source = f"{os.path.join(client.current_folder, git_repo_folder)}/.git"
     client.run(f"install '{install_source}'", assert_error=True)
     assert "No valid tome commands were found in the cloned repository" in client.out
+
+
+def test_install_script_file():
+    """
+    Test that the install command fails when a script file is provided instead of a directory.
+    """
+    client = TestClient()
+    dummy_script = temp_file(suffix='.py', prefix='cmd_foobar')
+    client.run(f"install -e '{dummy_script}'", assert_error=True)
+    assert "Error: The following path does not exist or is not a directory: " in client.out
